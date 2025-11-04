@@ -6,6 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repository contains templates for working with AI. Currently it has one project setup template for Python projects.
 
+## Git Commit Guidelines
+
+**IMPORTANT:** When creating git commits in this repository:
+- NEVER include Claude Code attribution in commit messages
+- NEVER add "Generated with Claude Code" or similar phrases
+- NEVER add "Co-Authored-By: Claude" or similar attribution
+- Keep commit messages professional and focused on the changes made
+- Commit messages should describe what changed and why, without mentioning AI assistance
+
 ## Current Contents
 
 - `project-setup/setup-project-python-claude.md` - A comprehensive guide for bootstrapping Python projects using Claude Code

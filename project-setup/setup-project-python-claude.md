@@ -227,12 +227,17 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 - Explicit value handling (never assume defaults)
 - Domain-specific rules
 
-**2. Testing Rules**
+**2. Git Commit Guidelines**
+- Never include AI attribution in commit messages
+- Keep commits professional and focused on changes
+- No "Generated with" or "Co-Authored-By: Claude" messages
+
+**3. Testing Rules**
 - When to run tests (after every change)
 - How to verify changes work
 - Required test commands
 
-**3. Python Execution Rules**
+**4. Python Execution Rules**
 ```markdown
 - Python execution: **only** via `uv run ...`
 - Virtual environment: **only** via `uv sync`
@@ -240,33 +245,33 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 - **FORBIDDEN**: `python`, `python3`, `pip install`, `uv pip`
 ```
 
-**4. Makefile Rules**
+**5. Makefile Rules**
 - All Python execution uses `uv run`
 - Reference key make targets
 
-**5. File Handling**
+**6. File Handling**
 - How to read/write specific file types
 - Libraries to use for each format
 - File processing rules
 
-**6. Project Structure**
+**7. Project Structure**
 - Where code belongs (src/, scripts/, prompts/)
 - Input/output organization
 - Forbidden locations
 
-**7. Directory Organization Pattern**
+**8. Directory Organization Pattern**
 - Input file organization logic
 - Output file organization logic
 - Subdirectory mirroring rules
 - Error file handling
 
-**8. Error Handling**
+**9. Error Handling**
 - How to handle failures gracefully
 - Where to place failed outputs
 - Success/failure reporting
 - Exit code conventions
 
-**9. Optimization**
+**10. Optimization**
 - When to skip processing
 - Performance considerations
 
@@ -279,6 +284,13 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 - **Never assume any default values anywhere**
 - Always be explicit about values, paths, and configurations
 - If a value is not provided, handle it explicitly (raise error, use null, or prompt for input)
+
+## Git Commit Guidelines
+- **NEVER include AI attribution in commit messages**
+- **NEVER add "Generated with Claude Code" or similar phrases**
+- **NEVER add "Co-Authored-By: Claude" or similar attribution**
+- Keep commit messages professional and focused on the changes made
+- Commit messages should describe what changed and why, without mentioning AI assistance
 
 ## Testing
 - After **every change** to the code, the tests must be executed
