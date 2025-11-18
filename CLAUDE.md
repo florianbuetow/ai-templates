@@ -15,6 +15,7 @@ This repository contains templates for working with AI. Currently it has one pro
 - NEVER run `git add -A` or `git add .` - always stage files explicitly
 - Keep commit messages professional and focused on the changes made
 - Commit messages should describe what changed and why, without mentioning AI assistance
+- ALWAYS run `git push` after creating a commit to push changes to the remote repository
 
 ## Current Contents
 
