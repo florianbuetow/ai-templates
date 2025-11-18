@@ -12,6 +12,7 @@ This repository contains templates for working with AI. Currently it has one pro
 - NEVER include Claude Code attribution in commit messages
 - NEVER add "Generated with Claude Code" or similar phrases
 - NEVER add "Co-Authored-By: Claude" or similar attribution
+- NEVER run `git add -A` or `git add .` - always stage files explicitly
 - Keep commit messages professional and focused on the changes made
 - Commit messages should describe what changed and why, without mentioning AI assistance
 
