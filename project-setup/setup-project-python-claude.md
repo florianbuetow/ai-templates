@@ -78,6 +78,15 @@ Must include:
 - Project name, version, description
 - `requires-python = ">=3.12"`
 - Dependencies list (can be empty initially)
+- Build system configuration:
+  ```toml
+  [build-system]
+  requires = ["hatchling"]
+  build-backend = "hatchling.build"
+
+  [tool.hatch.build.targets.wheel]
+  packages = ["src"]
+  ```
 - Must work with `uv sync` without errors
 - No mention of pip anywhere
 
