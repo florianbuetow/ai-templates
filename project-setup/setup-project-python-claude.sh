@@ -31,7 +31,7 @@ fi
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATE_FILE="$SCRIPT_DIR/setup-project-python-claude.md"
+TEMPLATE_FILE="$SCRIPT_DIR/setup-project-python.md"
 
 # Check if template file exists locally
 if [ ! -f "$TEMPLATE_FILE" ]; then
@@ -42,18 +42,18 @@ fi
 
 # Copy the Python setup template to current directory
 echo "Copying setup template from local repository..."
-cp "$TEMPLATE_FILE" setup-project-python-claude.md
+cp "$TEMPLATE_FILE" setup-project-python.md
 
 if [ $? -ne 0 ]; then
   echo "✗ Failed to copy template file"
   exit 1
 fi
 
-echo "✓ Copied setup-project-python-claude.md"
+echo "✓ Copied setup-project-python.md"
 
 # Run Claude with the setup instructions
 echo "Running Claude to set up the project..."
-claude "Follow the setup instructions in setup-project-python-claude.md to the teeth."
+claude "Follow the setup instructions in setup-project-python.md to the teeth."
 
 if [ $? -ne 0 ]; then
   echo "✗ Claude command failed"
@@ -61,11 +61,11 @@ if [ $? -ne 0 ]; then
 fi
 
 # Delete the setup file
-rm setup-project-python-claude.md
+rm setup-project-python.md
 if [ $? -eq 0 ]; then
-  echo "✓ Cleaned up setup-project-python-claude.md"
+  echo "✓ Cleaned up setup-project-python.md"
 else
-  echo "⚠ Warning: Failed to delete setup-project-python-claude.md"
+  echo "⚠ Warning: Failed to delete setup-project-python.md"
 fi
 
 echo "✓ Project setup complete!"

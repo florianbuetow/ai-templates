@@ -6,12 +6,12 @@ This directory contains a complete setup system for bootstrapping new Python pro
 
 ### Files in This Directory
 
-- **`setup-project-python-claude.md`** - The Python project template and guide
-  - Contains comprehensive instructions for creating Python projects with Claude Code
+- **`setup-project-python.md`** - The Python project template and guide
+  - Contains comprehensive instructions for creating Python projects with AI agents
   - Includes project structure requirements, dependency management rules, and conventions
-  - Defines what should go in `CLAUDE.md` files for generated projects
+  - Defines what should go in `AGENTS.md` and `CLAUDE.md` files for generated projects
   - Emphasizes using `uv` exclusively for package management (never pip or python directly)
-  - Serves as the "blueprint" that Claude Code follows when creating new projects
+  - Serves as the "blueprint" that AI agents follow when creating new projects
 
 - **`setup-project-python-claude.sh`** - Automated project creation script
   - Bash script that automates the entire project creation process
@@ -137,14 +137,15 @@ When you run `./setup_aliases.sh`:
 When you run `newpy my-project-name`:
 
 1. The script creates a new directory with the specified name (or uses the current directory if you pass `.`)
-2. It copies `setup-project-python-claude.md` from `~/scripts/ai-templates/project-setup/` to your project directory
-3. It invokes Claude Code with the instruction: "Follow the setup instructions in setup-project-python-claude.md to the teeth."
+2. It copies `setup-project-python.md` from `~/scripts/ai-templates/project-setup/` to your project directory
+3. It invokes Claude Code with the instruction: "Follow the setup instructions in setup-project-python.md to the teeth."
 4. Claude Code reads the template and creates:
    - Complete project structure (`src/`, `scripts/`, `data/`, etc.)
    - `pyproject.toml` with Python 3.12+ requirements
    - `justfile` with `init`, `run`, and `help` recipes
    - `README.md` with project documentation
-   - `CLAUDE.md` with AI development rules
+   - `AGENTS.md` with AI agent development rules
+   - `CLAUDE.md` as a redirect to AGENTS.md
    - `src/main.py` with a working example
 5. The script cleans up the template file
 6. Your project is ready to use with `just init` and `just run`
@@ -166,7 +167,7 @@ Projects created with this template follow these principles:
 - **Strict directory structure**: `src/` for code, `scripts/` for utilities, `data/` for files
 - **Justfile workflow**: `just init`, `just run`, `just help`
 - **No placeholders**: Everything is immediately runnable
-- **CLAUDE.md rules**: AI-specific development guidelines for the project
+- **AGENTS.md rules**: AI-specific development guidelines for all AI agents working on the project
 
 ## Requirements
 

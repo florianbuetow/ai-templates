@@ -7,12 +7,13 @@ A collection of templates and prompts for AI-assisted development with Claude Co
 ```
 ai-templates/
 ├── project-setup/                              # Project bootstrapping templates
-│   ├── setup-project-python-claude.md         # Python project setup guide with uv
+│   ├── setup-project-python.md         # Python project setup guide with uv
 │   ├── setup-project-python-claude.sh         # Automated project creation script
 │   ├── setup_aliases.sh                       # Automated alias installation script
 │   └── README.md                              # Detailed documentation
 ├── justfile                                    # Quick setup commands
-├── CLAUDE.md                                   # Guidance for Claude Code when working in this repo
+├── AGENTS.md                                   # Guidance for AI agents when working in this repo
+├── CLAUDE.md                                   # Redirects to AGENTS.md (for Claude Code compatibility)
 ├── README.md                                   # This file
 └── .gitignore                                  # Git ignore patterns (Python, macOS)
 ```
@@ -21,7 +22,7 @@ ai-templates/
 
 ### Project Setup Templates
 
-- **[Python Project Setup](project-setup/setup-project-python-claude.md)** - Comprehensive guide for bootstrapping Python projects with Claude Code
+- **[Python Project Setup](project-setup/setup-project-python.md)** - Comprehensive guide for bootstrapping Python projects using AI agents
   - Uses `uv` for package management
   - Enforces Python 3.12+
   - Justfile-based workflow
@@ -79,7 +80,7 @@ You'll now have two aliases:
 If you prefer not to install aliases, you can use the templates directly:
 
 1. Navigate to the template directory
-2. Read the template file (e.g., `setup-project-python-claude.md`)
+2. Read the template file (e.g., `setup-project-python.md`)
 3. Copy the provided prompt
 4. Paste it into Claude Code with your specific requirements
 5. Follow the generated project instructions

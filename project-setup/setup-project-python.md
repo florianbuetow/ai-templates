@@ -1,14 +1,14 @@
 # Python Project Bootstrapping Guide
 
-This file contains instructions for creating a new Python project using Claude Code. After running these instructions and setting up your project, **delete this file**.
+This file contains instructions for creating a new Python project using AI agents and AI-assisted development tools. After running these instructions and setting up your project, **delete this file**.
 
 ---
 
 ## How to Use This Guide
 
 1. Copy the **Project Setup Prompt** below
-2. Paste it into Claude Code with your project name and description
-3. Claude Code will generate all necessary files
+2. Paste it into your AI assistant with your project name and description
+3. The AI will generate all necessary files
 4. Run `just init` to initialize the project
 5. **Delete this INIT.md file**
 
@@ -16,7 +16,7 @@ This file contains instructions for creating a new Python project using Claude C
 
 ## Project Setup Prompt
 
-Copy and customize this prompt when asking Claude Code to create a new Python project:
+Copy and customize this prompt when asking an AI assistant to create a new Python project:
 
 ```text
 You are an experienced Python developer and build engineer. Create a new Python project skeleton with the following requirements:
@@ -26,7 +26,7 @@ ROLE
 ==================================================
 Produce a minimal but clean project skeleton:
 - Complete directory tree structure
-- Full contents of all files (pyproject.toml, justfile, CLAUDE.md, src/main.py)
+- Full contents of all files (pyproject.toml, justfile, AGENTS.md, CLAUDE.md, src/main.py)
 - No placeholders - everything must be directly runnable
 - All instructions are strict requirements, especially regarding "uv" usage
 
@@ -55,6 +55,7 @@ project-name/
 ├── pyproject.toml
 ├── justfile
 ├── README.md
+├── AGENTS.md
 ├── CLAUDE.md
 ├── src/
 │   └── main.py
@@ -155,7 +156,8 @@ Example:
 project-name/
 ├── pyproject.toml          # Project dependencies and metadata
 ├── justfile                # Build and run commands
-├── CLAUDE.md               # AI development rules
+├── AGENTS.md               # AI agent development rules
+├── CLAUDE.md               # Claude Code compatibility (redirects to AGENTS.md)
 ├── README.md               # This file
 ├── src/                    # Source code
 │   └── main.py            # Main entry point
@@ -176,9 +178,11 @@ project-name/
    - Command-line options
 
 ==================================================
-CLAUDE.md
+AGENTS.md and CLAUDE.md
 ==================================================
-Create development rules file with:
+Create two files:
+
+1. **AGENTS.md** - Main AI agent development rules file with:
 
 Required sections:
 1. **Testing rules**:
@@ -213,6 +217,13 @@ Format:
 - Bullet lists for easy scanning
 - Be explicit about forbidden patterns
 
+2. **CLAUDE.md** - Simple redirect file:
+```markdown
+# CLAUDE.md
+
+You must read and follow [AGENTS.md](AGENTS.md)
+```
+
 ==================================================
 OUTPUT FORMAT
 ==================================================
@@ -224,6 +235,7 @@ Return in this order:
    - pyproject.toml
    - justfile
    - README.md
+   - AGENTS.md
    - CLAUDE.md
    - src/main.py
    - Any other files
@@ -233,9 +245,9 @@ Use proper code blocks with language hints.
 
 ---
 
-## What to Write in CLAUDE.md
+## What to Write in AGENTS.md
 
-CLAUDE.md is read by Claude Code to understand project-specific rules. It should contain:
+AGENTS.md is read by AI agents and AI-assisted development tools (such as Claude Code, Cursor IDE, GitHub Copilot, Windsurf, etc.) to understand project-specific rules. It should contain:
 
 ### Required Content
 
@@ -247,7 +259,7 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 **2. Git Commit Guidelines**
 - Never include AI attribution in commit messages
 - Keep commits professional and focused on changes
-- No "Generated with" or "Co-Authored-By: Claude" messages
+- No "Generated with" or "Co-Authored-By: [AI name]" messages
 
 **3. Testing Rules**
 - When to run tests (after every change)
@@ -292,10 +304,12 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 - When to skip processing
 - Performance considerations
 
-### CLAUDE.md Template
+### AGENTS.md Template
 
 ```markdown
 # Development Rules for [Project Name]
+
+This file provides guidance to AI agents and AI-assisted development tools when working with this project.
 
 ## General Coding Principles
 - **Never assume any default values anywhere**
@@ -304,8 +318,8 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 
 ## Git Commit Guidelines
 - **NEVER include AI attribution in commit messages**
-- **NEVER add "Generated with Claude Code" or similar phrases**
-- **NEVER add "Co-Authored-By: Claude" or similar attribution**
+- **NEVER add "Generated with [AI tool name]" or similar phrases**
+- **NEVER add "Co-Authored-By: [AI name]" or similar attribution**
 - **NEVER run `git add -A` or `git add .` - always stage files explicitly**
 - Keep commit messages professional and focused on the changes made
 - Commit messages should describe what changed and why, without mentioning AI assistance
@@ -372,9 +386,9 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 
 ---
 
-## What NOT to Put in CLAUDE.md
+## What NOT to Put in AGENTS.md
 
-- ❌ General Python best practices (Claude already knows these)
+- ❌ General Python best practices (AI agents already know these)
 - ❌ How to use standard libraries
 - ❌ Basic syntax rules
 - ❌ User documentation (belongs in README.md)
@@ -390,7 +404,7 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 4. **Organize by type** - Input by source type, output by result type
 5. **Handle errors gracefully** - Continue processing, track failures, report clearly
 6. **Skip unnecessary work** - Don't reprocess existing outputs
-7. **Document for your audience** - CLAUDE.md for AI, README.md for humans (must include directory tree with descriptions)
+7. **Document for your audience** - AGENTS.md for AI agents, README.md for humans (must include directory tree with descriptions)
 
 ---
 
@@ -398,6 +412,6 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 
 1. Run `just init` to initialize
 2. Run `just run` to verify setup (should print "Hello World")
-3. Customize CLAUDE.md with project-specific rules
+3. Customize AGENTS.md with project-specific rules
 4. **Delete this INIT.md file**
-5. Start developing following CLAUDE.md rules
+5. Start developing following AGENTS.md rules
