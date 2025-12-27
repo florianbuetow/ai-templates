@@ -1,0 +1,93 @@
+rules:
+  # Prohibit module-level primitive constant declarations
+  - id: xrag.no-module-level-constants
+    languages: [python]
+    message: >
+      Module-level primitive constants are prohibited.
+      Put them inside 'if __name__ == "__main__":' blocks for scripts and use config files and config classes for any production purpose.
+    severity: ERROR
+    patterns:
+      # Match module-level assignments
+      - pattern: $CONST = $VALUE
+      # Exclude assignments inside class definitions
+      - pattern-not-inside: |
+          class $CLASS:
+              ...
+      # Exclude assignments inside if __name__ == '__main__' blocks
+      - pattern-not-inside: |
+          if __name__ == "__main__":
+              ...
+      - pattern-not-inside: |
+          if __name__ == '__main__':
+              ...
+      # Exclude type annotations (these are not assignments)
+      - pattern-not: |
+          $VAR: $TYPE = ...
+      # Exclude function/method definitions
+      - pattern-not-inside: |
+          def $FUNC(...):
+              ...
+      # Exclude common module-level non-constant variables
+      - metavariable-pattern:
+          metavariable: $CONST
+          patterns:
+            - pattern-not-regex: '^(logger|_.*|__.*__)$'
+      # Exclude type aliases (Literal, Union, Optional, etc.)
+      - pattern-not: $VAR = Literal[...]
+      - pattern-not: $VAR = Union[...]
+      - pattern-not: $VAR = Optional[...]
+      # Exclude TypeVar and ParamSpec
+      - pattern-not: $VAR = TypeVar(...)
+      - pattern-not: $VAR = ParamSpec(...)
+      # Exclude Prometheus metrics
+      - pattern-not: $VAR = Counter(...)
+      - pattern-not: $VAR = Gauge(...)
+      - pattern-not: $VAR = Histogram(...)
+      - pattern-not: $VAR = Summary(...)
+      # Exclude application/framework instances
+      - pattern-not: $VAR = FastAPI(...)
+      - pattern-not: $VAR = Flask(...)
+      - pattern-not: $VAR = APIRouter(...)
+      - pattern-not: $VAR = Jinja2Templates(...)
+      # Exclude Path operations (including chained attribute/division operations)
+      - pattern-not: $VAR = ... / "$STR"
+      - pattern-not: $VAR = ... / $STR
+      - pattern-not: $VAR = Path(...)
+      - pattern-not: $VAR = $OBJ.parent
+      # Exclude template strings (usually UPPER_CASE and multiline)
+      - metavariable-pattern:
+          metavariable: $CONST
+          patterns:
+            - pattern-not-regex: '.*_TEMPLATE$'
+      # Exclude class/type aliases (direct assignment of a class/type name)
+      - metavariable-pattern:
+          metavariable: $VALUE
+          patterns:
+            - pattern-not-regex: '^[A-Z][a-zA-Z0-9]*$'
+      # Only match primitive literal values (not function calls, objects, etc.)
+      - metavariable-pattern:
+          metavariable: $VALUE
+          patterns:
+            - pattern-either:
+                - pattern: $INT
+                - pattern: $FLOAT
+                - pattern: "$STR"
+                - pattern: "True"
+                - pattern: "False"
+            # Exclude function calls, method calls, and complex expressions
+            - pattern-not: $FUNC(...)
+            - pattern-not: $OBJ.$METHOD
+            - pattern-not: $OBJ.$ATTR
+            - pattern-not: $OBJ[...]
+      # Exclude standard module metadata
+      - metavariable-regex:
+          metavariable: $CONST
+          regex: '^(?!(__all__|__version__|__author__|__email__|__license__|__name__|__file__|__doc__|T|K|V|TypeVar)).*'
+    paths:
+      include:
+        - "**/src/**/*.py"
+      exclude:
+        # Allow constants in test files
+        - "**/tests/**"
+        # Allow in generated code
+        - "**/src/proto_gen/**"

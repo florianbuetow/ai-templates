@@ -1,0 +1,15 @@
+:include .gitignore
+
+# Virtual environments (if not in .gitignore)
+.venv/
+venv/
+
+# Build artifacts
+build/
+dist/
+
+# Reports
+reports/
+
+# Cache directories
+.cache/

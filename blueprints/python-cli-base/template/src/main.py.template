@@ -1,0 +1,10 @@
+"""{{project_description}}."""
+
+
+def main() -> None:
+    """Main entry point."""
+    print("Hello from {{package_name}}!")
+
+
+if __name__ == "__main__":
+    main()

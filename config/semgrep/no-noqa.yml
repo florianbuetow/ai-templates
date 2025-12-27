@@ -1,0 +1,13 @@
+rules:
+  - id: python.no-noqa-for-typing
+    languages: [python]
+    severity: ERROR
+    message: |
+      Do not use '# noqa' to silence typing-related issues.
+      Fix the typing issue instead; if you cannot, explain why and propose a suppression-free refactor plan.
+    pattern-regex: '(?m)#\s*noqa(?::\s*.*)?'
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/

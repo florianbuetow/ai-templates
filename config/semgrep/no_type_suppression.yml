@@ -1,0 +1,61 @@
+rules:
+  - id: python.no-type-ignore
+    languages: [python]
+    severity: ERROR
+    message: |
+      Type-suppression is not allowed.
+      Do NOT add or keep: '# type: ignore' (including '[code]').
+      Fix the underlying typing issue instead: adjust annotations/signatures, add guards for Optional/Union,
+      correct generics/collections types, or refactor into typed helpers. If you believe suppression is required,
+      do not patch—explain why and propose a refactor that avoids suppression.
+    pattern-regex: '(?m)#\s*type:\s*ignore(\[[^\]]*\])?'
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/
+
+  - id: python.no-mypy-ignore-errors
+    languages: [python]
+    severity: ERROR
+    message: |
+      File-level type suppression is not allowed.
+      Do NOT add or keep: '# mypy: ignore-errors'.
+      Fix typing properly (signatures, guards, generics, helpers). If you cannot fix without suppression,
+      do not patch—explain the blocker and a suppression-free refactor plan.
+    pattern-regex: '(?m)^\s*#\s*mypy:\s*ignore-errors\b'
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/
+
+  - id: python.no-mypy-disable-error-code
+    languages: [python]
+    severity: ERROR
+    message: |
+      Disabling mypy error codes inline is not allowed.
+      Do NOT add or keep: '# mypy: disable-error-code=...'.
+      Fix the typing source (types, narrowing, generics, helpers). If unavoidable, do not patch—explain why
+      and propose a refactor that avoids suppression.
+    pattern-regex: '(?m)^\s*#\s*mypy:\s*disable-error-code\s*='
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/
+
+  - id: python.no-pyright-ignore
+    languages: [python]
+    severity: ERROR
+    message: |
+      Pyright suppression is not allowed.
+      Do NOT add or keep: '# pyright: ignore'.
+      Fix the underlying typing issue instead (types, narrowing, refactor). If you cannot fix without suppression,
+      do not patch—explain the blocker and a suppression-free refactor plan.
+    pattern-regex: '(?m)(^\s*#\s*pyright:\s*ignore\b|#\s*pyright:\s*ignore\b)'
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/

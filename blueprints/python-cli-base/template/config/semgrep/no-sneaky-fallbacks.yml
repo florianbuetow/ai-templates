@@ -1,0 +1,81 @@
+rules:
+  - id: xrag.no-conditional-expression-fallback
+    languages: [python]
+    message: >
+      Conditional expression with fallback value hides missing data.
+      Use explicit validation and raise an error when the value is expected but missing,
+      or use Optional types if the value is truly optional.
+    severity: ERROR
+    pattern: $VAR = $DICT[$KEY] if $KEY in $DICT else $DEFAULT
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/
+
+  - id: xrag.no-or-operator-fallback
+    languages: [python]
+    message: >
+      OR operator fallback hides None/empty values. Use explicit None checks
+      and raise an error when the value is expected but missing.
+
+      Example violations:
+        # WRONG - hides missing config with hardcoded default
+        endpoint = otlp_endpoint or os.getenv(
+            "OTEL_EXPORTER_OTLP_ENDPOINT",
+            "http://tempo.monitoring.svc.cluster.local:4317",
+        )
+
+        # STILL WRONG - removes hardcoded default, but 'or' still hides None
+        endpoint = otlp_endpoint or os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
+
+        # CORRECT - require explicit value, no fallbacks
+        endpoint = otlp_endpoint
+        if endpoint is None:
+            raise ValueError("otlp_endpoint is required")
+    severity: ERROR
+    pattern: $VAR = $EXPR or $DEFAULT
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/
+
+  - id: xrag.no-getattr-with-default
+    languages: [python]
+    message: >
+      getattr() with default value hides missing attributes.
+      Access attributes directly or use hasattr() with explicit error handling.
+    severity: ERROR
+    pattern: getattr($OBJ, $ATTR, $DEFAULT)
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/
+
+  - id: xrag.no-ternary-none-check-fallback
+    languages: [python]
+    message: >
+      Ternary expression with fallback for None check hides missing configuration.
+      Use explicit validation and raise an error when None is unexpected.
+    severity: WARNING
+    pattern: $VAR = $DEFAULT if $EXPR is None else $EXPR
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/
+
+  - id: xrag.no-walrus-or-fallback
+    languages: [python]
+    message: >
+      Walrus operator with fallback hides missing values.
+      Use explicit validation instead.
+    severity: ERROR
+    pattern: ($VAR := $EXPR) or $DEFAULT
+    paths:
+      include:
+        - src/
+      exclude:
+        - tests/

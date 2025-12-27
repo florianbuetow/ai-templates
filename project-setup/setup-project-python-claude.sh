@@ -1,71 +1,36 @@
 #!/bin/bash
 
-# Check if path parameter is provided
+# Check if target directory parameter is provided
 if [ -z "$1" ]; then
-  echo "Error: Project path parameter required"
-  echo "Usage: $0 <path>"
-  echo "  Use '.' for current directory"
-  echo "  Use a name to create a new subdirectory"
+  echo "Error: Target directory parameter required"
+  echo "Usage: $0 <target-directory>"
   exit 1
 fi
 
-# Check if claude CLI is available
-if ! command -v claude >/dev/null 2>&1; then
-  echo "✗ Error: claude CLI is not installed"
-  echo "  Please install Claude Code: https://claude.com/claude-code"
-  exit 1
-fi
-
-PROJECT_PATH="$1"
-
-# If path is not current directory, create it and cd into it
-if [ "$PROJECT_PATH" != "." ]; then
-  mkdir -p "$PROJECT_PATH"
-  if [ $? -ne 0 ]; then
-    echo "✗ Failed to create directory: $PROJECT_PATH"
-    exit 1
-  fi
-  cd "$PROJECT_PATH"
-  echo "✓ Created and entered directory: $PROJECT_PATH"
-fi
+TARGET_DIR="$1"
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATE_FILE="$SCRIPT_DIR/setup-project-python.md"
+SETUP_SCRIPT="$SCRIPT_DIR/setup-project.sh"
 
-# Check if template file exists locally
-if [ ! -f "$TEMPLATE_FILE" ]; then
-  echo "✗ Template file not found: $TEMPLATE_FILE"
-  echo "Please run setup_aliases.sh to install the templates repository."
+# Check if setup-project.sh exists
+if [ ! -f "$SETUP_SCRIPT" ]; then
+  echo "✗ Error: setup-project.sh not found: $SETUP_SCRIPT"
   exit 1
 fi
 
-# Copy the Python setup template to current directory
-echo "Copying setup template from local repository..."
-cp "$TEMPLATE_FILE" setup-project-python.md
+# Execute setup-project.sh with python-cli-base template
+"$SETUP_SCRIPT" --template python-cli-base --target "$TARGET_DIR"
 
-if [ $? -ne 0 ]; then
-  echo "✗ Failed to copy template file"
-  exit 1
-fi
+EXIT_CODE=$?
 
-echo "✓ Copied setup-project-python.md"
-
-# Run Claude with the setup instructions
-echo "Running Claude to set up the project..."
-claude "Follow the setup instructions in setup-project-python.md to the teeth."
-
-if [ $? -ne 0 ]; then
-  echo "✗ Claude command failed"
-  exit 1
-fi
-
-# Delete the setup file
-rm setup-project-python.md
-if [ $? -eq 0 ]; then
-  echo "✓ Cleaned up setup-project-python.md"
+if [ $EXIT_CODE -eq 0 ]; then
+  echo ""
+  echo "✓ Project setup complete!"
+  echo ""
 else
-  echo "⚠ Warning: Failed to delete setup-project-python.md"
+  echo ""
+  echo "✗ Project setup failed"
+  echo ""
+  exit $EXIT_CODE
 fi
-
-echo "✓ Project setup complete!"

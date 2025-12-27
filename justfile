@@ -7,9 +7,14 @@ help:
 	@clear
 	@echo ""
 	@echo "Available recipes:"
-	@echo "  just help    - Show this help message"
-	@echo "  just init    - Install templates and set up aliases"
-	@echo "  just update  - Update templates to latest version"
+	@echo "  just help                              - Show this help message"
+	@echo "  just init                              - Install templates and set up aliases"
+	@echo "  just update                            - Update templates to latest version"
+	@echo "  just create <template> <target-dir>    - Create new project from template"
+	@echo "  just test                              - Test Python CLI template generation"
+	@echo ""
+	@echo "Available templates:"
+	@echo "  python-cli-base                        - Python CLI application"
 	@echo ""
 
 # Install templates and set up aliases
@@ -84,3 +89,11 @@ update:
 		echo ""; \
 		exit 1; \
 	fi
+
+# Create new project from template
+create template-name target-dir=".":
+	@./project-setup/setup-project.sh --template {{template-name}} --target {{target-dir}}
+
+# Test the Python CLI template by generating a project in a temp folder
+test:
+	@./tests/test-template.sh

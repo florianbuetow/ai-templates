@@ -1,0 +1,37 @@
+# Domain-specific terms that codespell should ignore
+# One word per line, case-insensitive
+# Add new terms as false positives are discovered
+
+# Infrastructure & Tools
+grpc
+grpcio
+weaviate
+minio
+uvicorn
+haystack
+prometheus
+grafana
+kubectl
+kubernetes
+redis
+kafka
+aiokafka
+
+# Python & Libraries
+pydantic
+pytest
+mypy
+ruff
+fastapi
+openai
+httpx
+hiredis
+
+# Project-specific
+proto
+protobuf
+servicer
+
+# Technical terms
+uuid
+uuids
