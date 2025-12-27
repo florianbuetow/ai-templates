@@ -142,12 +142,12 @@ When you run `newpy my-project-name`:
 4. Claude Code reads the template and creates:
    - Complete project structure (`src/`, `scripts/`, `data/`, etc.)
    - `pyproject.toml` with Python 3.12+ requirements
-   - `Makefile` with `init`, `run`, and `help` targets
+   - `justfile` with `init`, `run`, and `help` recipes
    - `README.md` with project documentation
    - `CLAUDE.md` with AI development rules
    - `src/main.py` with a working example
 5. The script cleans up the template file
-6. Your project is ready to use with `make init` and `make run`
+6. Your project is ready to use with `just init` and `just run`
 
 ### Updating Templates
 
@@ -164,7 +164,7 @@ Projects created with this template follow these principles:
 - **Python 3.12+** as the minimum version
 - **uv exclusively** for package management (never `pip` or `python` directly)
 - **Strict directory structure**: `src/` for code, `scripts/` for utilities, `data/` for files
-- **Makefile workflow**: `make init`, `make run`, `make help`
+- **Justfile workflow**: `just init`, `just run`, `just help`
 - **No placeholders**: Everything is immediately runnable
 - **CLAUDE.md rules**: AI-specific development guidelines for the project
 
@@ -182,14 +182,14 @@ Create a new data analysis project:
 ```bash
 newpy data-analysis-tool
 cd data-analysis-tool
-make init
-make run
+just init
+just run
 ```
 
 Create a project in the current directory:
 ```bash
 mkdir my-project && cd my-project
 newpy .
-make init
-make run
+just init
+just run
 ```

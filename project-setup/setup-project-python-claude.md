@@ -9,7 +9,7 @@ This file contains instructions for creating a new Python project using Claude C
 1. Copy the **Project Setup Prompt** below
 2. Paste it into Claude Code with your project name and description
 3. Claude Code will generate all necessary files
-4. Run `make init` to initialize the project
+4. Run `just init` to initialize the project
 5. **Delete this INIT.md file**
 
 ---
@@ -26,7 +26,7 @@ ROLE
 ==================================================
 Produce a minimal but clean project skeleton:
 - Complete directory tree structure
-- Full contents of all files (pyproject.toml, Makefile, CLAUDE.md, src/main.py)
+- Full contents of all files (pyproject.toml, justfile, CLAUDE.md, src/main.py)
 - No placeholders - everything must be directly runnable
 - All instructions are strict requirements, especially regarding "uv" usage
 
@@ -53,7 +53,7 @@ Required structure:
 
 project-name/
 ├── pyproject.toml
-├── Makefile
+├── justfile
 ├── README.md
 ├── CLAUDE.md
 ├── src/
@@ -91,16 +91,23 @@ Must include:
 - No mention of pip anywhere
 
 ==================================================
-MAKEFILE
+JUSTFILE
 ==================================================
-Required targets:
+Configuration:
+- Set the default recipe to `--list` by adding at the top:
+  ```
+  _default:
+      @just --list
+  ```
 
-1. **help** (must be first/default target):
+Required recipes:
+
+1. **help**:
    - Clear screen with `@clear`
    - Print blank line
-   - List all targets with brief descriptions
+   - Display custom help information or call `just --list`
    - Print blank line at end
-   - Only target that may clear screen
+   - Only recipe that may clear screen
 
 2. **init**:
    - Create all necessary directories
@@ -112,15 +119,16 @@ Required targets:
    - Execute main program with `uv run src/main.py`
    - Never use `python` directly
 
-Optional targets (clean, test, etc.):
-- Document in `help` output
+Optional recipes (clean, test, etc.):
+- Add descriptive comments above each recipe
 - Use `uv run` for Python execution
 - Follow blank-line convention
 
 Conventions:
-- Every target: start and end with `@echo ""`
-- Use `.PHONY` for non-file targets
+- Every recipe: start and end with `@echo ""`
 - All descriptions in English
+- Use `@` prefix for silent commands
+- Add comments above recipes to document what they do
 
 ==================================================
 src/main.py
@@ -146,7 +154,7 @@ Example:
 ```
 project-name/
 ├── pyproject.toml          # Project dependencies and metadata
-├── Makefile                # Build and run commands
+├── justfile                # Build and run commands
 ├── CLAUDE.md               # AI development rules
 ├── README.md               # This file
 ├── src/                    # Source code
@@ -159,9 +167,9 @@ project-name/
 ```
 
 3. **Setup instructions**:
-   - How to initialize: `make init`
-   - How to run: `make run`
-   - Prerequisites (Python 3.12+, uv installed)
+   - How to initialize: `just init`
+   - How to run: `just run`
+   - Prerequisites (Python 3.12+, uv installed, just installed)
 
 4. **Usage** (if applicable):
    - Basic usage examples
@@ -175,7 +183,7 @@ Create development rules file with:
 Required sections:
 1. **Testing rules**:
    - Test after every code change
-   - Verify with `make run` after modifications
+   - Verify with `just run` after modifications
 
 2. **Python execution rules**:
    - Execute only via `uv run <script>`
@@ -183,9 +191,9 @@ Required sections:
    - Manage dependencies only through `uv` and `pyproject.toml`
    - FORBIDDEN: `python`, `python3`, `pip install`, `uv pip`
 
-3. **Makefile rules**:
+3. **Justfile rules**:
    - All Python execution uses `uv run`
-   - Reference `make init`, `make run`, `make help`
+   - Reference `just init`, `just run`
 
 4. **Project structure rules**:
    - Where code belongs (src/, scripts/, etc.)
@@ -214,7 +222,7 @@ Return in this order:
 2. Directory tree
 3. Complete file contents:
    - pyproject.toml
-   - Makefile
+   - justfile
    - README.md
    - CLAUDE.md
    - src/main.py
@@ -254,9 +262,9 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 - **FORBIDDEN**: `python`, `python3`, `pip install`, `uv pip`
 ```
 
-**5. Makefile Rules**
+**5. Justfile Rules**
 - All Python execution uses `uv run`
-- Reference key make targets
+- Reference key just recipes
 
 **6. File Handling**
 - How to read/write specific file types
@@ -304,7 +312,7 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 
 ## Testing
 - After **every change** to the code, the tests must be executed
-- Always verify the program runs correctly with `make run` after modifications
+- Always verify the program runs correctly with `just run` after modifications
 
 ## Python Execution Rules
 - Python code must be executed **only** via `uv run ...`
@@ -314,11 +322,12 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
   - **Never** use: `pip install`, `python -m pip`, or `uv pip`
 - All dependencies must be managed through `uv` and declared in `pyproject.toml`
 
-## Makefile Rules
-- All Python execution in the Makefile uses `uv run`, never `python` directly
-- Use `make init` to set up the project
-- Use `make run` to execute the main program
-- Use `make help` to see all available targets
+## Justfile Rules
+- All Python execution in the justfile uses `uv run`, never `python` directly
+- Use `just init` to set up the project
+- Use `just run` to execute the main program
+- Use `just help` to see all available recipes with descriptions
+- Use `just` (with no arguments) to see a list of all recipes
 
 ## File Handling
 - **[File Type 1]**: Read using [Library] with [specific configuration]
@@ -387,8 +396,8 @@ CLAUDE.md is read by Claude Code to understand project-specific rules. It should
 
 ## After Project Creation
 
-1. Run `make init` to initialize
-2. Run `make run` to verify setup (should print "Hello World")
+1. Run `just init` to initialize
+2. Run `just run` to verify setup (should print "Hello World")
 3. Customize CLAUDE.md with project-specific rules
 4. **Delete this INIT.md file**
 5. Start developing following CLAUDE.md rules

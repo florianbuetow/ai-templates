@@ -11,7 +11,7 @@ ai-templates/
 │   ├── setup-project-python-claude.sh         # Automated project creation script
 │   ├── setup_aliases.sh                       # Automated alias installation script
 │   └── README.md                              # Detailed documentation
-├── Makefile                                    # Quick setup commands
+├── justfile                                    # Quick setup commands
 ├── CLAUDE.md                                   # Guidance for Claude Code when working in this repo
 ├── README.md                                   # This file
 └── .gitignore                                  # Git ignore patterns (Python, macOS)
@@ -24,7 +24,7 @@ ai-templates/
 - **[Python Project Setup](project-setup/setup-project-python-claude.md)** - Comprehensive guide for bootstrapping Python projects with Claude Code
   - Uses `uv` for package management
   - Enforces Python 3.12+
-  - Makefile-based workflow
+  - Justfile-based workflow
   - Strict project structure conventions
 
 ## Prerequisites
@@ -33,9 +33,10 @@ Before installation, ensure you have the following installed:
 - **git** - Version control system
 - **python** - Python 3.12 or higher
 - **uv** - Python package manager ([installation guide](https://docs.astral.sh/uv/getting-started/installation/))
+- **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
 - **claude CLI** - Claude Code ([installation guide](https://claude.com/claude-code))
 
-The `make init` command will check for these prerequisites automatically.
+The `just init` command will check for these prerequisites automatically.
 
 ## Installation
 
@@ -56,11 +57,11 @@ cd ai-templates
 
 2. Run the setup:
 ```bash
-make init
+just init
 ```
 
 This will:
-- Check prerequisites (git, python, uv, claude CLI)
+- Check prerequisites (git, python, uv, just, claude CLI)
 - Ensure the repository is at `~/scripts/ai-templates` (clones or updates as needed)
 - Set up shell aliases in your RC file
 
@@ -90,8 +91,8 @@ After installation, creating a new Python project is as simple as:
 ```bash
 newpy my-awesome-project
 cd my-awesome-project
-make init
-make run
+just init
+just run
 ```
 
 To update your templates to the latest version:
@@ -100,7 +101,7 @@ To update your templates to the latest version:
 update-templates
 
 # Or, if you're in the ai-templates directory:
-make update
+just update
 ```
 
 ## Contributing
