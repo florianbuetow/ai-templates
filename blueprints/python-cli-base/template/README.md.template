@@ -112,6 +112,19 @@ just
 - `just ci` - Run all validation checks (verbose)
 - `just ci-quiet` - Run all checks (silent, fail-fast)
 
+The CI pipeline runs the following steps in order:
+1. `init` - Initialize environment
+2. `code-format` - Auto-format code
+3. `code-style` - Verify formatting
+4. `code-typecheck` - Type checking (mypy)
+5. `code-security` - Security scan (bandit)
+6. `code-deptry` - Dependency hygiene
+7. `code-spell` - Spell checking
+8. `code-semgrep` - Custom static analysis
+9. `code-audit` - Vulnerability scanning
+10. `test` - Unit tests
+11. `code-lspchecks` - Strict type checking (pyright)
+
 ## Project Rules
 
 See [AGENTS.md](AGENTS.md) for detailed development guidelines including:
