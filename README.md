@@ -1,6 +1,6 @@
 # AI Templates
 
-Production-ready Copier template for Python CLI applications with comprehensive validation infrastructure.
+Copier template for Python CLI applications designed to create an AI-agent-friendly codebase with comprehensive validation checks that guide AI assistants toward writing better, more maintainable code.
 
 ## Repository Structure
 
@@ -34,16 +34,29 @@ ai-templates/
 └── .gitignore                                  # Git ignore patterns
 ```
 
-## Features
+## Features: Guiding AI Agents to Better Code
 
-- **Full validation infrastructure**: ruff, mypy, pyright, bandit, semgrep, deptry, codespell, pip-audit
-- **11-step CI pipeline**: auto-format → style check → type check → security → tests
-- **Pre-commit hooks**: Automatically format and validate code before commits
-- **Custom semgrep rules**: Enforce explicit configuration, ban default values and type suppressions
-- **AI-ready**: Comprehensive AGENTS.md with development guidelines for AI assistants
+This template creates a development environment that actively guides AI assistants through:
+
+### Validation Guardrails
+- **11-step CI pipeline**: Auto-format → style → typecheck → security → tests
+  *Catches issues immediately and teaches patterns through fast feedback*
+- **Custom semgrep rules**: Ban default values, type suppressions, and fallback patterns
+  *Forces explicit configuration and proper error handling*
+- **Pre-commit hooks**: Auto-format and validate before every commit
+  *Prevents bad code from entering the repository*
+
+### AI-Specific Guidance
+- **Comprehensive AGENTS.md**: Development rules specifically written for AI assistants
+  *Teaches project conventions, forbidden patterns, and testing requirements*
+- **Explicit validation tools**: ruff, mypy, pyright, bandit, semgrep, deptry, codespell, pip-audit
+  *Each tool provides specific feedback to guide improvements*
+
+### Developer Experience
+- **Just task runner**: Simple commands for all development tasks (`just ci`, `just test`)
+  *AI agents can easily run validation and get immediate feedback*
 - **Python 3.12+** with **uv** package management
-- **Just task runner**: Simple commands for all development tasks
-- **Git worktree workflow**: Support for parallel development branches
+  *Modern tooling with clear conventions*
 
 See [code-validation-blueprint-guide.md](code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
 
@@ -68,21 +81,30 @@ cd ai-templates
 
 ### Creating a New Python CLI Project
 
-Using Copier (recommended):
+**Method 1: Using Copier directly (recommended)**
 
 ```bash
-copier copy blueprints/python-cli-base my-awesome-project
+copier copy /path/to/ai-templates/blueprints/python-cli-base my-awesome-project
 cd my-awesome-project
 just init
 just run
 ```
 
-Or using the convenience script:
+**Method 2: Using the just command**
+
+From the ai-templates directory:
 
 ```bash
 cd ai-templates
-just create python-cli-base my-project
+just create python-cli-base ~/projects/my-awesome-project
+cd ~/projects/my-awesome-project
+just init
+just run
 ```
+
+The `just create` command takes two arguments:
+1. Template name (e.g., `python-cli-base`)
+2. Target directory (absolute or relative path where the project will be created)
 
 ### Development Commands
 
