@@ -175,6 +175,7 @@ ci: ## Run ALL validation checks (verbose)
 	@echo "$(BLUE)=== Running CI Checks ===$(NC)"
 	@echo ""
 	@$(MAKE) init
+	@$(MAKE) code-format
 	@$(MAKE) code-style
 	@$(MAKE) code-typecheck
 	@$(MAKE) code-security
@@ -193,6 +194,8 @@ ci-quiet: ## Run ALL validation checks silently (only show output on errors)
 	@TMPFILE=$$(mktemp); \
 	$(MAKE) init > $$TMPFILE 2>&1 || { echo "$(RED)✗ Init failed$(NC)"; cat $$TMPFILE; rm $$TMPFILE; exit 1; }; \
 	echo "$(GREEN)✓ Init passed$(NC)"; \
+	$(MAKE) code-format > $$TMPFILE 2>&1 || { echo "$(RED)✗ Code-format failed$(NC)"; cat $$TMPFILE; rm $$TMPFILE; exit 1; }; \
+	echo "$(GREEN)✓ Code-format passed$(NC)"; \
 	$(MAKE) code-style > $$TMPFILE 2>&1 || { echo "$(RED)✗ Code-style failed$(NC)"; cat $$TMPFILE; rm $$TMPFILE; exit 1; }; \
 	echo "$(GREEN)✓ Code-style passed$(NC)"; \
 	$(MAKE) code-typecheck > $$TMPFILE 2>&1 || { echo "$(RED)✗ Code-typecheck failed$(NC)"; cat $$TMPFILE; rm $$TMPFILE; exit 1; }; \

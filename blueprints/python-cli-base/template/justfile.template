@@ -173,6 +173,7 @@ ci:
     echo "\033[0;34m=== Running CI Checks ===\033[0m"
     echo ""
     just init
+    just code-format
     just code-style
     just code-typecheck
     just code-security
@@ -196,6 +197,9 @@ ci-quiet:
 
     just init > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Init failed\033[0m"; cat $TMPFILE; exit 1; }
     echo "\033[0;32m✓ Init passed\033[0m"
+
+    just code-format > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-format failed\033[0m"; cat $TMPFILE; exit 1; }
+    echo "\033[0;32m✓ Code-format passed\033[0m"
 
     just code-style > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-style failed\033[0m"; cat $TMPFILE; exit 1; }
     echo "\033[0;32m✓ Code-style passed\033[0m"
