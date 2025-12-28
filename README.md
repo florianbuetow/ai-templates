@@ -1,4 +1,4 @@
-# AI Templates
+# AI Friendly Project Templates
 
 Copier template for Python CLI applications designed to create an AI-agent-friendly codebase with comprehensive validation checks that guide AI assistants toward writing better, more maintainable code.
 
