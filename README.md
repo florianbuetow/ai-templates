@@ -17,10 +17,23 @@ just run
 - **Pre-commit hooks** run full CI validation automatically before each commit
 - **Custom semgrep rules** ban default values, type suppressions, and sneaky fallback patterns
 - **AGENTS.md** provides AI assistants with project conventions and development rules
-- **Validation tools**: ruff, mypy, pyright, bandit, semgrep, deptry, codespell, pip-audit
 - **Python 3.12+** with uv package management
 - **Just task runner** with recipes for common tasks (init, run, test, ci, destroy)
 - **Test infrastructure** with pytest, coverage thresholds, and quality gates
+
+### Validation Tools
+
+| Tool | Purpose | Why It's Used |
+|------|---------|---------------|
+| **ruff** | Linting and formatting | Fast Python linter and formatter - replaces flake8, isort, and black |
+| **mypy** | Type checking | Static type checker for gradual typing - catches type errors before runtime |
+| **pyright** | Strict type checking | Microsoft's LSP-based type checker - stricter than mypy, catches more edge cases |
+| **bandit** | Security scanning | Finds common security issues in Python code (SQL injection, hardcoded passwords, etc.) |
+| **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
+| **deptry** | Dependency hygiene | Finds unused dependencies and missing imports |
+| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
+| **pip-audit** | Vulnerability scanning | Scans dependencies for known security vulnerabilities |
+| **pytest** | Testing framework | Unit testing with fixtures, parameterization, and coverage |
 
 See [code-validation-blueprint-guide.md](code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
 
@@ -45,18 +58,7 @@ cd ai-templates
 
 ### Creating a New Project
 
-**Method 1: Using Copier directly (recommended)**
-
-```bash
-copier copy /path/to/ai-templates/blueprints/python-cli-base my-awesome-project
-cd my-awesome-project
-just init
-just run
-```
-
-**Method 2: Using the just command**
-
-From the ai-templates directory:
+**Method 1: Using the just command (recommended)**
 
 ```bash
 cd ai-templates
@@ -70,29 +72,41 @@ The `just create` command takes two arguments:
 1. Template name (e.g., `python-cli-base`)
 2. Target directory (absolute or relative path where the project will be created)
 
-## Development
-
-### Testing the Template
-
-From the ai-templates directory:
+**Method 2: Using Copier directly**
 
 ```bash
+copier copy /path/to/ai-templates/blueprints/python-cli-base my-awesome-project
+cd my-awesome-project
+just init
+just run
+```
+
+## Development
+
+### Run Tests
+
+```bash
+cd ai-templates
 just test
 ```
 
 This will:
-1. Generate a test project from the template
+1. Generate a test project from each available template
 2. Verify all files are created correctly
 3. Run `just init`, `just run`, `just ci`, `just ci-quiet`, and `just destroy`
 4. Assert each step completes successfully
 5. Clean up the test project
 
-### Updating
+### Updating the Template Repository
+
+To get the latest template features, configurations, and fixes:
 
 ```bash
 cd ai-templates
-just update  # git pull
+just update
 ```
+
+This updates the ai-templates repository itself (via `git pull`). Existing projects created from the template are not affected.
 
 ## Repository Structure
 
