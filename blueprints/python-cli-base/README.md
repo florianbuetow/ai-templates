@@ -162,4 +162,3 @@ To modify this template:
 Based on:
 - [mjun0812/python-copier-template](https://github.com/mjun0812/python-copier-template)
 - ai-templates/project-setup/setup-project-python.md
-- ai-templates/code-validation-blueprint-guide.md

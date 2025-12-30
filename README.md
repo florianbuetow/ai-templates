@@ -1,6 +1,6 @@
 # AI Friendly Project Templates
 
-Copier template for Python CLI applications designed to create an AI-agent-friendly codebase with comprehensive validation checks that guide AI assistants toward writing better, more maintainable code.
+Copier template for Python CLI applications designed to create an AI-agent-friendly codebase with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
 
 ## Quick Start
 
@@ -35,7 +35,7 @@ just run
 | **pip-audit** | Vulnerability scanning | Scans dependencies for known security vulnerabilities |
 | **pytest** | Testing framework | Unit testing with fixtures, parameterization, and coverage |
 
-See [code-validation-blueprint-guide.md](code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
+See [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
 
 ## Prerequisites
 
@@ -132,7 +132,8 @@ ai-templates/
 ├── config/                                     # Shared validation configs
 │   ├── semgrep/                               # Custom semgrep rules
 │   └── codespell/                             # Spell check config
-├── code-validation-blueprint-guide.md          # Validation infrastructure guide
+├── docs/                                       # Documentation
+│   └── code-validation-blueprint-guide.md     # Validation infrastructure guide
 ├── justfile                                    # Quick setup commands
 ├── AGENTS.md                                   # Guidance for AI agents
 ├── CLAUDE.md                                   # Redirects to AGENTS.md
