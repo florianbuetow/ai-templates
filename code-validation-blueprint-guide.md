@@ -20,6 +20,7 @@ project/
 │   │   ├── no-sneaky-fallbacks.yml
 │   │   ├── no_type_suppression.yml
 │   │   ├── no-noqa.yml
+│   │   ├── no-mypy-ignore-missing-imports.yml
 │   │   └── python-constants.yml
 │   └── codespell/
 │       └── ignore.txt      # Domain-specific spell-check ignore list
@@ -756,6 +757,33 @@ rules:
         - src/
       exclude:
         - tests/
+```
+
+---
+
+### config/semgrep/no-mypy-ignore-missing-imports.yml
+
+Prevents ignoring missing imports in mypy configuration:
+
+```yaml
+rules:
+  - id: toml.no-ignore-missing-imports
+    languages: [generic]
+    severity: ERROR
+    message: |
+      Ignoring missing imports is not allowed in mypy configuration.
+      Do NOT add or keep: 'ignore_missing_imports = true' in [[tool.mypy.overrides]].
+      Install proper type stubs instead (types-*, stub packages, or py.typed markers).
+      If a library truly has no type information available, the proper solution is to:
+      1. Check if type stubs exist: `pip search types-<library>` or check typeshed
+      2. Install the stub package: add it to pyproject.toml dependencies
+      3. If no stubs exist, create a minimal stub file in your project
+      4. Consider contributing type stubs to typeshed or the upstream project
+      Silently ignoring missing imports defeats the purpose of static type checking.
+    pattern-regex: '(?m)^\s*ignore_missing_imports\s*=\s*true\b'
+    paths:
+      include:
+        - pyproject.toml
 ```
 
 ---

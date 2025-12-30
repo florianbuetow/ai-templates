@@ -52,6 +52,7 @@ blueprints/python-cli-base/
         │   ├── no-sneaky-fallbacks.yml
         │   ├── no_type_suppression.yml
         │   ├── no-noqa.yml
+        │   ├── no-mypy-ignore-missing-imports.yml
         │   └── python-constants.yml
         └── codespell/
             └── ignore.txt

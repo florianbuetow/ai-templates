@@ -171,6 +171,7 @@ main() {
     assert_file_exists "config/semgrep/no-sneaky-fallbacks.yml" "semgrep no-sneaky-fallbacks rule"
     assert_file_exists "config/semgrep/no_type_suppression.yml" "semgrep no_type_suppression rule"
     assert_file_exists "config/semgrep/no-noqa.yml" "semgrep no-noqa rule"
+    assert_file_exists "config/semgrep/no-mypy-ignore-missing-imports.yml" "semgrep no-mypy-ignore-missing-imports rule"
     assert_file_exists "config/semgrep/python-constants.yml" "semgrep python-constants rule"
     assert_file_exists "config/codespell/ignore.txt" "codespell ignore.txt"
 
