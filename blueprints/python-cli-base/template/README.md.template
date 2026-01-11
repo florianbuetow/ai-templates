@@ -15,6 +15,9 @@
 ├── AGENTS.md               # AI agent development rules
 ├── CLAUDE.md               # Claude Code compatibility (symlink to AGENTS.md)
 ├── README.md               # This file
+├── .cursor/                # Cursor IDE configuration
+│   └── commands/          # Cursor AI commands
+│       └── doc-statemachine.md  # Generate state machine diagrams
 ├── src/                    # Source code
 │   └── {{package_name}}/   # Main package
 │       └── __init__.py     # Package initialization

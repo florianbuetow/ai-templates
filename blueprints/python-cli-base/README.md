@@ -35,6 +35,9 @@ blueprints/python-cli-base/
     ├── README.md.template
     ├── AGENTS.md.template
     ├── CLAUDE.md -> AGENTS.md         # Symlink (created via _tasks)
+    ├── .cursor/
+    │   └── commands/
+    │       └── doc-statemachine.md    # Cursor AI command for state machine diagrams
     ├── src/
     │   ├── {{package_name}}/
     │   │   └── __init__.py
