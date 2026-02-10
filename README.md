@@ -37,6 +37,26 @@ just run
 
 See [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
 
+## Highly Recommended Companion Tools
+
+These two tools complement AI Templates and are strongly recommended for any AI-assisted development workflow.
+
+### [Guard](https://github.com/florianbuetow/guard) — Protect Files from AI Modifications
+
+When AI agents work on your codebase, they sometimes modify unrelated files in an attempt to "fix" cascading issues. Guard lets you lock down file permissions so that the AI simply cannot touch files you want left alone. Toggle protection on individual files, collections, or use interactive mode for a fast workflow.
+
+Use Guard alongside AI Templates to keep your project structure, configuration files, and critical modules safe while the AI works on the parts you want changed.
+
+### [Claude Code Plugins](https://github.com/florianbuetow/claude-code) — Code Quality and Project Planning Skills
+
+A collection of three Claude Code plugins that bring automated design analysis and specification writing into your workflow:
+
+- **SOLID Principles** — Audit any class or module against all five SOLID principles (SRP, OCP, LSP, ISP, DIP) with severity-rated findings and concrete refactoring suggestions.
+- **Beyond SOLID Principles** — Architecture-level analysis covering ten principles (Separation of Concerns, DRY, Law of Demeter, Loose Coupling, KISS, YAGNI, and more) for catching structural rot across module and service boundaries.
+- **Spec Writer** — Guided specification writing that produces five layered documents (Vision, Business Requirements, Software Requirements, Architecture, and Test Verification) through an interactive interview process.
+
+Use these plugins after scaffolding a project with AI Templates to maintain code quality as the codebase grows and to plan new features with proper specifications before writing code.
+
 ## Prerequisites
 
 - **git** - Version control system
