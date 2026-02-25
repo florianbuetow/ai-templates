@@ -1,5 +1,7 @@
 # AI Friendly Project Templates
 
+![Made with AI](https://img.shields.io/badge/Made%20with-AI-333333?labelColor=f00) ![Verified by Humans](https://img.shields.io/badge/Verified%20by-Humans-333333?labelColor=brightgreen)
+
 Copier template for Python CLI applications designed to create an AI-agent-friendly codebase with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
 
 ## Quick Start
@@ -13,7 +15,7 @@ just run
 
 ## Features
 
-- **11-step CI pipeline**: init → format → style → typecheck → security → deptry → spell → semgrep → audit → test → lspchecks
+- **12-step CI pipeline**: init → format → style → typecheck → security → deptry → spell → semgrep → audit → test → architecture → lspchecks
 - **Pre-commit hooks** run full CI validation automatically before each commit
 - **Custom semgrep rules** ban default values, type suppressions, and sneaky fallback patterns
 - **AGENTS.md** provides AI assistants with project conventions and development rules
@@ -33,6 +35,7 @@ just run
 | **deptry** | Dependency hygiene | Finds unused dependencies and missing imports |
 | **codespell** | Spell checking | Catches typos in code, comments, and documentation |
 | **pip-audit** | Vulnerability scanning | Scans dependencies for known security vulnerabilities |
+| **pytestarch** | Architecture constraints | Enforces import boundaries between layers - prevents architectural erosion |
 | **pytest** | Testing framework | Unit testing with fixtures, parameterization, and coverage |
 
 See [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
