@@ -36,6 +36,9 @@ dev = [
     "mypy>=1.7.0",
     "pyright>=1.1.0",
 
+    # Architecture
+    "pytestarch>=4.0.0",
+
     # Security & Quality
     "bandit[toml]>=1.7.8",
     "deptry>=0.20.0",
@@ -105,6 +108,9 @@ python_functions = ["test_*"]
 timeout = 30
 timeout_method = "thread"
 # pytest-randomly: randomize test order to catch hidden dependencies
+markers = [
+    "architecture: Architecture import rule tests",
+]
 
 [tool.mypy]
 python_version = "{{python_version}}"
@@ -200,7 +206,9 @@ ignore = []
 json_output = "reports/deptry/deptry.json"
 
 [tool.deptry.per_rule_ignores]
-# Add specific package ignores with comments explaining why
+DEP002 = [
+    "pytestarch",  # Used in tests/architecture/ only
+]
 
 [tool.codespell]
 # Paths to check

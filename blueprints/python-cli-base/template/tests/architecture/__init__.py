@@ -1,0 +1,1 @@
+"""Architecture import rule tests."""

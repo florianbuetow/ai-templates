@@ -143,6 +143,15 @@ code-semgrep:
     @echo "\033[0;32m✓ Semgrep checks passed\033[0m"
     @echo ""
 
+# Run architecture import rule tests
+code-architecture:
+    @echo ""
+    @echo "\033[0;34m=== Running Architecture Tests ===\033[0m"
+    @uv run pytest tests/architecture/ -v --tb=long -x
+    @echo ""
+    @echo "\033[0;32m✓ Architecture checks passed\033[0m"
+    @echo ""
+
 # Run unit tests only (fast)
 test:
     @echo ""
@@ -182,6 +191,7 @@ ci:
     just code-semgrep
     just code-audit
     just test
+    just code-architecture
     just code-lspchecks
     echo ""
     echo "\033[0;32m✓ All CI checks passed\033[0m"
@@ -224,6 +234,9 @@ ci-quiet:
 
     just test > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Test failed\033[0m"; cat $TMPFILE; exit 1; }
     echo "\033[0;32m✓ Test passed\033[0m"
+
+    just code-architecture > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-architecture failed\033[0m"; cat $TMPFILE; exit 1; }
+    echo "\033[0;32m✓ Code-architecture passed\033[0m"
 
     just code-lspchecks > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-lspchecks failed\033[0m"; cat $TMPFILE; exit 1; }
     echo "\033[0;32m✓ Code-lspchecks passed\033[0m"

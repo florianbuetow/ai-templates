@@ -24,6 +24,7 @@ _exclude:
 _skip_if_exists:
   - "src/main.py"
   - "tests/"
+  - "tests/architecture/test_architecture.py"
   - "data/input/"
   - "data/output/"
   - "scripts/"

@@ -1,0 +1,70 @@
+"""Architecture import rule tests for {{project_name}}.
+
+Add architectural boundary rules here as the project grows.
+Each test enforces one invariant about the import graph.
+
+See: https://github.com/zyskarch/pytestarch for the full API.
+
+Example rules to add as your project develops layers:
+
+    # Business logic must not import HTTP framework
+    def test_services_must_not_import_fastapi(evaluable):
+        (
+            Rule()
+            .modules_that()
+            .are_sub_modules_of("{{package_name}}.services")
+            .should_not()
+            .import_modules_that()
+            .have_name_matching(r"fastapi.*")
+            .assert_applies(evaluable)
+        )
+
+    # Config must be self-contained
+    def test_config_must_not_import_services(evaluable):
+        (
+            Rule()
+            .modules_that()
+            .are_named("{{package_name}}.config")
+            .should_not()
+            .import_modules_that()
+            .are_sub_modules_of("{{package_name}}.services")
+            .assert_applies(evaluable)
+        )
+"""
+
+from __future__ import annotations
+
+import pytest
+from pytestarch import EvaluableArchitecture, Rule
+
+# Mark all tests in this module as architecture tests
+pytestmark = pytest.mark.architecture
+
+
+# ---------------------------------------------------------------------------
+# Smoke test: verify pytestarch can scan the codebase
+# ---------------------------------------------------------------------------
+
+
+def test_evaluable_is_configured(evaluable: EvaluableArchitecture) -> None:
+    """Verify the evaluable architecture graph was built successfully.
+
+    This smoke test ensures pytestarch scans the project without errors.
+    Replace this with a proper canary test once the project has real imports:
+
+        (
+            Rule()
+            .modules_that()
+            .are_named("{{package_name}}.app")
+            .should()
+            .import_modules_that()
+            .are_named("{{package_name}}.config")
+            .assert_applies(evaluable)
+        )
+    """
+    assert evaluable is not None
+
+
+# ---------------------------------------------------------------------------
+# Add your architecture rules below
+# ---------------------------------------------------------------------------
