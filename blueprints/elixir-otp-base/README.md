@@ -16,8 +16,11 @@ Production-ready Copier template for Elixir OTP applications with full validatio
 | **mix format** | Formatting | Built-in code formatter - enforces consistent Elixir code style |
 | **Credo** | Linting | Static analysis for code consistency, readability, and refactoring opportunities (strict mode) |
 | **Dialyxir** | Type checking | Erlang Dialyzer wrapper - catches type errors, unreachable code, and spec violations |
+| **mix compile** | LSP analysis | Compiler warnings-as-errors catches unused variables, imports, aliases, and deprecated calls |
 | **Sobelow** | Security scanning | Finds security issues in Elixir code (SQL injection, XSS, directory traversal, etc.) |
+| **mix deps** | Dependency hygiene | Detects unused dependencies and lock file drift |
 | **codespell** | Spell checking | Catches typos in code, comments, and documentation |
+| **Custom Credo checks** | Custom rules | Bans default parameters, fallback operators, Map.get defaults, and Dialyzer suppression |
 | **mix_audit** | Vulnerability scanning | Scans Hex dependencies for known security vulnerabilities |
 | **ExUnit** | Testing framework | Built-in testing with coverage support and async test execution |
 

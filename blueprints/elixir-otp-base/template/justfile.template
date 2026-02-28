@@ -62,6 +62,13 @@ check:
         exit 1; \
     fi
     @printf "\033[0;32m✓ mix is installed\033[0m\n"
+    @if ! command -v codespell >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: codespell is not installed\033[0m\n"; \
+        printf "  Install with: brew install codespell\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ codespell is installed\033[0m\n"
     @echo ""
 
 # Initialize the development environment
@@ -134,17 +141,32 @@ code-security:
     @echo "\033[0;32m✓ Security checks passed\033[0m"
     @echo ""
 
+# Check dependency hygiene
+code-deptry:
+    @echo ""
+    @echo "\033[0;34m=== Checking Dependencies ===\033[0m"
+    @mix deps.unlock --check-unused
+    @mix deps.get --check-locked
+    @echo ""
+    @echo "\033[0;32m✓ Dependency checks passed\033[0m"
+    @echo ""
+
 # Check spelling in code and documentation
 code-spell:
     @echo ""
     @echo "\033[0;34m=== Checking Spelling ===\033[0m"
-    @if command -v codespell >/dev/null 2>&1; then \
-        codespell lib/ test/ config/ *.md *.exs --ignore-words=config/codespell/ignore.txt --skip="_build,deps,*.lock"; \
-    else \
-        echo "⚠ codespell not installed, skipping (install with: brew install codespell)"; \
-    fi
+    @codespell lib/ test/ config/ *.md *.exs --ignore-words=config/codespell/ignore.txt --skip="_build,deps,*.lock"
     @echo ""
     @echo "\033[0;32m✓ Spelling checks passed\033[0m"
+    @echo ""
+
+# Run custom Credo checks (equivalent to semgrep in other templates)
+code-semgrep:
+    @echo ""
+    @echo "\033[0;34m=== Running Custom Static Analysis ===\033[0m"
+    @mix credo --strict --checks Credo.Check.Custom.NoDefaultParameterValues,Credo.Check.Custom.NoFallbackOperator,Credo.Check.Custom.NoMapGetDefault,Credo.Check.Custom.NoDialyzerSuppress
+    @echo ""
+    @echo "\033[0;32m✓ Custom checks passed\033[0m"
     @echo ""
 
 # Scan dependencies for known vulnerabilities
@@ -164,6 +186,15 @@ test:
     @mix test --cover --warnings-as-errors
     @echo ""
 
+# Run strict compiler checks (LSP-equivalent analysis)
+code-lspchecks:
+    @echo ""
+    @echo "\033[0;34m=== Running Compiler Checks ===\033[0m"
+    @mix compile --force --warnings-as-errors --all-warnings
+    @echo ""
+    @echo "\033[0;32m✓ Compiler checks passed\033[0m"
+    @echo ""
+
 # Run ALL validation checks (verbose)
 ci:
     #!/usr/bin/env bash
@@ -177,9 +208,12 @@ ci:
     just code-lint
     just code-typecheck
     just code-security
+    just code-deptry
     just code-spell
+    just code-semgrep
     just code-audit
     just test
+    just code-lspchecks
     echo ""
     echo "\033[0;32m✓ All CI checks passed\033[0m"
     echo ""
@@ -210,14 +244,23 @@ ci-quiet:
     just code-security > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-security failed\033[0m"; cat $TMPFILE; exit 1; }
     echo "\033[0;32m✓ Code-security passed\033[0m"
 
+    just code-deptry > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-deptry failed\033[0m"; cat $TMPFILE; exit 1; }
+    echo "\033[0;32m✓ Code-deptry passed\033[0m"
+
     just code-spell > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-spell failed\033[0m"; cat $TMPFILE; exit 1; }
     echo "\033[0;32m✓ Code-spell passed\033[0m"
+
+    just code-semgrep > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-semgrep failed\033[0m"; cat $TMPFILE; exit 1; }
+    echo "\033[0;32m✓ Code-semgrep passed\033[0m"
 
     just code-audit > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-audit failed\033[0m"; cat $TMPFILE; exit 1; }
     echo "\033[0;32m✓ Code-audit passed\033[0m"
 
     just test > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Test failed\033[0m"; cat $TMPFILE; exit 1; }
     echo "\033[0;32m✓ Test passed\033[0m"
+
+    just code-lspchecks > $TMPFILE 2>&1 || { echo "\033[0;31m✗ Code-lspchecks failed\033[0m"; cat $TMPFILE; exit 1; }
+    echo "\033[0;32m✓ Code-lspchecks passed\033[0m"
 
     echo ""
     echo "\033[0;32m✓ All CI checks passed\033[0m"

@@ -19,7 +19,12 @@
 │   └── codespell/          # Spell-check configuration
 │       └── ignore.txt      # Spell-check ignore list
 ├── lib/                    # Source code
-│   └── {{app_name}}.ex     # Main module
+│   ├── {{app_name}}.ex     # Main module
+│   └── credo/check/        # Custom Credo checks (static analysis rules)
+│       ├── no_default_parameter_values.ex
+│       ├── no_fallback_operator.ex
+│       ├── no_map_get_default.ex
+│       └── no_dialyzer_suppress.ex
 └── test/                   # Test files
     ├── test_helper.exs     # Test configuration
     └── {{app_name}}_test.exs # Main module tests
@@ -74,8 +79,11 @@ just help
 - `just code-lint` - Run Credo static analysis (strict)
 - `just code-typecheck` - Run Dialyzer type checking
 - `just code-security` - Run Sobelow security scan
+- `just code-deptry` - Check dependency hygiene
 - `just code-spell` - Check spelling
+- `just code-semgrep` - Run custom static analysis checks
 - `just code-audit` - Scan for dependency vulnerabilities
+- `just code-lspchecks` - Run strict compiler checks
 
 ### Testing
 
@@ -93,9 +101,12 @@ The CI pipeline runs the following steps in order:
 4. `code-lint` - Credo static analysis
 5. `code-typecheck` - Dialyzer type checking
 6. `code-security` - Sobelow security scan
-7. `code-spell` - Spell checking
-8. `code-audit` - Dependency vulnerability scanning
-9. `test` - Unit tests with coverage
+7. `code-deptry` - Dependency hygiene
+8. `code-spell` - Spell checking
+9. `code-semgrep` - Custom static analysis checks
+10. `code-audit` - Dependency vulnerability scanning
+11. `test` - Unit tests with coverage
+12. `code-lspchecks` - Strict compiler checks
 
 ## Project Rules
 

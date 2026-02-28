@@ -8,9 +8,17 @@ defmodule {{module_name}}.MixProject do
       elixir: "~> {{elixir_version}}",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      test_coverage: [threshold: {{coverage_threshold}}],
+      test_coverage: [
+        threshold: {{coverage_threshold}},
+        ignore_modules: [
+          Credo.Check.Custom.NoDefaultParameterValues,
+          Credo.Check.Custom.NoFallbackOperator,
+          Credo.Check.Custom.NoMapGetDefault,
+          Credo.Check.Custom.NoDialyzerSuppress
+        ]
+      ],
       dialyzer: [
-        plt_add_apps: [:mix, :ex_unit],
+        plt_add_apps: [:mix, :ex_unit, :credo],
         flags: [:error_handling, :underspecs, :unmatched_returns]
       ]
     ]

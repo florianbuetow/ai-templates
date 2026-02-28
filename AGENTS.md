@@ -43,6 +43,6 @@ This repository contains Copier templates for AI-agent-friendly project scaffold
 ### The Elixir OTP Template (`blueprints/elixir-otp-base`)
 
 - Elixir 1.17+ with Mix build tool
-- Validation: mix format, Credo, Dialyxir, semgrep, codespell, mix audit, ExUnit
+- Validation: mix format, Credo, Dialyxir, mix compile --warnings-as-errors, Sobelow, mix deps.unlock --check-unused, codespell, custom Credo checks, mix audit, ExUnit
 
 All templates emphasize creating immediately runnable projects with no placeholders, comprehensive CI pipelines, and AGENTS.md/CLAUDE.md files for AI agent guidance.

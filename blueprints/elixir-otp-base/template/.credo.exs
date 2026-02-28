@@ -7,7 +7,7 @@
         excluded: [~r"/_build/", ~r"/deps/"]
       },
       plugins: [],
-      requires: [],
+      requires: ["lib/credo/**/*.ex"],
       strict: true,
       parse_timeout: 5000,
       color: true,
@@ -71,7 +71,12 @@
           {Credo.Check.Warning.UnusedRegexOperation, []},
           {Credo.Check.Warning.UnusedStringOperation, []},
           {Credo.Check.Warning.UnusedTupleOperation, []},
-          {Credo.Check.Warning.WrongTestFileExtension, []}
+          {Credo.Check.Warning.WrongTestFileExtension, []},
+          # Custom checks (equivalent to semgrep rules in other templates)
+          {Credo.Check.Custom.NoDefaultParameterValues, []},
+          {Credo.Check.Custom.NoFallbackOperator, []},
+          {Credo.Check.Custom.NoMapGetDefault, []},
+          {Credo.Check.Custom.NoDialyzerSuppress, []}
         ]
       }
     }
