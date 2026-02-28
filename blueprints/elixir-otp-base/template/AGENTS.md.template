@@ -1,0 +1,56 @@
+# Development Rules for {{project_name}}
+
+This file provides guidance to AI agents and AI-assisted development tools when working with this project. This includes Claude Code, Cursor IDE, GitHub Copilot, Windsurf, and any other AI coding assistants.
+
+## General Coding Principles
+- **Never assume any default values anywhere**
+- Always be explicit about values, paths, and configurations
+- If a value is not provided, handle it explicitly (raise error, return error tuple, or prompt for input)
+
+## Git Commit Guidelines
+
+**IMPORTANT:** When creating git commits in this repository:
+- **NEVER include AI attribution in commit messages**
+- **NEVER add "Generated with [AI tool name]" or similar phrases**
+- **NEVER add "Co-Authored-By: [AI name]" or similar attribution**
+- **NEVER run `git add -A` or `git add .` - always stage files explicitly**
+- Keep commit messages professional and focused on the changes made
+- Commit messages should describe what changed and why, without mentioning AI assistance
+- **ALWAYS run `git push` after creating a commit to push changes to the remote repository**
+
+## Testing
+- After **every change** to the code, the tests must be executed
+- Always verify the program runs correctly with `just run` after modifications
+
+## Elixir Execution Rules
+- Elixir code must be executed **only** via `mix` tasks
+  - Example: `mix run -e "{{module_name}}.main()"`
+  - **Never** use: `elixir lib/something.ex` directly
+- Dependencies must be fetched **only** via `mix deps.get`
+  - **Never** manually download or copy dependency code
+- All dependencies must be declared in `mix.exs`
+
+## Justfile Rules
+- All Elixir execution in the justfile uses `mix`, never `elixir` directly
+- Use `just init` to set up the project
+- Use `just run` to execute the main program
+- Use `just destroy` to remove build artifacts and dependencies
+- Use `just help` to see all available recipes with descriptions
+- Use `just` (with no arguments) to see a list of all recipes
+- Use `just ci` to run all validation checks (verbose)
+- Use `just ci-quiet` to run all validation checks (silent, fail-fast)
+
+## Project Structure
+- All source code lives in `lib/`
+- All tests live in `test/`
+- Configuration files go in `config/`
+- **Never create `.ex` or `.exs` files in the project root directory**
+  - Wrong: `./helper.ex`, `./script.exs`
+  - Correct: `./lib/helper.ex`, `./test/helper_test.exs`
+
+## Error Handling
+- Use tagged tuples for error handling: `{:ok, result}` and `{:error, reason}`
+- Use `with` chains for multi-step operations that may fail
+- Always pattern match on error tuples, never ignore them
+- Scripts should track and report success/failure counts
+- Exit with non-zero status if any operations failed

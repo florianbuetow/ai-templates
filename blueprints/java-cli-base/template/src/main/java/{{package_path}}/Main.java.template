@@ -1,0 +1,12 @@
+package {{package_name}};
+
+/** {{project_description}}. */
+public final class Main {
+
+  private Main() {}
+
+  /** Main entry point. */
+  public static void main(String[] args) {
+    System.out.println("Hello from {{project_name}}!");
+  }
+}

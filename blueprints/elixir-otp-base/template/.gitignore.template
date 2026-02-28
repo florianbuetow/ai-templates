@@ -1,0 +1,32 @@
+# Build artifacts
+/_build/
+/deps/
+
+# Generated on crash or on exit
+erl_crash.dump
+
+# Mix archives
+/archives/
+
+# Dialyzer PLTs
+/priv/plts/
+*.plt
+*.plt.hash
+
+# Coverage
+/cover/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Copier answers file
+.copier-answers.yml

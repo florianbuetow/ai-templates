@@ -1,0 +1,110 @@
+# {{project_name}}
+
+{{project_description}}
+
+## Repository Structure
+
+```
+{{project_name}}/
+├── mix.exs                 # Project dependencies and metadata
+├── .formatter.exs          # Elixir formatter configuration
+├── .credo.exs              # Credo linting configuration
+├── .gitignore              # Git ignore patterns
+├── justfile                # Task runner with build/test/validation commands
+├── AGENTS.md               # AI agent development rules
+├── CLAUDE.md               # Claude Code compatibility (symlink to AGENTS.md)
+├── README.md               # This file
+├── config/                 # Configuration files
+│   ├── config.exs          # Application config (git hooks, etc.)
+│   └── codespell/          # Spell-check configuration
+│       └── ignore.txt      # Spell-check ignore list
+├── lib/                    # Source code
+│   └── {{app_name}}.ex     # Main module
+└── test/                   # Test files
+    ├── test_helper.exs     # Test configuration
+    └── {{app_name}}_test.exs # Main module tests
+```
+
+## Prerequisites
+
+- **Elixir {{elixir_version}}+** - Programming language
+- **Erlang/OTP 26+** - Runtime platform
+- **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
+- **codespell** - Spell checker (optional, `brew install codespell` or `pip install codespell`)
+
+## Setup
+
+Initialize the project environment:
+
+```bash
+just init
+```
+
+This will:
+- Fetch all dependencies via `mix deps.get`
+- Compile the project via `mix compile`
+
+## Usage
+
+Run the main application:
+
+```bash
+just run
+```
+
+See all available commands:
+
+```bash
+just help
+```
+
+## Development
+
+### Available Commands
+
+- `just init` - Initialize development environment
+- `just run` - Run the main application
+- `just destroy` - Remove build artifacts and dependencies
+- `just help` - Show available commands
+
+### Code Quality
+
+- `just code-style` - Check code formatting (read-only)
+- `just code-format` - Auto-format code
+- `just code-lint` - Run Credo static analysis (strict)
+- `just code-typecheck` - Run Dialyzer type checking
+- `just code-security` - Run Sobelow security scan
+- `just code-spell` - Check spelling
+- `just code-audit` - Scan for dependency vulnerabilities
+
+### Testing
+
+- `just test` - Run tests with coverage ({{coverage_threshold}}% threshold)
+
+### CI
+
+- `just ci` - Run all validation checks (verbose)
+- `just ci-quiet` - Run all checks (silent, fail-fast)
+
+The CI pipeline runs the following steps in order:
+1. `init` - Initialize environment
+2. `code-format` - Auto-format code
+3. `code-style` - Verify formatting
+4. `code-lint` - Credo static analysis
+5. `code-typecheck` - Dialyzer type checking
+6. `code-security` - Sobelow security scan
+7. `code-spell` - Spell checking
+8. `code-audit` - Dependency vulnerability scanning
+9. `test` - Unit tests with coverage
+
+## Project Rules
+
+See [AGENTS.md](AGENTS.md) for detailed development guidelines including:
+- Elixir execution rules (use `mix` exclusively)
+- Git commit guidelines (no AI attribution)
+- Testing requirements
+- Project structure conventions
+
+## License
+
+<!-- Add your license here -->
