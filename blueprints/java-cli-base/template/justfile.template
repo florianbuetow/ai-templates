@@ -1,0 +1,276 @@
+# =============================================================================
+# Justfile Rules (follow these when editing justfile):
+#
+# 1. Use printf (not echo) to print colors — some terminals won't render
+#    colors with echo.
+#
+# 2. Always add an empty `@echo ""` line before and after each target's
+#    command block.
+#
+# 3. Always add new targets to the help section and update it when targets
+#    are added, modified or removed.
+#
+# 4. Target ordering in help (and in this file) matters:
+#    - Setup targets first (init, setup, install, etc.)
+#    - Start/stop/run targets next
+#    - Code generation / data tooling targets next
+#    - Checks, linting, and tests next (ordered fastest to slowest)
+#    Group related targets together and separate groups with an empty
+#    `@echo ""` line in the help output.
+#
+# 5. Composite targets (e.g. ci) that call multiple sub-targets must fail
+#    fast: exit 1 on the first error. Never skip over errors or warnings.
+#    Use `set -e` or `&&` chaining to ensure immediate abort with the
+#    appropriate error message.
+#
+# 6. Every target must end with a clear short status message:
+#    - On success: green (\033[32m) message confirming completion.
+#      E.g. printf "\033[32m✓ init completed successfully\033[0m\n"
+#    - On failure: red (\033[31m) message indicating what failed, then exit 1.
+#      E.g. printf "\033[31m✗ ci failed: tests exited with errors\033[0m\n"
+# =============================================================================
+
+# Default recipe: show available commands
+_default:
+    @just --list
+
+# Check prerequisites
+check:
+    @echo ""
+    @if ! command -v java >/dev/null 2>&1; then \
+        printf "\033[31m✗ Error: java is not installed\033[0m\n"; \
+        printf "  Please install JDK {{java_version}}+: https://adoptium.net/\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[32m✓ java is installed\033[0m\n"
+    @if [ ! -f "./gradlew" ]; then \
+        printf "\033[31m✗ Error: Gradle wrapper (gradlew) not found\033[0m\n"; \
+        printf "  Run this from the project root directory\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[32m✓ gradlew is available\033[0m\n"
+    @if ! command -v codespell >/dev/null 2>&1; then \
+        printf "\033[31m✗ Error: codespell is not installed\033[0m\n"; \
+        printf "  Install with: pip install codespell\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[32m✓ codespell is installed\033[0m\n"
+    @if ! command -v semgrep >/dev/null 2>&1; then \
+        printf "\033[31m✗ Error: semgrep is not installed\033[0m\n"; \
+        printf "  Install with: pip install semgrep\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[32m✓ semgrep is installed\033[0m\n"
+    @echo ""
+
+# Show help information
+help:
+    @echo ""
+    @printf "\033[1m{{project_name}} - Available commands:\033[0m\n"
+    @echo ""
+    @printf "  \033[36mcheck\033[0m              Check prerequisites (java, gradlew, codespell, semgrep)\n"
+    @printf "  \033[36minit\033[0m               Initialize the development environment\n"
+    @printf "  \033[36mrun\033[0m                Run the main application\n"
+    @printf "  \033[36mdestroy\033[0m            Clean build artifacts\n"
+    @printf "  \033[36mhelp\033[0m               Show this help message\n"
+    @echo ""
+    @printf "  \033[36mcode-format\033[0m        Auto-format code (google-java-format via Spotless)\n"
+    @printf "  \033[36mcode-style\033[0m         Check code style (Checkstyle)\n"
+    @printf "  \033[36mcode-typecheck\033[0m     Compile with Error Prone checks\n"
+    @printf "  \033[36mcode-security\033[0m      Run security checks (SpotBugs + Find Security Bugs)\n"
+    @printf "  \033[36mcode-deptry\033[0m        Check dependency hygiene\n"
+    @printf "  \033[36mcode-spell\033[0m         Check spelling (codespell)\n"
+    @printf "  \033[36mcode-semgrep\033[0m       Run custom static analysis (Semgrep)\n"
+    @printf "  \033[36mcode-audit\033[0m         Scan for CVEs (OWASP Dependency-Check)\n"
+    @printf "  \033[36mcode-architecture\033[0m  Run ArchUnit architecture tests\n"
+    @echo ""
+    @printf "  \033[36mtest\033[0m               Run unit tests\n"
+    @printf "  \033[36mtest-coverage\033[0m      Run tests with coverage ({{coverage_threshold}}%% threshold)\n"
+    @echo ""
+    @printf "  \033[36mci\033[0m                 Run ALL validation checks (verbose)\n"
+    @printf "  \033[36mci-quiet\033[0m           Run ALL validation checks (silent, fail-fast)\n"
+    @echo ""
+
+# Initialize the development environment
+init: check
+    @echo ""
+    @printf "\033[34m=== Initializing Development Environment ===\033[0m\n"
+    @./gradlew dependencies --quiet
+    @printf "\033[32m✓ init completed successfully\033[0m\n"
+    @echo ""
+
+# Run the main application
+run:
+    @echo ""
+    @printf "\033[34m=== Running Application ===\033[0m\n"
+    @./gradlew run --quiet --console=plain
+    @printf "\033[32m✓ run completed successfully\033[0m\n"
+    @echo ""
+
+# Clean build artifacts
+destroy:
+    @echo ""
+    @printf "\033[34m=== Cleaning Build Artifacts ===\033[0m\n"
+    @./gradlew clean --quiet
+    @rm -rf .gradle
+    @printf "\033[32m✓ destroy completed successfully\033[0m\n"
+    @echo ""
+
+# Auto-format code with google-java-format (via Spotless)
+code-format:
+    @echo ""
+    @printf "\033[34m=== Formatting Code ===\033[0m\n"
+    @./gradlew spotlessApply --quiet
+    @printf "\033[32m✓ code-format completed successfully\033[0m\n"
+    @echo ""
+
+# Check code style with Checkstyle (read-only)
+code-style:
+    @echo ""
+    @printf "\033[34m=== Checking Code Style ===\033[0m\n"
+    @./gradlew checkstyleMain checkstyleTest --quiet
+    @printf "\033[32m✓ code-style completed successfully\033[0m\n"
+    @echo ""
+
+# Compile with Error Prone for enhanced type/bug checking
+code-typecheck:
+    @echo ""
+    @printf "\033[34m=== Running Type Checks (Error Prone) ===\033[0m\n"
+    @./gradlew compileJava compileTestJava --quiet
+    @printf "\033[32m✓ code-typecheck completed successfully\033[0m\n"
+    @echo ""
+
+# Run security checks with SpotBugs + Find Security Bugs
+code-security:
+    @echo ""
+    @printf "\033[34m=== Running Security Checks ===\033[0m\n"
+    @./gradlew spotbugsMain --quiet
+    @printf "\033[32m✓ code-security completed successfully\033[0m\n"
+    @echo ""
+
+# Check dependency hygiene
+code-deptry:
+    @echo ""
+    @printf "\033[34m=== Checking Dependencies ===\033[0m\n"
+    @./gradlew buildHealth --quiet
+    @printf "\033[32m✓ code-deptry completed successfully\033[0m\n"
+    @echo ""
+
+# Check spelling in code and documentation
+code-spell:
+    @echo ""
+    @printf "\033[34m=== Checking Spelling ===\033[0m\n"
+    @codespell src config scripts prompts *.md *.kts *.properties --ignore-words=config/codespell/ignore.txt
+    @printf "\033[32m✓ code-spell completed successfully\033[0m\n"
+    @echo ""
+
+# Run Semgrep static analysis with custom rules
+code-semgrep:
+    @echo ""
+    @printf "\033[34m=== Running Semgrep Static Analysis ===\033[0m\n"
+    @semgrep --config config/semgrep/ --error src/main/
+    @printf "\033[32m✓ code-semgrep completed successfully\033[0m\n"
+    @echo ""
+
+# Scan dependencies for known vulnerabilities (OWASP)
+code-audit:
+    @echo ""
+    @printf "\033[34m=== Scanning Dependencies for Vulnerabilities ===\033[0m\n"
+    @./gradlew dependencyCheckAnalyze --quiet
+    @printf "\033[32m✓ code-audit completed successfully\033[0m\n"
+    @echo ""
+
+# Run unit tests
+test:
+    @echo ""
+    @printf "\033[34m=== Running Unit Tests ===\033[0m\n"
+    @./gradlew test --quiet
+    @printf "\033[32m✓ test completed successfully\033[0m\n"
+    @echo ""
+
+# Run unit tests with coverage report and threshold check
+test-coverage: init
+    @echo ""
+    @printf "\033[34m=== Running Unit Tests with Coverage ===\033[0m\n"
+    @./gradlew test jacocoTestReport jacocoTestCoverageVerification --quiet
+    @printf "\033[32m✓ test-coverage completed successfully\033[0m\n"
+    @echo ""
+
+# Run architecture import rule tests
+code-architecture:
+    @echo ""
+    @printf "\033[34m=== Running Architecture Tests ===\033[0m\n"
+    @./gradlew test --tests '*architecture*' --quiet
+    @printf "\033[32m✓ code-architecture completed successfully\033[0m\n"
+    @echo ""
+
+# Run ALL validation checks (verbose)
+ci:
+    #!/usr/bin/env bash
+    set -e
+    echo ""
+    printf "\033[34m=== Running CI Checks ===\033[0m\n"
+    echo ""
+    just init
+    just code-format
+    just code-style
+    just code-typecheck
+    just code-security
+    just code-deptry
+    just code-spell
+    just code-semgrep
+    just code-audit
+    just test
+    just code-architecture
+    echo ""
+    printf "\033[32m✓ ci completed successfully\033[0m\n"
+    echo ""
+
+# Run ALL validation checks silently (only show output on errors)
+ci-quiet:
+    #!/usr/bin/env bash
+    set -e
+    printf "\033[34m=== Running CI Checks (Quiet Mode) ===\033[0m\n"
+    TMPFILE=$(mktemp)
+    trap "rm -f $TMPFILE" EXIT
+
+    just init > $TMPFILE 2>&1 || { printf "\033[31m✗ init failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ init passed\033[0m\n"
+
+    just code-format > $TMPFILE 2>&1 || { printf "\033[31m✗ code-format failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-format passed\033[0m\n"
+
+    just code-style > $TMPFILE 2>&1 || { printf "\033[31m✗ code-style failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-style passed\033[0m\n"
+
+    just code-typecheck > $TMPFILE 2>&1 || { printf "\033[31m✗ code-typecheck failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-typecheck passed\033[0m\n"
+
+    just code-security > $TMPFILE 2>&1 || { printf "\033[31m✗ code-security failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-security passed\033[0m\n"
+
+    just code-deptry > $TMPFILE 2>&1 || { printf "\033[31m✗ code-deptry failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-deptry passed\033[0m\n"
+
+    just code-spell > $TMPFILE 2>&1 || { printf "\033[31m✗ code-spell failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-spell passed\033[0m\n"
+
+    just code-semgrep > $TMPFILE 2>&1 || { printf "\033[31m✗ code-semgrep failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-semgrep passed\033[0m\n"
+
+    just code-audit > $TMPFILE 2>&1 || { printf "\033[31m✗ code-audit failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-audit passed\033[0m\n"
+
+    just test > $TMPFILE 2>&1 || { printf "\033[31m✗ test failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ test passed\033[0m\n"
+
+    just code-architecture > $TMPFILE 2>&1 || { printf "\033[31m✗ code-architecture failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-architecture passed\033[0m\n"
+
+    echo ""
+    printf "\033[32m✓ ci-quiet completed successfully\033[0m\n"
+    echo ""
