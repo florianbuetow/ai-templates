@@ -121,9 +121,14 @@ main() {
     fi
     echo -e "${GREEN}✓ just is installed${NC}"
 
-    if ! command -v java >/dev/null 2>&1; then
-        echo -e "${RED}✗ Error: java is not installed${NC}"
-        echo "  Install from: https://adoptium.net/"
+    # Add Homebrew OpenJDK to PATH if available (keg-only, not linked by default)
+    if [ -d "/opt/homebrew/opt/openjdk@21/bin" ]; then
+        export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
+    fi
+
+    if ! java -version >/dev/null 2>&1; then
+        echo -e "${RED}✗ Error: java is not installed (or only macOS stub present)${NC}"
+        echo "  Install with: brew install openjdk@21"
         echo ""
         exit 1
     fi
