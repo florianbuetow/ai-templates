@@ -1,0 +1,12 @@
+# Domain-specific terms that codespell should ignore
+# One word per line, case-insensitive
+
+# Java & Build tools
+gradle
+junit
+jacoco
+checkstyle
+spotbugs
+archunit
+assertj
+errorprone
