@@ -1,0 +1,37 @@
+rules:
+  - id: java.no-suppress-warnings
+    languages: [java]
+    message: >
+      @SuppressWarnings is not allowed. Fix the underlying issue instead of suppressing it.
+      If you believe suppression is required, explain why and propose a fix that avoids suppression.
+    severity: ERROR
+    pattern: "@SuppressWarnings(...)"
+    paths:
+      include:
+        - src/main/
+      exclude:
+        - src/test/
+
+  - id: java.no-noinspection-comment
+    languages: [java]
+    message: >
+      //noinspection comments are not allowed. Fix the underlying issue instead of suppressing it.
+    severity: ERROR
+    pattern-regex: '//\s*noinspection\b'
+    paths:
+      include:
+        - src/main/
+      exclude:
+        - src/test/
+
+  - id: java.no-nosonar-comment
+    languages: [java]
+    message: >
+      NOSONAR comments are not allowed. Fix the underlying issue instead of suppressing it.
+    severity: ERROR
+    pattern-regex: 'NOSONAR'
+    paths:
+      include:
+        - src/main/
+      exclude:
+        - src/test/

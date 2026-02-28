@@ -1,0 +1,55 @@
+rules:
+  - id: java.no-objects-require-non-null-else
+    languages: [java]
+    message: >
+      Objects.requireNonNullElse() hides null values with a fallback.
+      Use Objects.requireNonNull() to fail explicitly, or add proper null checks
+      with clear error messages.
+    severity: ERROR
+    pattern: Objects.requireNonNullElse($OBJ, $DEFAULT)
+    paths:
+      include:
+        - src/main/
+      exclude:
+        - src/test/
+
+  - id: java.no-objects-require-non-null-else-get
+    languages: [java]
+    message: >
+      Objects.requireNonNullElseGet() hides null values with a lazy fallback.
+      Use Objects.requireNonNull() to fail explicitly, or add proper null checks
+      with clear error messages.
+    severity: ERROR
+    pattern: Objects.requireNonNullElseGet($OBJ, $SUPPLIER)
+    paths:
+      include:
+        - src/main/
+      exclude:
+        - src/test/
+
+  - id: java.no-map-get-or-default
+    languages: [java]
+    message: >
+      Map.getOrDefault() hides missing configuration values.
+      Access the key directly and handle the missing case explicitly,
+      or use Map.get() with a null check and error.
+    severity: ERROR
+    pattern: $MAP.getOrDefault($KEY, $DEFAULT)
+    paths:
+      include:
+        - src/main/
+      exclude:
+        - src/test/
+
+  - id: java.no-ternary-null-fallback
+    languages: [java]
+    message: >
+      Ternary null check with fallback hides missing data.
+      Use explicit null checks with clear error messages instead.
+    severity: ERROR
+    pattern: $VAR != null ? $VAR : $DEFAULT
+    paths:
+      include:
+        - src/main/
+      exclude:
+        - src/test/

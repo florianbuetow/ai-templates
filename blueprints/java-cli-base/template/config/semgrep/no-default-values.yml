@@ -1,0 +1,28 @@
+rules:
+  - id: java.no-optional-or-else
+    languages: [java]
+    message: >
+      Optional.orElse() with a default value hides missing data.
+      Use Optional.orElseThrow() to fail explicitly when the value is absent,
+      or handle the empty case with explicit logic.
+    severity: ERROR
+    pattern: $OPT.orElse($DEFAULT)
+    paths:
+      include:
+        - src/main/
+      exclude:
+        - src/test/
+
+  - id: java.no-optional-or-else-get
+    languages: [java]
+    message: >
+      Optional.orElseGet() with a supplier hides missing data.
+      Use Optional.orElseThrow() to fail explicitly when the value is absent,
+      or handle the empty case with explicit logic.
+    severity: ERROR
+    pattern: $OPT.orElseGet($SUPPLIER)
+    paths:
+      include:
+        - src/main/
+      exclude:
+        - src/test/
