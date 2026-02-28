@@ -10,17 +10,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Strict compiler warnings
-add_compile_options(
-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+if(MSVC)
+    add_compile_options(/W4 /WX /permissive-)
+else()
+    add_compile_options(
         -Wall -Wextra -Wpedantic -Werror
         -Wconversion -Wsign-conversion -Wshadow
         -Wnon-virtual-dtor -Wold-style-cast -Wcast-align
         -Woverloaded-virtual -Wunused
-    >
-    $<$<CXX_COMPILER_ID:MSVC>:
-        /W4 /WX /permissive-
-    >
-)
+    )
+endif()
 
 # Coverage flags (enabled via CMakePresets.json)
 option(ENABLE_COVERAGE "Enable code coverage instrumentation" OFF)
@@ -35,16 +34,10 @@ endif()
 # Sanitizer flags (enabled via CMakePresets.json)
 option(ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 if(ENABLE_SANITIZERS)
-    add_compile_options(
-        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
-            -fsanitize=address,undefined -fno-omit-frame-pointer
-        >
-    )
-    add_link_options(
-        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
-            -fsanitize=address,undefined
-        >
-    )
+    if(NOT MSVC)
+        add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
+        add_link_options(-fsanitize=address,undefined)
+    endif()
 endif()
 
 # Main library target (all source except main.cpp)

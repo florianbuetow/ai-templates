@@ -161,9 +161,16 @@ code-style:
     set -e
     echo ""
     printf "\033[0;34m=== Checking Code Style ===\033[0m\n"
+    EXTRA_ARGS=""
+    if [ "$(uname)" = "Darwin" ] && command -v xcrun >/dev/null 2>&1; then
+        SDKROOT=$(xcrun --show-sdk-path 2>/dev/null || true)
+        if [ -n "$SDKROOT" ]; then
+            EXTRA_ARGS="--extra-arg=--sysroot=$SDKROOT"
+        fi
+    fi
     FILES=$(find src/ -type f -name "*.cpp" 2>/dev/null)
     if [ -n "$FILES" ]; then
-        echo "$FILES" | xargs clang-tidy -p build/debug
+        echo "$FILES" | xargs clang-tidy -p build/debug $EXTRA_ARGS
     fi
     printf "\033[0;32m✓ Style checks passed\033[0m\n"
     echo ""
@@ -221,7 +228,7 @@ code-spell:
 code-semgrep:
     @echo ""
     @printf "\033[0;34m=== Running Semgrep Static Analysis ===\033[0m\n"
-    @semgrep --config config/semgrep/ --error src include
+    @semgrep --config config/semgrep/ --error --no-git-ignore src/ include/
     @printf "\033[0;32m✓ Semgrep checks passed\033[0m\n"
     @echo ""
 

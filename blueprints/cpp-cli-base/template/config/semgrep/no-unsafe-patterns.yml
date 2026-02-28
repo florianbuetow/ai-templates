@@ -86,7 +86,7 @@ rules:
     message: >
       goto is not allowed. Use structured control flow (loops, functions, exceptions) instead.
     severity: ERROR
-    pattern: goto $LABEL
+    pattern-regex: '\bgoto\s+\w+'
     paths:
       include:
         - src/
