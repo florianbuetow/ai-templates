@@ -45,8 +45,27 @@ help:
     @just --list
     @echo ""
 
+# Check prerequisites
+check:
+    @echo ""
+    @if ! command -v elixir >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: elixir is not installed\033[0m\n"; \
+        printf "  Install Elixir {{elixir_version}}+: https://elixir-lang.org/install.html\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ elixir is installed\033[0m\n"
+    @if ! command -v mix >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: mix is not installed\033[0m\n"; \
+        printf "  Mix should come with Elixir installation\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ mix is installed\033[0m\n"
+    @echo ""
+
 # Initialize the development environment
-init:
+init: check
     @echo ""
     @echo "\033[0;34m=== Initializing Development Environment ===\033[0m"
     @if [ ! -d ".git" ]; then echo "Initializing git repository..." && git init -q; fi

@@ -34,6 +34,32 @@
 _default:
     @just --list
 
+# Check prerequisites
+check:
+    @echo ""
+    @if ! command -v go >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: go is not installed\033[0m\n"; \
+        printf "  Install from: https://go.dev/dl/\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ go is installed\033[0m\n"
+    @if ! command -v codespell >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: codespell is not installed\033[0m\n"; \
+        printf "  Install with: brew install codespell\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ codespell is installed\033[0m\n"
+    @if ! command -v semgrep >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: semgrep is not installed\033[0m\n"; \
+        printf "  Install with: brew install semgrep\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ semgrep is installed\033[0m\n"
+    @echo ""
+
 # Show help information
 help:
     @echo ""
@@ -46,7 +72,7 @@ help:
     @echo ""
 
 # Initialize the development environment
-init:
+init: check
     @echo ""
     @printf "\033[0;34m=== Initializing Development Environment ===\033[0m\n"
     @mkdir -p reports/coverage

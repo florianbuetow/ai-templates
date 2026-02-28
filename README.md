@@ -60,7 +60,26 @@ just run
 | [**go-cli-base**](blueprints/go-cli-base/) | Go 1.23+ | CLI apps with golangci-lint, go vet, staticcheck, gosec, govulncheck |
 | [**elixir-otp-base**](blueprints/elixir-otp-base/) | Elixir 1.17+ | OTP apps with Credo, Dialyxir, Sobelow, mix_audit, ExUnit |
 
-See each template's README for the full validation tools breakdown, or [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
+## Validation Tools by Language
+
+Every template runs the same CI check categories via `just ci`. The table below shows which tool handles each check for each language.
+
+| Check | Recipe | Python | Java | Go | Elixir |
+|-------|--------|--------|------|----|--------|
+| Formatting | `code-format` | ruff | Spotless | gofumpt | mix format |
+| Style | `code-style` | ruff | Checkstyle | gofumpt | mix format |
+| Type checking | `code-typecheck` | mypy | Error Prone | go vet | Dialyzer |
+| LSP analysis | `code-lspchecks` | pyright | — | staticcheck | — |
+| Security | `code-security` | bandit | SpotBugs | gosec | Sobelow |
+| Dependency hygiene | `code-deptry` | deptry | Gradle buildHealth | go mod tidy | — |
+| Spell checking | `code-spell` | codespell | codespell | codespell | codespell |
+| Custom rules | `code-semgrep` | semgrep | semgrep | semgrep | — |
+| Vulnerability scan | `code-audit` | pip-audit | OWASP Dep-Check | govulncheck | mix deps.audit + hex.audit |
+| Testing | `test` | pytest | JUnit 5 | go test | ExUnit |
+| Meta-linter | `lint` | — | — | golangci-lint | Credo |
+| Architecture | `code-architecture` | pytestarch | ArchUnit | — | — |
+
+See each template's README for tool details and configuration, or [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for semgrep rules.
 
 ## Highly Recommended Companion Tools
 
@@ -87,14 +106,9 @@ Use these plugins after scaffolding a project with AI Templates to maintain code
 - **git** - Version control system
 - **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
 - **copier** - Template engine ([installation guide](https://copier.readthedocs.io/))
-- **codespell** - Spell checker (`pip install codespell`)
-- **semgrep** - Static analysis (`pip install semgrep`)
-- **python** - Python 3.12 or higher (for Python templates)
-- **uv** - Python package manager (for Python templates, [installation guide](https://docs.astral.sh/uv/getting-started/installation/))
-- **java** - JDK 21+ (for Java templates, [Adoptium](https://adoptium.net/))
-- **go** - Go 1.23+ (for Go templates, [go.dev](https://go.dev/dl/))
-- **elixir** - Elixir 1.17+ (for Elixir templates)
-- **erlang** - Erlang/OTP 26+ (for Elixir templates)
+
+Each template has its own language-specific prerequisites. See the template READMEs for details:
+[Python](blueprints/python-cli-base/) | [Java](blueprints/java-cli-base/) | [Go](blueprints/go-cli-base/) | [Elixir](blueprints/elixir-otp-base/)
 
 ## Installation
 

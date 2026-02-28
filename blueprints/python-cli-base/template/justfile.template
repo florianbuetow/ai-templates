@@ -34,6 +34,25 @@
 _default:
     @just --list
 
+# Check prerequisites
+check:
+    @echo ""
+    @if ! command -v python3 >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: python3 is not installed\033[0m\n"; \
+        printf "  Install Python {{python_version}}+ from: https://python.org/downloads/\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ python3 is installed\033[0m\n"
+    @if ! command -v uv >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: uv is not installed\033[0m\n"; \
+        printf "  Install with: curl -LsSf https://astral.sh/uv/install.sh | sh\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ uv is installed\033[0m\n"
+    @echo ""
+
 # Show help information
 help:
     @echo ""
@@ -46,7 +65,7 @@ help:
     @echo ""
 
 # Initialize the development environment
-init:
+init: check
     @echo ""
     @echo "\033[0;34m=== Initializing Development Environment ===\033[0m"
     @mkdir -p reports/coverage
