@@ -2,13 +2,22 @@
 
 ![Made with AI](https://img.shields.io/badge/Made%20with-AI-333333?labelColor=f00) ![Verified by Humans](https://img.shields.io/badge/Verified%20by-Humans-333333?labelColor=brightgreen)
 
-Copier template for Python CLI applications designed to create an AI-agent-friendly codebase with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
+Copier templates for Python CLI and Elixir OTP applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
 
 ## Quick Start
 
 ```bash
 copier copy https://github.com/florianbuetow/ai-templates/blueprints/python-cli-base my-project
 cd my-project
+just init
+just run
+```
+
+**Elixir OTP:**
+
+```bash
+copier copy https://github.com/florianbuetow/ai-templates/blueprints/elixir-otp-base my-elixir-project
+cd my-elixir-project
 just init
 just run
 ```
@@ -67,6 +76,8 @@ Use these plugins after scaffolding a project with AI Templates to maintain code
 - **uv** - Python package manager ([installation guide](https://docs.astral.sh/uv/getting-started/installation/))
 - **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
 - **copier** - Template engine ([installation guide](https://copier.readthedocs.io/))
+- **elixir** - Elixir 1.17+ (for Elixir templates)
+- **erlang** - Erlang/OTP 26+ (for Elixir templates)
 
 ## Installation
 
@@ -92,7 +103,7 @@ just run
 ```
 
 The `just create` command takes two arguments:
-1. Template name (e.g., `python-cli-base`)
+1. Template name (e.g., `python-cli-base` or `elixir-otp-base`)
 2. Target directory (absolute or relative path where the project will be created)
 
 **Method 2: Using Copier directly**
@@ -136,7 +147,8 @@ This updates the ai-templates repository itself (via `git pull`). Existing proje
 ```
 ai-templates/
 ├── blueprints/                                 # Copier-based project templates
-│   └── python-cli-base/                       # Production-ready Python CLI template
+│   ├── python-cli-base/                       # Production-ready Python CLI template
+│   └── elixir-otp-base/                       # Production-ready Elixir OTP template
 │       ├── copier.yml                         # Template configuration
 │       ├── README.md                          # Template documentation
 │       └── template/                          # Template files

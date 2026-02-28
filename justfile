@@ -12,9 +12,11 @@ help:
 	@echo "  just update                            - Update templates to latest version"
 	@echo "  just create <template> <target-dir>    - Create new project from template"
 	@echo "  just test                              - Test Python CLI template generation"
+	@echo "  just test-elixir                       - Test Elixir OTP template generation"
 	@echo ""
 	@echo "Available templates:"
 	@echo "  python-cli-base                        - Python CLI application"
+	@echo "  elixir-otp-base                        - Elixir OTP application"
 	@echo ""
 
 # Install templates and set up aliases
@@ -63,6 +65,12 @@ init:
 		exit 1; \
 	fi
 	@echo "✓ claude CLI is installed"
+	@# Check for elixir (optional, for Elixir templates)
+	@if command -v elixir >/dev/null 2>&1; then \
+		echo "✓ elixir is installed"; \
+	else \
+		echo "⚠ elixir is not installed (needed for Elixir templates)"; \
+	fi
 	@echo ""
 	@echo "All prerequisites met! Installing AI Templates..."
 	@echo ""
@@ -97,3 +105,7 @@ create template-name target-dir=".":
 # Test the Python CLI template by generating a project in a temp folder
 test:
 	@./tests/test-template.sh
+
+# Test the Elixir OTP template by generating a project in a temp folder
+test-elixir:
+	@./tests/test-elixir-template.sh
