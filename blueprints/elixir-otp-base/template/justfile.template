@@ -49,6 +49,7 @@ help:
 init:
     @echo ""
     @echo "\033[0;34m=== Initializing Development Environment ===\033[0m"
+    @if [ ! -d ".git" ]; then echo "Initializing git repository..." && git init -q; fi
     @echo "Fetching dependencies..."
     @mix deps.get
     @echo "Compiling project..."
