@@ -1,0 +1,89 @@
+# Go CLI Base Template Configuration
+# Minimum Copier version required
+_min_copier_version: "9.0.0"
+
+# Template settings
+_subdirectory: template
+_templates_suffix: ".template"
+_answers_file: .copier-answers.yml
+
+# Exclude patterns (extend defaults)
+_exclude:
+  - ".git"
+  - "reports/"
+  - "CLAUDE.md"
+
+# Skip if exists (never overwrite these on update)
+_skip_if_exists:
+  - "cmd/"
+  - "internal/"
+  - "data/input/"
+  - "data/output/"
+  - "scripts/"
+
+# Messages
+_message_before_copy: |
+  Creating Go CLI project with full validation infrastructure.
+  This will set up a production-ready project following strict conventions.
+
+_message_after_copy: |
+  Project {{project_name}} created successfully!
+
+  Next steps:
+    cd {{project_name}}
+    just init    # Install dependencies and dev tools
+    just run     # Test the project
+    just help    # See all available commands
+
+# Post-generation tasks
+_tasks:
+  - "ln -s AGENTS.md CLAUDE.md"
+
+# Questions
+project_name:
+  type: str
+  help: Project name (e.g., my-cli-tool)?
+  validator: >-
+    {% if not (project_name | regex_search('^[a-zA-Z0-9]([a-zA-Z0-9_.-]*[a-zA-Z0-9])?$')) %}
+    Invalid project name. Use letters, digits, -, _, . only.
+    {% endif %}
+
+module_path:
+  type: str
+  help: Go module path (e.g., github.com/user/project)?
+  validator: >-
+    {% if not (module_path | regex_search('^[a-zA-Z0-9][a-zA-Z0-9._/-]*$')) %}
+    Invalid module path.
+    {% endif %}
+
+project_description:
+  type: str
+  help: Short description?
+  default: "A Go CLI application"
+
+go_version:
+  type: str
+  help: Minimum Go version?
+  default: "1.23"
+  choices:
+    - "1.23"
+    - "1.24"
+
+author_name:
+  type: str
+  help: Author name?
+  default: ""
+
+author_email:
+  type: str
+  help: Author email?
+  default: ""
+
+coverage_threshold:
+  type: int
+  help: Code coverage threshold (%)?
+  default: 80
+  validator: >-
+    {% if coverage_threshold < 0 or coverage_threshold > 100 %}
+    Must be 0-100
+    {% endif %}
