@@ -65,20 +65,12 @@ blueprints/rust-cli-base/
 
 ## Usage
 
-### Via setup-project.sh
+### Via just create
 
 ```bash
 cd /path/to/ai-templates
-./project-setup/setup-project.sh --name my-project --template rust-cli-base
+just create rust-cli-base my-project
 ```
-
-This will:
-1. Create git bare repository + main worktree
-2. Run Copier to generate project
-3. Run `just init` to set up environment
-4. Run `just run` to test
-5. Run `just destroy` to clean up
-6. Create initial commit
 
 ### Direct Copier usage
 

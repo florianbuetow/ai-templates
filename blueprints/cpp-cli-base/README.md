@@ -106,6 +106,14 @@ Projects created from this template include:
 - **Semgrep rules**: Ban raw new/delete, C-style casts, goto, malloc/free, warning suppression
 - **Directory structure**: src/, include/, tests/, scripts/, data/
 
+## Semgrep Rules
+
+| Rule | Purpose |
+|------|---------|
+| `no-unsafe-patterns` | Bans raw `new`/`delete`, `reinterpret_cast`, C-style casts, `goto`, `malloc`/`free`, `using namespace` in headers |
+| `no-suppression` | Bans `NOLINT`, `NOLINTNEXTLINE`, `#pragma` diagnostic suppression -- fix issues instead of suppressing |
+| `no-sneaky-fallbacks` | Bans empty `catch` blocks and `catch(...)` without rethrow -- handle exceptions explicitly |
+
 ## Requirements
 
 - **cmake 3.25+** - Build system
@@ -145,7 +153,7 @@ This will:
 Projects can be updated when the template changes:
 
 ```bash
-cd my-project
+cd my-project/main
 copier update
 ```
 
@@ -157,3 +165,9 @@ To modify this template:
 2. Test with: `just test-cpp` (from repository root)
 3. Verify generated project works
 4. Commit changes
+
+## Sources
+
+Based on:
+- [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
+- ai-templates/blueprints/python-cli-base

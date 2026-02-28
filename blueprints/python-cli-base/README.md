@@ -69,25 +69,11 @@ blueprints/python-cli-base/
 
 ## Usage
 
-### Via setup-project.sh
+### Via just create
 
 ```bash
 cd /path/to/ai-templates
-./project-setup/setup-project.sh --name my-project
-```
-
-This will:
-1. Create git bare repository + main worktree
-2. Run Copier to generate project
-3. Run `just init` to set up environment
-4. Run `just run` to test
-5. Run `just destroy` to clean up
-6. Create initial commit
-
-### Via setup-project-python-claude.sh (newpy alias)
-
-```bash
-newpy my-project
+just create python-cli-base my-project
 ```
 
 ### Direct Copier usage
@@ -124,6 +110,17 @@ Projects created from this template include:
 - **Semgrep rules**: Enforce explicit configuration, no defaults, no type suppression
 - **Directory structure**: src/, tests/, scripts/, prompts/, data/
 
+## Semgrep Rules
+
+| Rule | Purpose |
+|------|---------|
+| `no-default-values` | Bans default parameter values, `dict.get()` with defaults, Pydantic `Field(default=)` -- require explicit arguments |
+| `no-sneaky-fallbacks` | Bans conditional expression fallbacks, `or` operator fallbacks, `getattr()` with defaults -- no silent defaults |
+| `no_type_suppression` | Bans `# type: ignore`, `# mypy: ignore-errors`, `# pyright: ignore` -- fix type issues instead of suppressing |
+| `no-noqa` | Bans `# noqa` comments -- fix lint issues instead of suppressing |
+| `no-mypy-ignore-missing-imports` | Bans `ignore_missing_imports = true` in pyproject.toml -- require proper type stubs |
+| `python-constants` | Bans module-level primitive constant declarations -- restrict to main blocks or config files |
+
 ## Requirements
 
 - **Python 3.12+**
@@ -143,9 +140,9 @@ just test
 
 This will:
 1. Generate a test project in a temp directory
-2. Verify all files are created
+2. Verify all expected files are created
 3. Verify CLAUDE.md symlink is correct
-4. Run `just init`, `just run`, `just destroy` in the generated project
+4. Run `just init`, `just run`, `just ci`, `just ci-quiet`, and `just destroy`
 5. Clean up temp directory
 
 ## Updating Generated Projects

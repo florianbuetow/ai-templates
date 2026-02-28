@@ -8,6 +8,7 @@ Production-ready Copier template for Elixir OTP applications with full validatio
 - **Just task runner** for all commands
 - **Git hooks** via git_hooks hex package
 - **Comprehensive AGENTS.md** for AI-assisted development
+- **Git worktree workflow** support
 
 ### Validation Tools
 
@@ -24,13 +25,45 @@ Production-ready Copier template for Elixir OTP applications with full validatio
 | **mix_audit** | Vulnerability scanning | Scans Hex dependencies for known security vulnerabilities |
 | **ExUnit** | Testing framework | Built-in testing with coverage support and async test execution |
 
+## Template Structure
+
+```
+blueprints/elixir-otp-base/
+├── copier.yml                          # Template configuration
+├── README.md                           # This file
+└── template/                           # Template files
+    ├── .credo.exs
+    ├── .formatter.exs
+    ├── .gitignore.template
+    ├── AGENTS.md.template
+    ├── CLAUDE.md -> AGENTS.md         # Symlink (created via _tasks)
+    ├── README.md.template
+    ├── justfile.template
+    ├── mix.exs.template
+    ├── config/
+    │   ├── config.exs.template
+    │   └── codespell/
+    │       └── ignore.txt
+    ├── lib/
+    │   ├── {{app_name}}.ex.template
+    │   └── credo/
+    │       └── check/
+    │           ├── no_default_parameter_values.ex
+    │           ├── no_dialyzer_suppress.ex
+    │           ├── no_fallback_operator.ex
+    │           └── no_map_get_default.ex
+    └── test/
+        ├── test_helper.exs
+        └── {{app_name}}_test.exs.template
+```
+
 ## Usage
 
 ### Via just create
 
 ```bash
 cd /path/to/ai-templates
-just create elixir-otp-base ~/projects/my-elixir-app
+just create elixir-otp-base my-elixir-app
 ```
 
 ### Direct Copier usage
@@ -54,6 +87,28 @@ The template will ask:
 - **author_name**: Author name
 - **coverage_threshold**: Code coverage threshold (0-100, default 80)
 
+## Generated Project Features
+
+Projects created from this template include:
+
+- **Mix build system**: Standard Elixir project with OTP application structure
+- **Complete validation suite**: Credo, Dialyxir, Sobelow, mix_audit, codespell
+- **Custom Credo checks**: Bans default parameters, fallback operators, Map.get defaults, Dialyzer suppression
+- **Just recipes**: init, run, destroy, code-*, test, ci, ci-quiet
+- **Git hooks**: Runs `just ci-quiet` on commit via git_hooks
+- **AI agent rules**: AGENTS.md with strict development guidelines
+- **Git commit rules**: No AI attribution, explicit file staging
+- **Directory structure**: lib/, test/, config/
+
+## Custom Credo Checks
+
+| Check | Purpose |
+|-------|---------|
+| `no_default_parameter_values` | Bans default values in function parameters -- require explicit arguments |
+| `no_dialyzer_suppress` | Bans `@dialyzer` attributes -- fix type issues instead of suppressing |
+| `no_fallback_operator` | Bans `||` fallback operator for default values -- handle missing data explicitly |
+| `no_map_get_default` | Bans `Map.get/3` with default values -- fail on missing keys instead |
+
 ## Requirements
 
 - **Elixir 1.17+**
@@ -62,3 +117,43 @@ The template will ask:
 - **copier** - Template engine
 - **git** - Version control
 - **codespell** - Spell checker (optional)
+
+## Testing the Template
+
+To verify the template generates correctly:
+
+```bash
+cd /path/to/ai-templates
+just test-elixir
+```
+
+This will:
+1. Generate a test project in a temp directory
+2. Verify all expected files are created
+3. Verify CLAUDE.md symlink is correct
+4. Run `just init`, `just run`, `just ci`, `just ci-quiet`, and `just destroy`
+5. Clean up temp directory
+
+## Updating Generated Projects
+
+Projects can be updated when the template changes:
+
+```bash
+cd my-elixir-app/main
+copier update
+```
+
+## Development
+
+To modify this template:
+
+1. Edit files in `template/` directory
+2. Test with: `just test-elixir` (from repository root)
+3. Verify generated project works
+4. Commit changes
+
+## Sources
+
+Based on:
+- [elixir-lang/elixir](https://github.com/elixir-lang/elixir)
+- ai-templates/blueprints/python-cli-base

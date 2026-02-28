@@ -32,7 +32,16 @@ blueprints/go-cli-base/
 ├── copier.yml                          # Template configuration
 ├── README.md                           # This file
 └── template/                           # Template files
+    ├── .gitignore.template
+    ├── .golangci.yml
+    ├── .pre-commit-config.yaml.template
+    ├── .semgrepignore.template
+    ├── AGENTS.md.template
+    ├── CLAUDE.md -> AGENTS.md         # Symlink (created via _tasks)
+    ├── README.md.template
+    ├── arch-go.yml
     ├── go.mod.template
+    ├── justfile.template
     ├── cmd/
     │   └── main.go.template
     ├── internal/
@@ -43,24 +52,25 @@ blueprints/go-cli-base/
     ├── data/
     │   ├── input/
     │   └── output/
+    └── config/
+        ├── semgrep/
+        │   ├── no-bare-return-in-error-func.yml
+        │   ├── no-build-ignore.yml
+        │   ├── no-error-swallowing.yml
+        │   ├── no-init-functions.yml
+        │   └── no-nolint-without-justification.yml
+        └── codespell/
+            └── ignore.txt
 ```
 
 ## Usage
 
-### Via setup-project.sh
+### Via just create
 
 ```bash
 cd /path/to/ai-templates
-./project-setup/setup-project.sh --name my-project --template go-cli-base
+just create go-cli-base my-project
 ```
-
-This will:
-1. Create git bare repository + main worktree
-2. Run Copier to generate project
-3. Run `just init` to set up environment
-4. Run `just run` to test
-5. Run `just destroy` to clean up
-6. Create initial commit
 
 ### Direct Copier usage
 
@@ -94,7 +104,18 @@ Projects created from this template include:
 - **Pre-commit hooks**: Runs `just ci-quiet` on commit
 - **AI agent rules**: AGENTS.md with strict development guidelines
 - **Git commit rules**: No AI attribution, explicit file staging
+- **Semgrep rules**: Enforce explicit error handling, ban init functions, require nolint justifications
 - **Directory structure**: cmd/, internal/, scripts/, data/
+
+## Semgrep Rules
+
+| Rule | Purpose |
+|------|---------|
+| `no-bare-return-in-error-func` | Bans bare `return` in functions with named error returns -- return errors explicitly |
+| `no-build-ignore` | Bans `//go:build ignore` -- remove excluded files instead of ignoring them |
+| `no-error-swallowing` | Bans assigning errors to `_` -- handle all errors explicitly |
+| `no-init-functions` | Bans `init()` functions -- use explicit initialization with clear ordering |
+| `no-nolint-without-justification` | Bans bare `//nolint` -- require explicit linter name and justification |
 
 ## Requirements
 
@@ -109,14 +130,14 @@ To verify the template generates correctly:
 
 ```bash
 cd /path/to/ai-templates
-just test
+just test-go
 ```
 
 This will:
 1. Generate a test project in a temp directory
-2. Verify all files are created
+2. Verify all expected files are created
 3. Verify CLAUDE.md symlink is correct
-4. Run `just init`, `just run`, `just destroy` in the generated project
+4. Run `just init`, `just run`, `just ci`, `just ci-quiet`, and `just destroy`
 5. Clean up temp directory
 
 ## Updating Generated Projects
@@ -133,7 +154,7 @@ copier update
 To modify this template:
 
 1. Edit files in `template/` directory
-2. Test with: `just test` (from repository root)
+2. Test with: `just test-go` (from repository root)
 3. Verify generated project works
 4. Commit changes
 

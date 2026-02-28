@@ -78,20 +78,17 @@ blueprints/java-cli-base/
 
 ## Usage
 
-### Via just create (recommended)
+### Via just create
 
 ```bash
 cd /path/to/ai-templates
-just create java-cli-base ~/projects/my-java-project
-cd ~/projects/my-java-project
-just init
-just run
+just create java-cli-base my-java-project
 ```
 
 ### Direct Copier usage
 
 ```bash
-copier copy /path/to/ai-templates/blueprints/java-cli-base my-java-project
+copier copy blueprints/java-cli-base my-java-project
 cd my-java-project
 just init
 just run
@@ -123,6 +120,14 @@ Projects created from this template include:
 - **Semgrep rules**: Enforce explicit configuration, no defaults, no suppression
 - **Directory structure**: src/main/java/, src/test/java/, scripts/, prompts/, data/
 
+## Semgrep Rules
+
+| Rule | Purpose |
+|------|---------|
+| `no-default-values` | Bans `Optional.orElse()` / `Optional.orElseGet()` -- handle missing data explicitly |
+| `no-sneaky-fallbacks` | Bans `Objects.requireNonNullElse()`, `Map.getOrDefault()`, ternary null fallbacks -- no silent defaults |
+| `no-suppression` | Bans `@SuppressWarnings`, `//noinspection`, `NOSONAR` -- fix issues instead of suppressing |
+
 ## Requirements
 
 - **Java 21+** (JDK) - [Adoptium](https://adoptium.net/)
@@ -153,7 +158,7 @@ This will:
 Projects can be updated when the template changes:
 
 ```bash
-cd my-java-project
+cd my-java-project/main
 copier update
 ```
 
@@ -165,3 +170,9 @@ To modify this template:
 2. Test with: `just test-java` (from repository root)
 3. Verify generated project works
 4. Commit changes
+
+## Sources
+
+Based on:
+- [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
+- ai-templates/blueprints/python-cli-base
