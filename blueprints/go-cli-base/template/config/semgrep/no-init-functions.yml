@@ -1,0 +1,17 @@
+rules:
+  - id: go.no-init-functions
+    languages: [go]
+    message: >
+      init() functions run implicitly at package load time and make initialization order
+      hard to reason about. Use explicit initialization in main() or constructor functions instead.
+    severity: ERROR
+    pattern: |
+      func init() {
+          ...
+      }
+    paths:
+      include:
+        - cmd/
+        - internal/
+      exclude:
+        - "*_test.go"

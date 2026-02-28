@@ -1,0 +1,44 @@
+rules:
+  - id: go.no-error-swallowing
+    languages: [go]
+    message: >
+      Assigning error to blank identifier swallows the error silently.
+      Handle the error explicitly: log it, return it, or wrap it with context.
+      If the error truly cannot occur, add a comment explaining why.
+    severity: ERROR
+    pattern: $X, _ = $FUNC(...)
+    paths:
+      include:
+        - cmd/
+        - internal/
+      exclude:
+        - "*_test.go"
+
+  - id: go.no-blank-error-check
+    languages: [go]
+    message: >
+      Assigning error to blank identifier swallows the error silently.
+      Handle the error explicitly: log it, return it, or wrap it with context.
+    severity: ERROR
+    pattern: |
+      _, _ = $FUNC(...)
+    paths:
+      include:
+        - cmd/
+        - internal/
+      exclude:
+        - "*_test.go"
+
+  - id: go.no-unchecked-error-assignment
+    languages: [go]
+    message: >
+      Error return value is not checked. Assign it and handle it explicitly.
+    severity: ERROR
+    pattern: |
+      _ = $FUNC(...)
+    paths:
+      include:
+        - cmd/
+        - internal/
+      exclude:
+        - "*_test.go"

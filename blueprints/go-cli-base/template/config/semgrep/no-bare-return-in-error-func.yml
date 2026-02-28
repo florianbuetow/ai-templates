@@ -1,0 +1,19 @@
+rules:
+  - id: go.no-bare-return-in-named-error
+    languages: [go]
+    message: >
+      Bare return in a function with named error return hides what error value is being returned.
+      Use explicit return values for clarity: return result, err
+    severity: WARNING
+    pattern: |
+      func $FUNC(...) (..., err error) {
+          ...
+          return
+          ...
+      }
+    paths:
+      include:
+        - cmd/
+        - internal/
+      exclude:
+        - "*_test.go"

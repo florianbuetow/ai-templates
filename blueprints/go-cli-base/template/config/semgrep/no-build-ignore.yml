@@ -1,0 +1,14 @@
+rules:
+  - id: go.no-build-ignore
+    languages: [go]
+    severity: ERROR
+    message: >
+      Build constraint '//go:build ignore' excludes this file from compilation.
+      This is not allowed in production code. If this file is not needed, remove it.
+    pattern-regex: '(?m)^//go:build\s+ignore\b'
+    paths:
+      include:
+        - cmd/
+        - internal/
+      exclude:
+        - "*_test.go"
