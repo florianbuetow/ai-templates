@@ -2,7 +2,7 @@
 
 ![Made with AI](https://img.shields.io/badge/Made%20with-AI-333333?labelColor=f00) ![Verified by Humans](https://img.shields.io/badge/Verified%20by-Humans-333333?labelColor=brightgreen)
 
-Copier templates for Python CLI, Java CLI, and Elixir OTP applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
+Copier templates for Python CLI, Java CLI, Go CLI, and Elixir OTP applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
 
 ## Quick Start
 
@@ -18,6 +18,15 @@ just run
 ```bash
 copier copy https://github.com/florianbuetow/ai-templates/blueprints/java-cli-base my-java-project
 cd my-java-project
+just init
+just run
+```
+
+**Go CLI:**
+
+```bash
+copier copy https://github.com/florianbuetow/ai-templates/blueprints/go-cli-base my-go-project
+cd my-go-project
 just init
 just run
 ```
@@ -39,6 +48,7 @@ just run
 - **AGENTS.md** provides AI assistants with project conventions and development rules
 - **Python 3.12+** with uv package management (python-cli-base)
 - **Java 21+** with Gradle Kotlin DSL build system (java-cli-base)
+- **Go 1.23+** with Go modules and golangci-lint (go-cli-base)
 - **Elixir 1.17+** with Mix build tool (elixir-otp-base)
 - **Just task runner** with recipes for common tasks (init, run, test, ci, destroy)
 - **Test infrastructure** with coverage thresholds and quality gates
@@ -73,6 +83,20 @@ just run
 | **ArchUnit** | Architecture constraints | Enforces package structure and import rules - prevents architectural erosion |
 | **JUnit 5 + JaCoCo** | Testing and coverage | Unit testing with coverage thresholds |
 
+### Go Validation Tools
+
+| Tool | Purpose | Why It's Used |
+|------|---------|---------------|
+| **gofumpt** | Formatting | Stricter gofmt - enforces consistent formatting beyond standard gofmt |
+| **go vet** | Static analysis | Built-in tool that catches suspicious constructs (printf args, struct tags, etc.) |
+| **staticcheck** | Strict analysis | LSP-based checker - catches unused code, deprecated APIs, and subtle bugs |
+| **golangci-lint** | Meta-linter | Runs 50+ linters in parallel - single tool for comprehensive code quality |
+| **gosec** | Security scanning | Finds security issues (SQL injection, hardcoded credentials, weak crypto, etc.) |
+| **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
+| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
+| **govulncheck** | Vulnerability scanning | Scans dependencies for known security vulnerabilities using Go vulnerability database |
+| **go test** | Testing framework | Built-in testing with race detection, coverage, and benchmarks |
+
 See [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
 
 ## Highly Recommended Companion Tools
@@ -105,6 +129,7 @@ Use these plugins after scaffolding a project with AI Templates to maintain code
 - **python** - Python 3.12 or higher (for Python templates)
 - **uv** - Python package manager (for Python templates, [installation guide](https://docs.astral.sh/uv/getting-started/installation/))
 - **java** - JDK 21+ (for Java templates, [Adoptium](https://adoptium.net/))
+- **go** - Go 1.23+ (for Go templates, [go.dev](https://go.dev/dl/))
 - **elixir** - Elixir 1.17+ (for Elixir templates)
 - **erlang** - Erlang/OTP 26+ (for Elixir templates)
 
@@ -132,7 +157,7 @@ just run
 ```
 
 The `just create` command takes two arguments:
-1. Template name (e.g., `python-cli-base`, `java-cli-base`, or `elixir-otp-base`)
+1. Template name (e.g., `python-cli-base`, `java-cli-base`, `go-cli-base`, or `elixir-otp-base`)
 2. Target directory (absolute or relative path where the project will be created)
 
 **Method 2: Using Copier directly**
@@ -152,6 +177,7 @@ just run
 cd ai-templates
 just test          # Test Python template
 just test-java     # Test Java template
+just test-go       # Test Go template
 just test-elixir   # Test Elixir template
 just test-all      # Test all templates
 ```
@@ -181,6 +207,7 @@ ai-templates/
 ├── blueprints/                                 # Copier-based project templates
 │   ├── python-cli-base/                       # Production-ready Python CLI template
 │   ├── java-cli-base/                         # Production-ready Java CLI template
+│   ├── go-cli-base/                           # Production-ready Go CLI template
 │   └── elixir-otp-base/                       # Production-ready Elixir OTP template
 │       ├── copier.yml                         # Template configuration
 │       ├── README.md                          # Template documentation
@@ -197,6 +224,7 @@ ai-templates/
 ├── tests/                                      # Repository test suite
 │   ├── test-template.sh                       # Python template integration tests
 │   ├── test-java-template.sh                  # Java template integration tests
+│   ├── test-go-template.sh                    # Go template integration tests
 │   └── test-elixir-template.sh                # Elixir template integration tests
 ├── config/                                     # Shared validation configs
 │   ├── semgrep/                               # Custom semgrep rules
