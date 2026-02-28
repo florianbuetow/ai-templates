@@ -18,7 +18,7 @@ Production-ready Copier template for C++ CLI applications with full validation i
 | **clang-tidy** | Linting/static analysis | Massive check catalog (bugprone, modernize, cert, cppcoreguidelines). WarningsAsErrors |
 | **cppcheck** | Deep static analysis | Finds bugs compilers miss: null derefs, memory leaks, UB. Low false positives |
 | **flawfinder** | Security scanning | C/C++ vulnerability scanner (buffer overflows, format strings, race conditions) |
-| **include-what-you-use** | Dependency hygiene | Detects unused and missing `#include` directives |
+| **include-what-you-use** | Dependency hygiene | Detects unused and missing `#include` directives (advisory) |
 | **semgrep** | Custom static analysis | Pattern-based rules banning unsafe patterns (raw new/delete, C casts, warning suppression) |
 | **codespell** | Spell checking | Catches typos in code, comments, and documentation |
 | **GoogleTest + lcov** | Testing and coverage | Unit testing with coverage thresholds |
@@ -31,30 +31,34 @@ blueprints/cpp-cli-base/
 ├── copier.yml                          # Template configuration
 ├── README.md                           # This file
 └── template/                           # Template files
+    ├── .clang-format
+    ├── .clang-tidy
     ├── .gitignore.template
-    ├── .clang-format.template
-    ├── .clang-tidy.template
-    ├── CMakeLists.txt.template
     ├── .pre-commit-config.yaml.template
+    ├── .semgrepignore.template
+    ├── AGENTS.md.template
+    ├── CLAUDE.md -> AGENTS.md          # Symlink (created via _tasks)
+    ├── CMakeLists.txt.template
+    ├── CMakePresets.json.template
     ├── justfile.template
     ├── README.md.template
-    ├── AGENTS.md.template
-    ├── CLAUDE.md -> AGENTS.md         # Symlink (created via _tasks)
     ├── src/
-    │   └── main.cpp.template
+    │   ├── main.cpp.template
+    │   └── app.cpp.template
     ├── include/
     │   └── {{project_name}}/
+    │       └── app.hpp.template
     ├── tests/
-    │   └── test_main.cpp.template
+    │   └── app_test.cpp.template
     ├── scripts/
     ├── data/
     │   ├── input/
     │   └── output/
     └── config/
         ├── semgrep/
-        │   ├── no-raw-new-delete.yml
-        │   ├── no-c-style-casts.yml
-        │   └── no-warning-suppression.yml
+        │   ├── no-unsafe-patterns.yml
+        │   ├── no-suppression.yml
+        │   └── no-sneaky-fallbacks.yml
         └── codespell/
             └── ignore.txt
 ```
@@ -65,7 +69,7 @@ blueprints/cpp-cli-base/
 
 ```bash
 cd /path/to/ai-templates
-just create cpp my-project
+just create cpp-cli-base my-project
 ```
 
 ### Direct Copier usage
@@ -92,31 +96,33 @@ The template will ask:
 
 Projects created from this template include:
 
-- **CMake build system**: Modern CMake with presets, C++20/C++23 support
+- **CMake build system**: Modern CMake with presets (debug, release, coverage, sanitize)
 - **Complete validation suite**: clang-format, clang-tidy, cppcheck, flawfinder, IWYU, semgrep, codespell
 - **Runtime sanitizers**: AddressSanitizer and UndefinedBehaviorSanitizer
-- **Just recipes**: init, run, destroy, code-*, test, ci, ci-quiet
+- **Just recipes**: init, run, destroy, code-*, test, test-coverage, ci, ci-quiet
 - **Pre-commit hooks**: Runs `just ci-quiet` on commit
 - **AI agent rules**: AGENTS.md with strict development guidelines
 - **Git commit rules**: No AI attribution, explicit file staging
-- **Semgrep rules**: Ban raw new/delete, C-style casts, warning suppression
+- **Semgrep rules**: Ban raw new/delete, C-style casts, goto, malloc/free, warning suppression
 - **Directory structure**: src/, include/, tests/, scripts/, data/
 
 ## Requirements
 
 - **cmake 3.25+** - Build system
-- **C++23 compiler** - GCC 14+ or Clang 18+
-- **clang-format** - Code formatter
-- **clang-tidy** - Static analysis
-- **cppcheck** - Deep static analysis
-- **flawfinder** - Security scanner
-- **include-what-you-use** - Include hygiene
-- **codespell** - Spell checker
-- **semgrep** - Pattern-based analysis
-- **lcov** - Coverage reporting
+- **C++ compiler** - GCC 14+ or Clang 18+ (with C++20/C++23 support)
+- **clang-format** - Code formatter (`brew install clang-format`)
+- **clang-tidy** - Static analysis (`brew install llvm`)
+- **cppcheck** - Deep static analysis (`brew install cppcheck`)
+- **flawfinder** - Security scanner (`brew install flawfinder`)
+- **codespell** - Spell checker (`brew install codespell`)
+- **semgrep** - Pattern-based analysis (`brew install semgrep`)
+- **lcov** - Coverage reporting (`brew install lcov`)
 - **just** - Command runner
 - **copier** - Template engine
 - **git** - Version control
+
+Optional:
+- **include-what-you-use** - Include hygiene (advisory, does not fail CI)
 
 ## Testing the Template
 
@@ -129,9 +135,9 @@ just test-cpp
 
 This will:
 1. Generate a test project in a temp directory
-2. Verify all files are created
+2. Verify all expected files are created
 3. Verify CLAUDE.md symlink is correct
-4. Run `just init`, `just run`, `just destroy` in the generated project
+4. Run `just init`, `just run`, `just ci`, `just ci-quiet`, and `just destroy`
 5. Clean up temp directory
 
 ## Updating Generated Projects
@@ -139,7 +145,7 @@ This will:
 Projects can be updated when the template changes:
 
 ```bash
-cd my-project/main
+cd my-project
 copier update
 ```
 
