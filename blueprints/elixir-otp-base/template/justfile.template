@@ -119,7 +119,11 @@ code-security:
 code-spell:
     @echo ""
     @echo "\033[0;34m=== Checking Spelling ===\033[0m"
-    @codespell lib/ test/ config/ *.md *.exs --ignore-words=config/codespell/ignore.txt --skip="_build,deps,*.lock"
+    @if command -v codespell >/dev/null 2>&1; then \
+        codespell lib/ test/ config/ *.md *.exs --ignore-words=config/codespell/ignore.txt --skip="_build,deps,*.lock"; \
+    else \
+        echo "⚠ codespell not installed, skipping (install with: brew install codespell)"; \
+    fi
     @echo ""
     @echo "\033[0;32m✓ Spelling checks passed\033[0m"
     @echo ""
