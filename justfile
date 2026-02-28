@@ -127,17 +127,16 @@ update:
 		echo ""; \
 		exit 1; \
 	fi
-	@git pull
-	@if [ $$? -eq 0 ]; then \
+	@git pull && { \
 		echo ""; \
-		echo "✓ Templates updated successfully!"; \
+		printf "\033[32m✓ Templates updated successfully!\033[0m\n"; \
 		echo ""; \
-	else \
+	} || { \
 		echo ""; \
-		echo "✗ Failed to update templates"; \
+		printf "\033[31m✗ Failed to update templates\033[0m\n"; \
 		echo ""; \
 		exit 1; \
-	fi
+	}
 
 # Create new project from template
 create template-name target-dir=".":
