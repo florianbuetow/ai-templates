@@ -1,0 +1,74 @@
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+output:
+  formats:
+    - format: colored-line-number
+
+linters:
+  enable:
+    # Default linters
+    - errcheck
+    - govet
+    - staticcheck
+    - gosimple
+    - unused
+    - ineffassign
+    # Additional linters
+    - revive
+    - gosec
+    - gocritic
+    - gofumpt
+    - misspell
+    - errname
+    - exhaustive
+    - nilerr
+    - unparam
+    - bodyclose
+    - prealloc
+    - unconvert
+    - goconst
+    - durationcheck
+    - forbidigo
+    - forcetypeassert
+    - noctx
+
+linters-settings:
+  revive:
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: dot-imports
+      - name: error-naming
+      - name: error-return
+      - name: error-strings
+      - name: exported
+      - name: increment-decrement
+      - name: indent-error-flow
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: var-declaration
+      - name: var-naming
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+
+  exhaustive:
+    default-signifies-exhaustive: true
+
+  govet:
+    enable-all: true
+
+  gofumpt:
+    extra-rules: true
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
