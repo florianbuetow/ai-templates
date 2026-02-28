@@ -1,0 +1,145 @@
+# {{project_name}}
+
+{{project_description}}
+
+## Repository Structure
+
+```
+{{project_name}}/
+├── build.gradle.kts           # Gradle build configuration with all plugins
+├── settings.gradle.kts        # Gradle settings (project name)
+├── gradle.properties          # Gradle and project properties
+├── gradlew                    # Gradle wrapper (Unix)
+├── gradlew.bat                # Gradle wrapper (Windows)
+├── gradle/                    # Gradle wrapper JAR and properties
+│   └── wrapper/
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── .pre-commit-config.yaml    # Pre-commit hooks configuration
+├── .semgrepignore             # Semgrep ignore patterns
+├── .gitignore                 # Git ignore patterns
+├── justfile                   # Task runner with build/test/validation commands
+├── AGENTS.md                  # AI agent development rules
+├── CLAUDE.md                  # Claude Code compatibility (symlink to AGENTS.md)
+├── README.md                  # This file
+├── .cursor/                   # Cursor IDE configuration
+│   └── commands/              # Cursor AI commands
+│       └── doc-statemachine.md
+├── src/
+│   ├── main/java/{{package_path}}/  # Main source code
+│   │   └── Main.java               # Application entry point
+│   └── test/java/{{package_path}}/  # Test source code
+│       └── MainTest.java            # Unit tests
+├── scripts/                   # Utility scripts
+├── prompts/                   # LLM prompt templates
+├── data/                      # Data files
+│   ├── input/                 # Input data files
+│   └── output/                # Generated output files
+├── config/                    # Configuration files
+│   ├── checkstyle/            # Checkstyle code style rules
+│   │   └── checkstyle.xml     # Google Java Style checks
+│   ├── semgrep/               # Semgrep static analysis rules
+│   │   ├── no-default-values.yml
+│   │   ├── no-sneaky-fallbacks.yml
+│   │   └── no-suppression.yml
+│   └── codespell/             # Spell-check configuration
+│       └── ignore.txt         # Spell-check ignore list
+└── reports/                   # Generated reports (not in git)
+```
+
+## Prerequisites
+
+- **Java {{java_version}}+** - JDK ([Adoptium](https://adoptium.net/))
+- **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
+- **codespell** - Spell checker (`pip install codespell`)
+- **semgrep** - Static analysis (`pip install semgrep`)
+
+## Setup
+
+Initialize the project environment:
+
+```bash
+just init
+```
+
+This will:
+- Verify prerequisites (java, gradlew, codespell, semgrep)
+- Download and cache all Gradle dependencies
+
+## Usage
+
+Run the main application:
+
+```bash
+just run
+```
+
+See all available commands:
+
+```bash
+just help
+```
+
+Or simply:
+
+```bash
+just
+```
+
+## Development
+
+### Available Commands
+
+- `just check` - Check prerequisites
+- `just init` - Initialize development environment
+- `just run` - Run the main application
+- `just destroy` - Clean build artifacts
+- `just help` - Show available commands
+
+### Code Quality
+
+- `just code-format` - Auto-format code (google-java-format via Spotless)
+- `just code-style` - Check code style (Checkstyle)
+- `just code-typecheck` - Compile with Error Prone checks
+- `just code-security` - Run security checks (SpotBugs + Find Security Bugs)
+- `just code-deptry` - Check dependency hygiene
+- `just code-spell` - Check spelling (codespell)
+- `just code-semgrep` - Run custom static analysis (Semgrep)
+- `just code-audit` - Scan for CVEs (OWASP Dependency-Check)
+- `just code-architecture` - Run ArchUnit architecture tests
+
+### Testing
+
+- `just test` - Run unit tests
+- `just test-coverage` - Run tests with coverage ({{coverage_threshold}}% threshold)
+
+### CI
+
+- `just ci` - Run all validation checks (verbose)
+- `just ci-quiet` - Run all checks (silent, fail-fast)
+
+The CI pipeline runs the following steps in order:
+1. `init` - Initialize environment
+2. `code-format` - Auto-format code
+3. `code-style` - Check code style (Checkstyle)
+4. `code-typecheck` - Type/bug checking (Error Prone)
+5. `code-security` - Security scan (SpotBugs)
+6. `code-deptry` - Dependency hygiene
+7. `code-spell` - Spell checking
+8. `code-semgrep` - Custom static analysis
+9. `code-audit` - Vulnerability scanning (OWASP)
+10. `test` - Unit tests
+11. `code-architecture` - Architecture tests (ArchUnit)
+
+## Project Rules
+
+See [AGENTS.md](AGENTS.md) for detailed development guidelines including:
+- Java execution rules (use `./gradlew` exclusively)
+- Git commit guidelines (no AI attribution)
+- Testing requirements
+- Forbidden patterns
+- Project structure conventions
+
+## License
+
+<!-- Add your license here -->
