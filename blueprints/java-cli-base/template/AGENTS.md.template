@@ -1,0 +1,83 @@
+# Development Rules for {{project_name}}
+
+This file provides guidance to AI agents and AI-assisted development tools when working with this project. This includes Claude Code, Cursor IDE, GitHub Copilot, Windsurf, and any other AI coding assistants.
+
+## General Coding Principles
+- **Never assume any default values anywhere**
+- Always be explicit about values, paths, and configurations
+- If a value is not provided, handle it explicitly (throw an exception, return null, or prompt for input)
+- Never silently fall back to a default when data is missing
+
+## Git Commit Guidelines
+
+**IMPORTANT:** When creating git commits in this repository:
+- **NEVER include AI attribution in commit messages**
+- **NEVER add "Generated with [AI tool name]" or similar phrases**
+- **NEVER add "Co-Authored-By: [AI name]" or similar attribution**
+- **NEVER run `git add -A` or `git add .` - always stage files explicitly**
+- Keep commit messages professional and focused on the changes made
+- Commit messages should describe what changed and why, without mentioning AI assistance
+- **ALWAYS run `git push` after creating a commit to push changes to the remote repository**
+
+## Testing
+- After **every change** to the code, the tests must be executed
+- Always verify the program runs correctly with `just run` after modifications
+- Use **AssertJ** for all test assertions (`assertThat()` style)
+- Use **ArchUnit** for architecture constraint tests
+- Run `just test` for unit tests, `just test-coverage` for coverage verification
+
+## Java Execution Rules
+- Java code must be built and executed **only** via `./gradlew`
+  - Example: `./gradlew run`, `./gradlew test`, `./gradlew build`
+  - **Never** use: `java`, `javac`, or `jar` directly
+- **Never** modify the Gradle wrapper files (`gradlew`, `gradlew.bat`, `gradle/wrapper/`)
+- All dependencies must be managed through `build.gradle.kts`
+- Use the Gradle wrapper (`./gradlew`) exclusively, never a system-installed `gradle`
+
+## Justfile Rules
+- All Java execution in the justfile uses `./gradlew`, never `java` directly
+- Use `just init` to set up the project
+- Use `just run` to execute the main program
+- Use `just destroy` to clean build artifacts
+- Use `just help` to see all available recipes with descriptions
+- Use `just` (with no arguments) to see a list of all recipes
+- Use `just ci` to run all validation checks (verbose)
+- Use `just ci-quiet` to run all validation checks (silent, fail-fast)
+
+## Forbidden Patterns
+The following patterns are banned in production code (`src/main/`) and enforced by Semgrep:
+
+- **`@SuppressWarnings`** - Fix the underlying issue instead of suppressing warnings
+- **`//noinspection`** - Fix the underlying issue instead of suppressing inspections
+- **`NOSONAR`** - Fix the underlying issue instead of suppressing findings
+- **`Optional.orElse()`** - Use `orElseThrow()` to fail explicitly on missing values
+- **`Optional.orElseGet()`** - Use `orElseThrow()` to fail explicitly on missing values
+- **`Objects.requireNonNullElse()`** - Use `Objects.requireNonNull()` to fail explicitly
+- **`Objects.requireNonNullElseGet()`** - Use `Objects.requireNonNull()` to fail explicitly
+- **`Map.getOrDefault()`** - Access the key directly and handle missing cases explicitly
+- **`var != null ? var : default`** - Use explicit null checks with error messages
+
+## Project Structure
+- Main source code lives in `src/main/java/{{package_path}}/`
+- Test code lives in `src/test/java/{{package_path}}/`
+- Utility scripts go in `scripts/`
+- Prompt templates go in `prompts/`
+- **Input data is organized**: `data/input/`
+- **Output data is organized**: `data/output/`
+- Configuration files go in `config/` (checkstyle, semgrep, codespell)
+- **Never create Java files in the project root directory**
+  - Wrong: `./Main.java`, `./Helper.java`
+  - Correct: `./src/main/java/{{package_path}}/Helper.java`
+
+## Error Handling
+- Use explicit exceptions with clear messages for missing or invalid data
+- Never catch and silently ignore exceptions
+- Prefer checked exceptions for recoverable errors, unchecked for programming errors
+- Scripts should track and report success/failure counts
+- Exit with code 1 if any items failed, 0 if all succeeded
+
+## Optimization
+- **Skip processing if output already exists** - Don't reprocess unnecessarily
+- Check if output file exists before starting expensive operations
+- Track skipped items separately in summary reports
+- Allow users to force reprocessing by deleting output files
