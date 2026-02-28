@@ -1,0 +1,34 @@
+defmodule {{module_name}}.MixProject do
+  use Mix.Project
+
+  def project do
+    [
+      app: :{{app_name}},
+      version: "0.1.0",
+      elixir: "~> {{elixir_version}}",
+      start_permanent: Mix.env() == :prod,
+      deps: deps(),
+      test_coverage: [threshold: {{coverage_threshold}}],
+      dialyzer: [
+        plt_add_apps: [:mix, :ex_unit],
+        flags: [:error_handling, :underspecs, :unmatched_returns]
+      ]
+    ]
+  end
+
+  def application do
+    [
+      extra_applications: [:logger]
+    ]
+  end
+
+  defp deps do
+    [
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
+      {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
+      {:git_hooks, "~> 0.8", only: [:dev], runtime: false}
+    ]
+  end
+end

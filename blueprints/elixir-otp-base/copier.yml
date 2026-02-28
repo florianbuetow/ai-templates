@@ -1,0 +1,82 @@
+# Elixir OTP Base Template Configuration
+_min_copier_version: "9.0.0"
+
+_subdirectory: template
+_templates_suffix: ".template"
+_answers_file: .copier-answers.yml
+
+_exclude:
+  - ".git"
+  - "_build"
+  - "deps"
+  - "CLAUDE.md"
+
+_skip_if_exists:
+  - "lib/"
+  - "test/"
+  - "config/"
+
+_message_before_copy: |
+  Creating Elixir OTP project with full validation infrastructure.
+  This will set up a production-ready project following strict conventions.
+
+_message_after_copy: |
+  Project {{project_name}} created successfully!
+
+  Next steps:
+    cd {{project_name}}
+    just init    # Install dependencies and compile
+    just run     # Test the project
+    just help    # See all available commands
+
+_tasks:
+  - "ln -s AGENTS.md CLAUDE.md"
+
+project_name:
+  type: str
+  help: Project name (e.g., my-otp-app)?
+  validator: >-
+    {% if not (project_name | regex_search('^[a-zA-Z0-9]([a-zA-Z0-9_.-]*[a-zA-Z0-9])?$')) %}
+    Invalid project name. Use letters, digits, -, _, . only.
+    {% endif %}
+
+app_name:
+  type: str
+  help: Application name (e.g., my_otp_app)?
+  default: "{{project_name | replace('-', '_')}}"
+  validator: >-
+    {% if not (app_name | regex_search('^[a-z][a-z_0-9]+$')) %}
+    Invalid app name. Must be lowercase with underscores.
+    {% endif %}
+
+module_name:
+  type: str
+  help: Module name (e.g., MyOtpApp)?
+  default: "{{app_name | replace('_', ' ') | title | replace(' ', '')}}"
+
+project_description:
+  type: str
+  help: Short description?
+  default: "An Elixir OTP application"
+
+elixir_version:
+  type: str
+  help: Minimum Elixir version?
+  default: "1.17"
+  choices:
+    - "1.17"
+    - "1.18"
+
+author_name:
+  type: str
+  help: Author name?
+  default: ""
+
+coverage_threshold:
+  type: int
+  help: Code coverage threshold (%)?
+  default: 80
+  validator: >-
+    {% if coverage_threshold < 0 or coverage_threshold > 100 %}
+    Must be 0-100
+    {% endif %}

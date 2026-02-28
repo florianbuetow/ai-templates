@@ -1,0 +1,12 @@
+defmodule {{module_name}} do
+  @moduledoc """
+  {{project_description}}
+  """
+
+  @doc """
+  Main entry point.
+  """
+  def main do
+    IO.puts("Hello from {{app_name}}!")
+  end
+end

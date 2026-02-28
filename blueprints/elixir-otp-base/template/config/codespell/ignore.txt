@@ -1,0 +1,32 @@
+# Domain-specific terms that codespell should ignore
+# One word per line, case-insensitive
+
+# Elixir & Erlang
+elixir
+erlang
+ecto
+cowboy
+hackney
+dialyxir
+dialyzer
+credo
+sobelow
+otp
+genserver
+absinthe
+liveview
+heex
+sigil
+
+# Infrastructure & Tools
+grpc
+redis
+kafka
+kubernetes
+kubectl
+prometheus
+grafana
+
+# Technical terms
+uuid
+uuids
