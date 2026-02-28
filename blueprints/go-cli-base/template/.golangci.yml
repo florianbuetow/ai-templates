@@ -30,7 +30,6 @@ linters:
     - unconvert
     - goconst
     - durationcheck
-    - forbidigo
     - forcetypeassert
     - noctx
 

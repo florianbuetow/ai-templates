@@ -73,8 +73,8 @@ run:
 destroy:
     @echo ""
     @printf "\033[0;34m=== Destroying Build Artifacts ===\033[0m\n"
-    @rm -rf reports/
-    @go clean -cache -testcache
+    @rm -rf reports/ bin/ dist/
+    @go clean -testcache
     @printf "\033[0;32m✓ Build artifacts removed\033[0m\n"
     @echo ""
 
