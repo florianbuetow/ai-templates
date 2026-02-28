@@ -2,13 +2,22 @@
 
 ![Made with AI](https://img.shields.io/badge/Made%20with-AI-333333?labelColor=f00) ![Verified by Humans](https://img.shields.io/badge/Verified%20by-Humans-333333?labelColor=brightgreen)
 
-Copier templates for Python CLI and Elixir OTP applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
+Copier templates for Python CLI, Java CLI, and Elixir OTP applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
 
 ## Quick Start
 
 ```bash
 copier copy https://github.com/florianbuetow/ai-templates/blueprints/python-cli-base my-project
 cd my-project
+just init
+just run
+```
+
+**Java CLI:**
+
+```bash
+copier copy https://github.com/florianbuetow/ai-templates/blueprints/java-cli-base my-java-project
+cd my-java-project
 just init
 just run
 ```
@@ -24,15 +33,17 @@ just run
 
 ## Features
 
-- **12-step CI pipeline**: init → format → style → typecheck → security → deptry → spell → semgrep → audit → test → architecture → lspchecks
+- **Multi-step CI pipelines** with fail-fast behavior across all templates
 - **Pre-commit hooks** run full CI validation automatically before each commit
 - **Custom semgrep rules** ban default values, type suppressions, and sneaky fallback patterns
 - **AGENTS.md** provides AI assistants with project conventions and development rules
-- **Python 3.12+** with uv package management
+- **Python 3.12+** with uv package management (python-cli-base)
+- **Java 21+** with Gradle Kotlin DSL build system (java-cli-base)
+- **Elixir 1.17+** with Mix build tool (elixir-otp-base)
 - **Just task runner** with recipes for common tasks (init, run, test, ci, destroy)
-- **Test infrastructure** with pytest, coverage thresholds, and quality gates
+- **Test infrastructure** with coverage thresholds and quality gates
 
-### Validation Tools
+### Python Validation Tools
 
 | Tool | Purpose | Why It's Used |
 |------|---------|---------------|
@@ -46,6 +57,21 @@ just run
 | **pip-audit** | Vulnerability scanning | Scans dependencies for known security vulnerabilities |
 | **pytestarch** | Architecture constraints | Enforces import boundaries between layers - prevents architectural erosion |
 | **pytest** | Testing framework | Unit testing with fixtures, parameterization, and coverage |
+
+### Java Validation Tools
+
+| Tool | Purpose | Why It's Used |
+|------|---------|---------------|
+| **Spotless** | Formatting | Applies google-java-format for consistent code style |
+| **Checkstyle** | Code style | Enforces Google Java Style Guide conventions |
+| **Error Prone** | Bug detection | Google's compile-time checker - catches common Java mistakes |
+| **SpotBugs** | Security scanning | Finds security issues with Find Security Bugs plugin |
+| **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
+| **Dependency Analysis** | Dependency hygiene | Detects unused and undeclared dependencies |
+| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
+| **OWASP Dependency-Check** | Vulnerability scanning | Scans dependencies for known CVEs |
+| **ArchUnit** | Architecture constraints | Enforces package structure and import rules - prevents architectural erosion |
+| **JUnit 5 + JaCoCo** | Testing and coverage | Unit testing with coverage thresholds |
 
 See [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
 
@@ -72,10 +98,13 @@ Use these plugins after scaffolding a project with AI Templates to maintain code
 ## Prerequisites
 
 - **git** - Version control system
-- **python** - Python 3.12 or higher
-- **uv** - Python package manager ([installation guide](https://docs.astral.sh/uv/getting-started/installation/))
 - **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
 - **copier** - Template engine ([installation guide](https://copier.readthedocs.io/))
+- **codespell** - Spell checker (`pip install codespell`)
+- **semgrep** - Static analysis (`pip install semgrep`)
+- **python** - Python 3.12 or higher (for Python templates)
+- **uv** - Python package manager (for Python templates, [installation guide](https://docs.astral.sh/uv/getting-started/installation/))
+- **java** - JDK 21+ (for Java templates, [Adoptium](https://adoptium.net/))
 - **elixir** - Elixir 1.17+ (for Elixir templates)
 - **erlang** - Erlang/OTP 26+ (for Elixir templates)
 
@@ -103,7 +132,7 @@ just run
 ```
 
 The `just create` command takes two arguments:
-1. Template name (e.g., `python-cli-base` or `elixir-otp-base`)
+1. Template name (e.g., `python-cli-base`, `java-cli-base`, or `elixir-otp-base`)
 2. Target directory (absolute or relative path where the project will be created)
 
 **Method 2: Using Copier directly**
@@ -121,11 +150,14 @@ just run
 
 ```bash
 cd ai-templates
-just test
+just test          # Test Python template
+just test-java     # Test Java template
+just test-elixir   # Test Elixir template
+just test-all      # Test all templates
 ```
 
-This will:
-1. Generate a test project from each available template
+Each test will:
+1. Generate a test project from the template in a temp directory
 2. Verify all files are created correctly
 3. Run `just init`, `just run`, `just ci`, `just ci-quiet`, and `just destroy`
 4. Assert each step completes successfully
@@ -148,6 +180,7 @@ This updates the ai-templates repository itself (via `git pull`). Existing proje
 ai-templates/
 ├── blueprints/                                 # Copier-based project templates
 │   ├── python-cli-base/                       # Production-ready Python CLI template
+│   ├── java-cli-base/                         # Production-ready Java CLI template
 │   └── elixir-otp-base/                       # Production-ready Elixir OTP template
 │       ├── copier.yml                         # Template configuration
 │       ├── README.md                          # Template documentation
@@ -155,7 +188,6 @@ ai-templates/
 │           ├── .semgrepignore.template        # Semgrep ignore patterns
 │           ├── .gitignore.template            # Git ignore patterns
 │           ├── justfile.template              # Just command runner config
-│           ├── pyproject.toml.template        # Python project config
 │           ├── AGENTS.md.template             # AI agent guidelines
 │           ├── config/                        # Validation configurations
 │           │   ├── semgrep/                   # Custom semgrep rules
@@ -163,7 +195,9 @@ ai-templates/
 │           ├── src/                           # Source code directory
 │           └── tests/                         # Test directory
 ├── tests/                                      # Repository test suite
-│   └── test-template.sh                       # Template integration tests
+│   ├── test-template.sh                       # Python template integration tests
+│   ├── test-java-template.sh                  # Java template integration tests
+│   └── test-elixir-template.sh                # Elixir template integration tests
 ├── config/                                     # Shared validation configs
 │   ├── semgrep/                               # Custom semgrep rules
 │   └── codespell/                             # Spell check config
