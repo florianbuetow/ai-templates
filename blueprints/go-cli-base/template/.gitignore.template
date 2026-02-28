@@ -1,0 +1,33 @@
+# Go binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Go build cache
+/bin/
+/dist/
+
+# Dependency directories
+/vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Reports (generated)
+reports/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Copier answers file
+.copier-answers.yml

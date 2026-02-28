@@ -1,0 +1,14 @@
+:include .gitignore
+
+# Vendor directory
+vendor/
+
+# Build artifacts
+bin/
+dist/
+
+# Reports
+reports/
+
+# Cache directories
+.cache/

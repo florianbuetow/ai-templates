@@ -1,0 +1,20 @@
+# Domain-specific terms that codespell should ignore
+# One word per line, case-insensitive
+
+# Go ecosystem
+golangci
+gofumpt
+staticcheck
+govulncheck
+gosec
+gocritic
+errcheck
+govet
+goconst
+nilerr
+unparam
+bodyclose
+
+# Technical terms
+uuid
+uuids
