@@ -46,12 +46,14 @@ help:
 	@echo "  just test                              - Test Python CLI template generation"
 	@echo "  just test-java                         - Test Java CLI template generation"
 	@echo "  just test-elixir                       - Test Elixir OTP template generation"
+	@echo "  just test-go                           - Test Go CLI template generation"
 	@echo "  just test-all                          - Test all templates"
 	@echo ""
 	@echo "Available templates:"
 	@echo "  python-cli-base                        - Python CLI application"
 	@echo "  java-cli-base                          - Java CLI application"
 	@echo "  elixir-otp-base                        - Elixir OTP application"
+	@echo "  go-cli-base                            - Go CLI application"
 	@echo ""
 
 # Install templates and set up aliases
@@ -149,8 +151,13 @@ test-java:
 test-elixir:
 	@./tests/test-elixir-template.sh
 
+# Test the Go CLI template by generating a project in a temp folder
+test-go:
+	@./tests/test-go-template.sh
+
 # Test all templates
 test-all:
 	@./tests/test-template.sh
 	@./tests/test-java-template.sh
 	@./tests/test-elixir-template.sh
+	@./tests/test-go-template.sh
