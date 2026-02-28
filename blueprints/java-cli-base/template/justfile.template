@@ -90,6 +90,7 @@ help:
     @printf "  \033[36mcode-semgrep\033[0m       Run custom static analysis (Semgrep)\n"
     @printf "  \033[36mcode-audit\033[0m         Check for outdated dependencies\n"
     @printf "  \033[36mcode-architecture\033[0m  Run ArchUnit architecture tests\n"
+    @printf "  \033[36mcode-lspchecks\033[0m     Run strict compiler checks (javac -Xlint:all -Werror)\n"
     @echo ""
     @printf "  \033[36mtest\033[0m               Run unit tests\n"
     @printf "  \033[36mtest-coverage\033[0m      Run tests with coverage ({{coverage_threshold}}%% threshold)\n"
@@ -203,6 +204,14 @@ test-coverage: init
     @printf "\033[32m✓ test-coverage completed successfully\033[0m\n"
     @echo ""
 
+# Run strict compiler checks (LSP-equivalent: javac -Xlint:all -Werror)
+code-lspchecks:
+    @echo ""
+    @printf "\033[34m=== Running Compiler Checks ===\033[0m\n"
+    @./gradlew lspChecks --quiet
+    @printf "\033[32m✓ code-lspchecks completed successfully\033[0m\n"
+    @echo ""
+
 # Run architecture import rule tests
 code-architecture:
     @echo ""
@@ -229,6 +238,7 @@ ci:
     just code-audit
     just test
     just code-architecture
+    just code-lspchecks
     echo ""
     printf "\033[32m✓ ci completed successfully\033[0m\n"
     echo ""
@@ -273,6 +283,9 @@ ci-quiet:
 
     just code-architecture > $TMPFILE 2>&1 || { printf "\033[31m✗ code-architecture failed\033[0m\n"; cat $TMPFILE; exit 1; }
     printf "\033[32m✓ code-architecture passed\033[0m\n"
+
+    just code-lspchecks > $TMPFILE 2>&1 || { printf "\033[31m✗ code-lspchecks failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-lspchecks passed\033[0m\n"
 
     echo ""
     printf "\033[32m✓ ci-quiet completed successfully\033[0m\n"

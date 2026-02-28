@@ -2,7 +2,7 @@
 
 ![Made with AI](https://img.shields.io/badge/Made%20with-AI-333333?labelColor=f00) ![Verified by Humans](https://img.shields.io/badge/Verified%20by-Humans-333333?labelColor=brightgreen)
 
-Copier templates for Python CLI, Java CLI, Go CLI, and Elixir OTP applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
+Copier templates for Python CLI, Java CLI, Go CLI, Elixir OTP, and C++ CLI applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
 
 ## Quick Start
 
@@ -42,6 +42,15 @@ just init
 just run
 ```
 
+**C++ CLI:**
+
+```bash
+copier copy https://github.com/florianbuetow/ai-templates/blueprints/cpp-cli-base my-cpp-project
+cd my-cpp-project
+just init
+just run
+```
+
 ## Features
 
 - **Multi-step CI pipelines** with fail-fast behavior across all templates
@@ -59,25 +68,26 @@ just run
 | [**java-cli-base**](blueprints/java-cli-base/) | Java 21+ | CLI apps with Gradle, Spotless, Checkstyle, Error Prone, SpotBugs, JUnit 5 |
 | [**go-cli-base**](blueprints/go-cli-base/) | Go 1.23+ | CLI apps with golangci-lint, go vet, staticcheck, gosec, govulncheck |
 | [**elixir-otp-base**](blueprints/elixir-otp-base/) | Elixir 1.17+ | OTP apps with Credo, Dialyxir, Sobelow, mix_audit, ExUnit |
+| [**cpp-cli-base**](blueprints/cpp-cli-base/) | C++23 | CLI apps with CMake, clang-format, clang-tidy, cppcheck, flawfinder, GoogleTest |
 
 ## Validation Tools by Language
 
 Every template runs the same CI check categories via `just ci`. The table below shows which tool handles each check for each language.
 
-| Check | Recipe | Python | Java | Go | Elixir |
-|-------|--------|--------|------|----|--------|
-| Formatting | `code-format` | ruff | Spotless | gofumpt | mix format |
-| Style | `code-style` | ruff | Checkstyle | gofumpt | mix format |
-| Type checking | `code-typecheck` | mypy | Error Prone | go vet | Dialyzer |
-| LSP analysis | `code-lspchecks` | pyright | — | staticcheck | mix compile --warnings-as-errors |
-| Security | `code-security` | bandit | SpotBugs | gosec | Sobelow |
-| Dependency hygiene | `code-deptry` | deptry | Gradle buildHealth | go mod tidy | mix deps.unlock --check-unused |
-| Spell checking | `code-spell` | codespell | codespell | codespell | codespell |
-| Custom rules | `code-semgrep` | semgrep | semgrep | semgrep | Custom Credo checks |
-| Vulnerability scan | `code-audit` | pip-audit | OWASP Dep-Check | govulncheck | mix deps.audit + hex.audit |
-| Testing | `test` | pytest | JUnit 5 | go test | ExUnit |
-| Meta-linter | `lint` | — | — | golangci-lint | Credo |
-| Architecture | `code-architecture` | pytestarch | ArchUnit | arch-go | — |
+| Check | Recipe | Python | Java | Go | Elixir | C++ |
+|-------|--------|--------|------|----|--------|-----|
+| Formatting | `code-format` | ruff | Spotless | gofumpt | mix format | clang-format |
+| Style | `code-style` | ruff | Checkstyle | gofumpt | mix format | clang-tidy |
+| Type checking | `code-typecheck` | mypy | Error Prone | go vet | Dialyzer | cppcheck |
+| LSP analysis | `code-lspchecks` | pyright | javac -Xlint:all -Werror | staticcheck | mix compile --warnings-as-errors | — |
+| Security | `code-security` | bandit | SpotBugs | gosec | Sobelow | flawfinder |
+| Dependency hygiene | `code-deptry` | deptry | Gradle buildHealth | go mod tidy | mix deps.unlock --check-unused | IWYU |
+| Spell checking | `code-spell` | codespell | codespell | codespell | codespell | codespell |
+| Custom rules | `code-semgrep` | semgrep | semgrep | semgrep | Custom Credo checks | semgrep |
+| Vulnerability scan | `code-audit` | pip-audit | Gradle Versions Plugin | govulncheck | mix deps.audit + hex.audit | — |
+| Testing | `test` | pytest | JUnit 5 | go test | ExUnit | GoogleTest |
+| Meta-linter | `lint` | — | — | golangci-lint | Credo | — |
+| Architecture | `code-architecture` | pytestarch | ArchUnit | arch-go | — | — |
 
 See each template's README for tool details and configuration, or [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for semgrep rules.
 
@@ -108,7 +118,7 @@ Use these plugins after scaffolding a project with AI Templates to maintain code
 - **copier** - Template engine ([installation guide](https://copier.readthedocs.io/))
 
 Each template has its own language-specific prerequisites. See the template READMEs for details:
-[Python](blueprints/python-cli-base/) | [Java](blueprints/java-cli-base/) | [Go](blueprints/go-cli-base/) | [Elixir](blueprints/elixir-otp-base/)
+[Python](blueprints/python-cli-base/) | [Java](blueprints/java-cli-base/) | [Go](blueprints/go-cli-base/) | [Elixir](blueprints/elixir-otp-base/) | [C++](blueprints/cpp-cli-base/)
 
 ## Installation
 
@@ -134,7 +144,7 @@ just run
 ```
 
 The `just create` command takes two arguments:
-1. Template name (e.g., `python-cli-base`, `java-cli-base`, `go-cli-base`, or `elixir-otp-base`)
+1. Template name (e.g., `python-cli-base`, `java-cli-base`, `go-cli-base`, `elixir-otp-base`, or `cpp-cli-base`)
 2. Target directory (absolute or relative path where the project will be created)
 
 **Method 2: Using Copier directly**
@@ -156,6 +166,7 @@ just test          # Test Python template
 just test-java     # Test Java template
 just test-go       # Test Go template
 just test-elixir   # Test Elixir template
+just test-cpp      # Test C++ template
 just test-all      # Test all templates
 ```
 
@@ -185,7 +196,8 @@ ai-templates/
 │   ├── python-cli-base/                       # Python CLI template (README, copier.yml, template/)
 │   ├── java-cli-base/                         # Java CLI template
 │   ├── go-cli-base/                           # Go CLI template
-│   └── elixir-otp-base/                       # Elixir OTP template
+│   ├── elixir-otp-base/                       # Elixir OTP template
+│   └── cpp-cli-base/                          # C++ CLI template
 ├── tests/                                      # Integration tests for each template
 ├── config/                                     # Shared validation configs (semgrep, codespell)
 ├── docs/                                       # Documentation

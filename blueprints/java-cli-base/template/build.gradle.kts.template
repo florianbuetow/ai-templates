@@ -122,6 +122,15 @@ tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
 
+// --- LSP-equivalent compiler checks (javac -Xlint:all -Werror) ---
+tasks.register<JavaCompile>("lspChecks") {
+    description = "Compile with strict javac warnings (-Xlint:all -Werror)"
+    source = sourceSets.main.get().java
+    classpath = sourceSets.main.get().compileClasspath
+    destinationDirectory = layout.buildDirectory.dir("classes/lspChecks")
+    options.compilerArgs.addAll(listOf("-Xlint:all", "-Werror"))
+}
+
 // --- Build lifecycle ---
 tasks.check {
     dependsOn(

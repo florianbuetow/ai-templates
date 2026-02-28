@@ -18,11 +18,12 @@ Production-ready Copier template for Java CLI applications with full validation 
 | **Spotless** | Formatting | Applies google-java-format for consistent code style |
 | **Checkstyle** | Code style | Enforces Google Java Style Guide conventions |
 | **Error Prone** | Bug detection | Google's compile-time checker - catches common Java mistakes |
+| **javac -Xlint:all -Werror** | LSP-equivalent checks | Strict compiler warnings catch unused imports, variables, deprecation, unchecked casts |
 | **SpotBugs** | Security scanning | Finds security issues with Find Security Bugs plugin |
 | **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
 | **Dependency Analysis** | Dependency hygiene | Detects unused and undeclared dependencies |
 | **codespell** | Spell checking | Catches typos in code, comments, and documentation |
-| **OWASP Dependency-Check** | Vulnerability scanning | Scans dependencies for known CVEs |
+| **Gradle Versions Plugin** | Dependency version audit | Detects outdated dependencies with available updates |
 | **ArchUnit** | Architecture constraints | Enforces package structure and import rules - prevents architectural erosion |
 | **JUnit 5 + JaCoCo** | Testing and coverage | Unit testing with coverage thresholds |
 

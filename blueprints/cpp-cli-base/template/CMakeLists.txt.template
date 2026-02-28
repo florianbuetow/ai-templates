@@ -1,0 +1,84 @@
+cmake_minimum_required(VERSION 3.25)
+project({{project_name}} VERSION 0.1.0 LANGUAGES CXX)
+
+# C++ standard
+set(CMAKE_CXX_STANDARD {{cpp_standard}})
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Export compile_commands.json for clang-tidy, IWYU, etc.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Strict compiler warnings
+add_compile_options(
+    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+        -Wall -Wextra -Wpedantic -Werror
+        -Wconversion -Wsign-conversion -Wshadow
+        -Wnon-virtual-dtor -Wold-style-cast -Wcast-align
+        -Woverloaded-virtual -Wunused
+    >
+    $<$<CXX_COMPILER_ID:MSVC>:
+        /W4 /WX /permissive-
+    >
+)
+
+# Coverage flags (enabled via CMakePresets.json)
+option(ENABLE_COVERAGE "Enable code coverage instrumentation" OFF)
+if(ENABLE_COVERAGE)
+    if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+        message(FATAL_ERROR "Coverage requires Debug build type")
+    endif()
+    add_compile_options(-O0 -g --coverage -fprofile-arcs -ftest-coverage)
+    add_link_options(--coverage -fprofile-arcs -ftest-coverage)
+endif()
+
+# Sanitizer flags (enabled via CMakePresets.json)
+option(ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
+if(ENABLE_SANITIZERS)
+    add_compile_options(
+        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+            -fsanitize=address,undefined -fno-omit-frame-pointer
+        >
+    )
+    add_link_options(
+        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:GNU>>:
+            -fsanitize=address,undefined
+        >
+    )
+endif()
+
+# Main library target (all source except main.cpp)
+add_library(${PROJECT_NAME}_lib STATIC
+    src/app.cpp
+)
+target_include_directories(${PROJECT_NAME}_lib PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
+)
+
+# Main executable
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_lib)
+
+# Testing
+option(BUILD_TESTING "Build tests" ON)
+if(BUILD_TESTING)
+    enable_testing()
+    include(FetchContent)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.15.2
+    )
+    FetchContent_MakeAvailable(googletest)
+
+    add_executable(${PROJECT_NAME}_tests
+        tests/app_test.cpp
+    )
+    target_link_libraries(${PROJECT_NAME}_tests PRIVATE
+        ${PROJECT_NAME}_lib
+        GTest::gtest_main
+    )
+
+    include(GoogleTest)
+    gtest_discover_tests(${PROJECT_NAME}_tests)
+endif()

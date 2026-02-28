@@ -1,0 +1,359 @@
+# =============================================================================
+# Justfile Rules (follow these when editing justfile):
+#
+# 1. Use printf (not echo) to print colors — some terminals won't render
+#    colors with echo.
+#
+# 2. Always add an empty `@echo ""` line before and after each target's
+#    command block.
+#
+# 3. Always add new targets to the help section and update it when targets
+#    are added, modified or removed.
+#
+# 4. Target ordering in help (and in this file) matters:
+#    - Setup targets first (init, setup, install, etc.)
+#    - Start/stop/run targets next
+#    - Code generation / data tooling targets next
+#    - Checks, linting, and tests next (ordered fastest to slowest)
+#    Group related targets together and separate groups with an empty
+#    `@echo ""` line in the help output.
+#
+# 5. Composite targets (e.g. ci) that call multiple sub-targets must fail
+#    fast: exit 1 on the first error. Never skip over errors or warnings.
+#    Use `set -e` or `&&` chaining to ensure immediate abort with the
+#    appropriate error message.
+#
+# 6. Every target must end with a clear short status message:
+#    - On success: green (\033[32m) message confirming completion.
+#      E.g. printf "\033[32m✓ init completed successfully\033[0m\n"
+#    - On failure: red (\033[31m) message indicating what failed, then exit 1.
+#      E.g. printf "\033[31m✗ ci failed: tests exited with errors\033[0m\n"
+# =============================================================================
+
+# Default recipe: show available commands
+_default:
+    @just --list
+
+# Check prerequisites
+check:
+    @echo ""
+    @if ! command -v cmake >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: cmake is not installed\033[0m\n"; \
+        printf "  Install with: brew install cmake\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ cmake is installed\033[0m\n"
+    @if ! command -v c++ >/dev/null 2>&1 && ! command -v g++ >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: no C++ compiler found (c++ or g++)\033[0m\n"; \
+        printf "  Install Xcode Command Line Tools: xcode-select --install\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ C++ compiler is installed\033[0m\n"
+    @if ! command -v clang-format >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: clang-format is not installed\033[0m\n"; \
+        printf "  Install with: brew install clang-format\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ clang-format is installed\033[0m\n"
+    @if ! command -v clang-tidy >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: clang-tidy is not installed\033[0m\n"; \
+        printf "  Install with: brew install llvm\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ clang-tidy is installed\033[0m\n"
+    @if ! command -v cppcheck >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: cppcheck is not installed\033[0m\n"; \
+        printf "  Install with: brew install cppcheck\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ cppcheck is installed\033[0m\n"
+    @if ! command -v flawfinder >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: flawfinder is not installed\033[0m\n"; \
+        printf "  Install with: brew install flawfinder\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ flawfinder is installed\033[0m\n"
+    @if ! command -v codespell >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: codespell is not installed\033[0m\n"; \
+        printf "  Install with: brew install codespell\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ codespell is installed\033[0m\n"
+    @if ! command -v semgrep >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: semgrep is not installed\033[0m\n"; \
+        printf "  Install with: brew install semgrep\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ semgrep is installed\033[0m\n"
+    @if ! command -v lcov >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: lcov is not installed\033[0m\n"; \
+        printf "  Install with: brew install lcov\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ lcov is installed\033[0m\n"
+    @echo ""
+
+# Show help information
+help:
+    @echo ""
+    @clear
+    @echo ""
+    @printf "\033[0;34m=== {{project_name}} ===\033[0m\n"
+    @echo ""
+    @echo "Available commands:"
+    @just --list
+    @echo ""
+
+# Initialize the development environment
+init: check
+    @echo ""
+    @printf "\033[0;34m=== Initializing Development Environment ===\033[0m\n"
+    @mkdir -p reports/coverage
+    @mkdir -p reports/security
+    @echo "Configuring CMake debug preset..."
+    @cmake --preset debug
+    @echo "Building project..."
+    @cmake --build --preset debug
+    @printf "\033[0;32m✓ Development environment ready\033[0m\n"
+    @echo ""
+
+# Run the main application
+run:
+    @echo ""
+    @printf "\033[0;34m=== Running Application ===\033[0m\n"
+    @cmake --build --preset debug
+    @./build/debug/{{project_name}}
+    @echo ""
+
+# Remove build artifacts and caches
+destroy:
+    @echo ""
+    @printf "\033[0;34m=== Destroying Build Artifacts ===\033[0m\n"
+    @rm -rf build/ reports/
+    @printf "\033[0;32m✓ Build artifacts removed\033[0m\n"
+    @echo ""
+
+# Auto-fix code formatting with clang-format
+code-format:
+    #!/usr/bin/env bash
+    set -e
+    echo ""
+    printf "\033[0;34m=== Formatting Code ===\033[0m\n"
+    FILES=$(find src/ include/ tests/ -type f \( -name "*.cpp" -o -name "*.hpp" \) 2>/dev/null)
+    if [ -n "$FILES" ]; then
+        echo "$FILES" | xargs clang-format -i
+    fi
+    printf "\033[0;32m✓ Code formatted\033[0m\n"
+    echo ""
+
+# Run clang-tidy static analysis
+code-style:
+    #!/usr/bin/env bash
+    set -e
+    echo ""
+    printf "\033[0;34m=== Checking Code Style ===\033[0m\n"
+    FILES=$(find src/ -type f -name "*.cpp" 2>/dev/null)
+    if [ -n "$FILES" ]; then
+        echo "$FILES" | xargs clang-tidy -p build/debug
+    fi
+    printf "\033[0;32m✓ Style checks passed\033[0m\n"
+    echo ""
+
+# Run cppcheck static analysis
+code-typecheck:
+    @echo ""
+    @printf "\033[0;34m=== Running Static Analysis (cppcheck) ===\033[0m\n"
+    @cppcheck --enable=all --error-exitcode=1 --suppress=missingIncludeSystem --std=c++{{cpp_standard}} -I include/ src/
+    @printf "\033[0;32m✓ Static analysis passed\033[0m\n"
+    @echo ""
+
+# Run security checks with flawfinder
+code-security:
+    @echo ""
+    @printf "\033[0;34m=== Running Security Checks ===\033[0m\n"
+    @mkdir -p reports/security
+    @flawfinder --minlevel=1 src/ include/ > reports/security/flawfinder.txt 2>&1 || true
+    @flawfinder --minlevel=1 --error-level=1 src/ include/
+    @printf "\033[0;32m✓ Security checks passed\033[0m\n"
+    @echo ""
+
+# Check include hygiene with IWYU (advisory — does not fail CI)
+code-deptry:
+    #!/usr/bin/env bash
+    echo ""
+    printf "\033[0;34m=== Checking Include Hygiene (IWYU — advisory) ===\033[0m\n"
+    # IWYU (Include What You Use) is advisory only: its suggestions are
+    # informational and do not cause CI to fail. Review its output manually
+    # and apply fixes where appropriate.
+    if command -v iwyu_tool >/dev/null 2>&1; then
+        iwyu_tool -p build/debug -- -Xiwyu --no_fwd_decls 2>&1 || true
+    elif command -v include-what-you-use >/dev/null 2>&1; then
+        FILES=$(find src/ -type f -name "*.cpp" 2>/dev/null)
+        if [ -n "$FILES" ]; then
+            for f in $FILES; do
+                include-what-you-use -std=c++{{cpp_standard}} -I include/ "$f" 2>&1 || true
+            done
+        fi
+    else
+        printf "  IWYU not installed — skipping (install with: brew install include-what-you-use)\n"
+    fi
+    printf "\033[0;32m✓ Include hygiene check completed (advisory)\033[0m\n"
+    echo ""
+
+# Check spelling in code and documentation
+code-spell:
+    @echo ""
+    @printf "\033[0;34m=== Checking Spelling ===\033[0m\n"
+    @codespell src include tests scripts *.md
+    @printf "\033[0;32m✓ Spelling checks passed\033[0m\n"
+    @echo ""
+
+# Run Semgrep static analysis
+code-semgrep:
+    @echo ""
+    @printf "\033[0;34m=== Running Semgrep Static Analysis ===\033[0m\n"
+    @semgrep --config config/semgrep/ --error src include
+    @printf "\033[0;32m✓ Semgrep checks passed\033[0m\n"
+    @echo ""
+
+# Run unit tests
+test:
+    @echo ""
+    @printf "\033[0;34m=== Running Tests ===\033[0m\n"
+    @cmake --build --preset debug
+    @ctest --preset debug
+    @printf "\033[0;32m✓ Tests passed\033[0m\n"
+    @echo ""
+
+# Run tests with coverage report and threshold check
+test-coverage:
+    #!/usr/bin/env bash
+    set -e
+    echo ""
+    printf "\033[0;34m=== Running Tests with Coverage ===\033[0m\n"
+    mkdir -p reports/coverage
+
+    # Configure and build with coverage preset
+    cmake --preset coverage
+    cmake --build --preset coverage
+
+    # Run tests
+    ctest --preset coverage
+
+    # Capture coverage data
+    lcov --capture \
+        --directory build/coverage \
+        --output-file reports/coverage/coverage.info \
+        --ignore-errors mismatch
+
+    # Filter out system headers and googletest
+    lcov --remove reports/coverage/coverage.info \
+        '/usr/*' \
+        '*/googletest/*' \
+        '*/build/*' \
+        '*/tests/*' \
+        --output-file reports/coverage/coverage.filtered.info \
+        --ignore-errors unused
+
+    # Extract coverage percentage
+    COVERAGE=$(lcov --summary reports/coverage/coverage.filtered.info 2>&1 \
+        | grep -oP 'lines\.*:\s*\K[0-9]+(\.[0-9]+)?' || echo "0")
+    printf "Total coverage: %s%%\n" "$COVERAGE"
+
+    # Check threshold
+    THRESHOLD={{coverage_threshold}}
+    if [ "$(echo "$COVERAGE < $THRESHOLD" | bc -l)" -eq 1 ]; then
+        printf "\033[0;31m✗ Coverage %s%% is below threshold %s%%\033[0m\n" "$COVERAGE" "$THRESHOLD"
+        exit 1
+    fi
+
+    # Generate HTML report
+    genhtml reports/coverage/coverage.filtered.info \
+        --output-directory reports/coverage/html \
+        --title "{{project_name}} Coverage"
+
+    printf "\033[0;32m✓ Coverage threshold met (%s%% >= %s%%)\033[0m\n" "$COVERAGE" "$THRESHOLD"
+    echo "  HTML: reports/coverage/html/index.html"
+    echo ""
+
+# Run tests with sanitizers (AddressSanitizer + UndefinedBehaviorSanitizer)
+code-sanitize:
+    @echo ""
+    @printf "\033[0;34m=== Running Sanitizer Tests ===\033[0m\n"
+    @cmake --preset sanitize
+    @cmake --build --preset sanitize
+    @ctest --preset sanitize
+    @printf "\033[0;32m✓ Sanitizer tests passed\033[0m\n"
+    @echo ""
+
+# Run ALL validation checks (verbose)
+ci:
+    #!/usr/bin/env bash
+    set -e
+    echo ""
+    printf "\033[0;34m=== Running CI Checks ===\033[0m\n"
+    echo ""
+    just init
+    just code-format
+    just code-style
+    just code-typecheck
+    just code-security
+    just code-deptry
+    just code-spell
+    just code-semgrep
+    just test
+    just code-sanitize
+    echo ""
+    printf "\033[0;32m✓ All CI checks passed\033[0m\n"
+    echo ""
+
+# Run ALL validation checks silently (only show output on errors)
+ci-quiet:
+    #!/usr/bin/env bash
+    set -e
+    printf "\033[0;34m=== Running CI Checks (Quiet Mode) ===\033[0m\n"
+    TMPFILE=$(mktemp)
+    trap "rm -f $TMPFILE" EXIT
+
+    just init > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Init failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Init passed\033[0m\n"
+
+    just code-format > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-format failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-format passed\033[0m\n"
+
+    just code-style > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-style failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-style passed\033[0m\n"
+
+    just code-typecheck > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-typecheck failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-typecheck passed\033[0m\n"
+
+    just code-security > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-security failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-security passed\033[0m\n"
+
+    just code-deptry > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-deptry failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-deptry passed\033[0m\n"
+
+    just code-spell > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-spell failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-spell passed\033[0m\n"
+
+    just code-semgrep > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-semgrep failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-semgrep passed\033[0m\n"
+
+    just test > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Test failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Test passed\033[0m\n"
+
+    just code-sanitize > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-sanitize failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-sanitize passed\033[0m\n"
+
+    echo ""
+    printf "\033[0;32m✓ All CI checks passed\033[0m\n"
+    echo ""

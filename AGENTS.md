@@ -4,7 +4,7 @@ This file provides guidance to AI agents and AI-assisted development tools when 
 
 ## Repository Overview
 
-This repository contains Copier templates for AI-agent-friendly project scaffolding across multiple languages: Python, Java, Go, and Elixir.
+This repository contains Copier templates for AI-agent-friendly project scaffolding across multiple languages: Python, Java, Go, Elixir, and C++.
 
 ## Git Commit Guidelines
 
@@ -31,7 +31,7 @@ This repository contains Copier templates for AI-agent-friendly project scaffold
 ### The Java CLI Template (`blueprints/java-cli-base`)
 
 - Java 21+ with Gradle Kotlin DSL
-- Validation: Spotless, Checkstyle, Error Prone, SpotBugs, semgrep, codespell, OWASP, ArchUnit, JUnit 5
+- Validation: Spotless, Checkstyle, Error Prone, javac -Xlint:all -Werror, SpotBugs, semgrep, codespell, Gradle Versions Plugin, ArchUnit, JUnit 5
 
 ### The Go CLI Template (`blueprints/go-cli-base`)
 
@@ -44,5 +44,12 @@ This repository contains Copier templates for AI-agent-friendly project scaffold
 
 - Elixir 1.17+ with Mix build tool
 - Validation: mix format, Credo, Dialyxir, mix compile --warnings-as-errors, Sobelow, mix deps.unlock --check-unused, codespell, custom Credo checks, mix audit, ExUnit
+
+### The C++ CLI Template (`blueprints/cpp-cli-base`)
+
+- C++23 with CMake build system
+- Project structure: src/, include/, tests/, scripts/, data/
+- Validation: clang-format, clang-tidy, cppcheck, flawfinder, IWYU, semgrep, codespell, GoogleTest, ASan/UBSan, lcov coverage
+- Conventions: Justfile workflow, CMakePresets.json, strict compiler warnings (-Wall -Wextra -Wpedantic -Werror)
 
 All templates emphasize creating immediately runnable projects with no placeholders, comprehensive CI pipelines, and AGENTS.md/CLAUDE.md files for AI agent guidance.
