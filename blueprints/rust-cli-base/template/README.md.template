@@ -1,0 +1,133 @@
+# {{project_name}}
+
+{{project_description}}
+
+## Repository Structure
+
+```
+{{project_name}}/
+├── Cargo.toml              # Project dependencies and metadata
+├── rustfmt.toml            # Rustfmt configuration
+├── deny.toml               # cargo-deny configuration (advisories, licenses, bans)
+├── .pre-commit-config.yaml # Pre-commit hooks configuration
+├── .gitignore              # Git ignore patterns
+├── justfile                # Task runner with build/test/validation commands
+├── AGENTS.md               # AI agent development rules
+├── CLAUDE.md               # Claude Code compatibility (symlink to AGENTS.md)
+├── README.md               # This file
+├── src/                    # Source code
+│   ├── main.rs             # Application entry point
+│   └── lib.rs              # Library code and types
+├── tests/                  # Integration tests
+│   └── integration_test.rs # CLI integration tests
+├── scripts/                # Utility scripts
+├── prompts/                # LLM prompt templates
+├── data/                   # Data files
+│   ├── input/             # Input data files
+│   └── output/            # Generated output files
+├── config/                 # Configuration files
+│   ├── semgrep/           # Semgrep static analysis rules
+│   │   ├── no-unwrap.yml
+│   │   ├── no-expect-without-context.yml
+│   │   ├── no-silent-error-discard.yml
+│   │   ├── no-allow-attributes.yml
+│   │   └── no-default-fallbacks.yml
+│   └── codespell/         # Spell-check configuration
+│       └── ignore.txt      # Spell-check ignore list
+└── reports/                # Generated reports (not in git)
+    └── coverage/          # Code coverage reports
+```
+
+## Prerequisites
+
+- **Rust 1.85+** (2024 edition) - ([rustup.rs](https://rustup.rs/) or Homebrew)
+- **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
+- **codespell** - Spell checker (`pip install codespell`)
+- **semgrep** - Static analysis (`pip install semgrep`)
+
+## Setup
+
+Initialize the project environment:
+
+```bash
+just init
+```
+
+This will:
+- Install Rust toolchain components (rustfmt, clippy, llvm-tools-preview)
+- Install dev tools (cargo-nextest, cargo-deny, cargo-geiger, cargo-machete, grcov)
+- Build the project
+
+## Usage
+
+Run the main application:
+
+```bash
+just run
+```
+
+See all available commands:
+
+```bash
+just help
+```
+
+Or simply:
+
+```bash
+just
+```
+
+## Development
+
+### Available Commands
+
+- `just init` - Initialize development environment
+- `just run` - Run the main application
+- `just destroy` - Remove build artifacts and reports
+- `just help` - Show available commands
+
+### Code Quality
+
+- `just code-style` - Check code formatting (read-only)
+- `just code-format` - Auto-fix code formatting
+- `just code-typecheck` - Run cargo check + clippy
+- `just code-security` - Run unsafe code detection (cargo-geiger)
+- `just code-deptry` - Check dependency hygiene (cargo-machete)
+- `just code-spell` - Check spelling
+- `just code-audit` - Scan for vulnerabilities (cargo-deny)
+- `just code-semgrep` - Run custom static analysis
+
+### Testing
+
+- `just test` - Run tests (cargo-nextest)
+- `just test-coverage` - Run tests with coverage (grcov)
+
+### CI
+
+- `just ci` - Run all validation checks (verbose)
+- `just ci-quiet` - Run all checks (silent, fail-fast)
+
+The CI pipeline runs the following steps in order:
+1. `init` - Install dependencies
+2. `code-format` - Auto-format code
+3. `code-style` - Verify formatting
+4. `code-typecheck` - Type checking (cargo check + clippy)
+5. `code-security` - Unsafe code scan (cargo-geiger)
+6. `code-deptry` - Unused dependency check (cargo-machete)
+7. `code-spell` - Spell checking (codespell)
+8. `code-semgrep` - Custom static analysis (semgrep)
+9. `code-audit` - Advisory/license/ban check (cargo-deny)
+10. `test` - Tests (cargo-nextest)
+
+## Project Rules
+
+See [AGENTS.md](AGENTS.md) for detailed development guidelines including:
+- Rust error handling rules (use `?` operator, never `.unwrap()`)
+- Git commit guidelines (no AI attribution)
+- Testing requirements
+- Project structure conventions
+
+## License
+
+<!-- Add your license here -->

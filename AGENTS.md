@@ -4,7 +4,7 @@ This file provides guidance to AI agents and AI-assisted development tools when 
 
 ## Repository Overview
 
-This repository contains Copier templates for AI-agent-friendly project scaffolding across multiple languages: Python, Java, Go, Elixir, and C++.
+This repository contains Copier templates for AI-agent-friendly project scaffolding across multiple languages: Python, Java, Go, Elixir, C++, and Rust.
 
 ## Git Commit Guidelines
 
@@ -44,6 +44,13 @@ This repository contains Copier templates for AI-agent-friendly project scaffold
 
 - Elixir 1.17+ with Mix build tool
 - Validation: mix format, Credo, Dialyxir, mix compile --warnings-as-errors, Sobelow, mix deps.unlock --check-unused, codespell, custom Credo checks, mix audit, ExUnit
+
+### The Rust CLI Template (`blueprints/rust-cli-base`)
+
+- Rust 2024 edition (1.85+) with Cargo
+- Project structure: src/, tests/, scripts/, data/
+- Validation: rustfmt, clippy (pedantic+nursery+cargo), cargo check, cargo-geiger, cargo-machete, semgrep, codespell, cargo-deny, cargo-nextest, grcov
+- Conventions: Justfile workflow, anyhow+thiserror error handling, no .unwrap(), no #[allow(...)], no unsafe
 
 ### The C++ CLI Template (`blueprints/cpp-cli-base`)
 

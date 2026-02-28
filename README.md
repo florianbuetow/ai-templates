@@ -2,7 +2,7 @@
 
 ![Made with AI](https://img.shields.io/badge/Made%20with-AI-333333?labelColor=f00) ![Verified by Humans](https://img.shields.io/badge/Verified%20by-Humans-333333?labelColor=brightgreen)
 
-Copier templates for Python CLI, Java CLI, Go CLI, Elixir OTP, and C++ CLI applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
+Copier templates for Python CLI, Java CLI, Go CLI, Elixir OTP, C++ CLI, and Rust CLI applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
 
 ## Quick Start
 
@@ -51,6 +51,15 @@ just init
 just run
 ```
 
+**Rust CLI:**
+
+```bash
+copier copy https://github.com/florianbuetow/ai-templates/blueprints/rust-cli-base my-rust-project
+cd my-rust-project
+just init
+just run
+```
+
 ## Features
 
 - **Multi-step CI pipelines** with fail-fast behavior across all templates
@@ -69,25 +78,26 @@ just run
 | [**go-cli-base**](blueprints/go-cli-base/) | Go 1.23+ | CLI apps with golangci-lint, go vet, staticcheck, gosec, govulncheck |
 | [**elixir-otp-base**](blueprints/elixir-otp-base/) | Elixir 1.17+ | OTP apps with Credo, Dialyxir, Sobelow, mix_audit, ExUnit |
 | [**cpp-cli-base**](blueprints/cpp-cli-base/) | C++23 | CLI apps with CMake, clang-format, clang-tidy, cppcheck, flawfinder, GoogleTest |
+| [**rust-cli-base**](blueprints/rust-cli-base/) | Rust 2024 | CLI apps with clippy, cargo-geiger, cargo-machete, cargo-deny, cargo-nextest, grcov |
 
 ## Validation Tools by Language
 
 Every template runs the same CI check categories via `just ci`. The table below shows which tool handles each check for each language.
 
-| Check | Recipe | Python | Java | Go | Elixir | C++ |
-|-------|--------|--------|------|----|--------|-----|
-| Formatting | `code-format` | ruff | Spotless | gofumpt | mix format | clang-format |
-| Style | `code-style` | ruff | Checkstyle | gofumpt | mix format | clang-tidy |
-| Type checking | `code-typecheck` | mypy | Error Prone | go vet | Dialyzer | cppcheck |
-| LSP analysis | `code-lspchecks` | pyright | javac -Xlint:all -Werror | staticcheck | mix compile --warnings-as-errors | — |
-| Security | `code-security` | bandit | SpotBugs | gosec | Sobelow | flawfinder |
-| Dependency hygiene | `code-deptry` | deptry | Gradle buildHealth | go mod tidy | mix deps.unlock --check-unused | IWYU |
-| Spell checking | `code-spell` | codespell | codespell | codespell | codespell | codespell |
-| Custom rules | `code-semgrep` | semgrep | semgrep | semgrep | Custom Credo checks | semgrep |
-| Vulnerability scan | `code-audit` | pip-audit | Gradle Versions Plugin | govulncheck | mix deps.audit + hex.audit | — |
-| Testing | `test` | pytest | JUnit 5 | go test | ExUnit | GoogleTest |
-| Meta-linter | `lint` | — | — | golangci-lint | Credo | — |
-| Architecture | `code-architecture` | pytestarch | ArchUnit | arch-go | — | — |
+| Check | Python | Java | Go | Elixir | C++ | Rust |
+|-------|--------|------|----|--------|-----|------|
+| Formatting | ruff | Spotless | gofumpt | mix format | clang-format | rustfmt |
+| Style | ruff | Checkstyle | gofumpt | mix format | clang-tidy | rustfmt |
+| Type checking | mypy | Error Prone | go vet | Dialyzer | cppcheck | cargo check + clippy |
+| LSP analysis | pyright | javac -Xlint:all -Werror | staticcheck | mix compile --warnings-as-errors | — | — |
+| Security | bandit | SpotBugs | gosec | Sobelow | flawfinder | cargo-geiger |
+| Dependency hygiene | deptry | Gradle buildHealth | go mod tidy | mix deps.unlock --check-unused | IWYU | cargo-machete |
+| Spell checking | codespell | codespell | codespell | codespell | codespell | codespell |
+| Custom rules | semgrep | semgrep | semgrep | Custom Credo checks | semgrep | semgrep |
+| Vulnerability scan | pip-audit | Gradle Versions Plugin | govulncheck | mix deps.audit + hex.audit | — | cargo-deny |
+| Testing | pytest | JUnit 5 | go test | ExUnit | GoogleTest | cargo-nextest |
+| Meta-linter | — | — | golangci-lint | Credo | — | — |
+| Architecture | pytestarch | ArchUnit | arch-go | — | — | — |
 
 See each template's README for tool details and configuration, or [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for semgrep rules.
 
@@ -118,7 +128,7 @@ Use these plugins after scaffolding a project with AI Templates to maintain code
 - **copier** - Template engine ([installation guide](https://copier.readthedocs.io/))
 
 Each template has its own language-specific prerequisites. See the template READMEs for details:
-[Python](blueprints/python-cli-base/) | [Java](blueprints/java-cli-base/) | [Go](blueprints/go-cli-base/) | [Elixir](blueprints/elixir-otp-base/) | [C++](blueprints/cpp-cli-base/)
+[Python](blueprints/python-cli-base/) | [Java](blueprints/java-cli-base/) | [Go](blueprints/go-cli-base/) | [Elixir](blueprints/elixir-otp-base/) | [C++](blueprints/cpp-cli-base/) | [Rust](blueprints/rust-cli-base/)
 
 ## Installation
 
@@ -144,7 +154,7 @@ just run
 ```
 
 The `just create` command takes two arguments:
-1. Template name (e.g., `python-cli-base`, `java-cli-base`, `go-cli-base`, `elixir-otp-base`, or `cpp-cli-base`)
+1. Template name (e.g., `python-cli-base`, `java-cli-base`, `go-cli-base`, `elixir-otp-base`, `cpp-cli-base`, or `rust-cli-base`)
 2. Target directory (absolute or relative path where the project will be created)
 
 **Method 2: Using Copier directly**
@@ -167,6 +177,7 @@ just test-java     # Test Java template
 just test-go       # Test Go template
 just test-elixir   # Test Elixir template
 just test-cpp      # Test C++ template
+just test-rust     # Test Rust template
 just test-all      # Test all templates
 ```
 
@@ -197,7 +208,8 @@ ai-templates/
 │   ├── java-cli-base/                         # Java CLI template
 │   ├── go-cli-base/                           # Go CLI template
 │   ├── elixir-otp-base/                       # Elixir OTP template
-│   └── cpp-cli-base/                          # C++ CLI template
+│   ├── cpp-cli-base/                          # C++ CLI template
+│   └── rust-cli-base/                         # Rust CLI template
 ├── tests/                                      # Integration tests for each template
 ├── config/                                     # Shared validation configs (semgrep, codespell)
 ├── docs/                                       # Documentation

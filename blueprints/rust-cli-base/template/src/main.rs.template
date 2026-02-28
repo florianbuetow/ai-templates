@@ -1,0 +1,5 @@
+//! {{project_description}}
+
+fn main() -> anyhow::Result<()> {
+    {{crate_name}}::run()
+}

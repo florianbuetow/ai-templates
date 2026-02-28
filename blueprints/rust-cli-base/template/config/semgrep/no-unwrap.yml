@@ -1,0 +1,13 @@
+rules:
+  - id: no-unwrap
+    patterns:
+      - pattern: $X.unwrap()
+    message: >
+      Do not use .unwrap(). Use the ? operator with anyhow::Result or provide
+      context with .context() / .with_context(). AI agents must handle errors
+      explicitly rather than panicking.
+    languages: [rust]
+    severity: ERROR
+    paths:
+      include:
+        - src/

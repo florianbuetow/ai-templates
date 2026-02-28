@@ -1,0 +1,13 @@
+rules:
+  - id: no-expect-without-context
+    patterns:
+      - pattern: $X.expect("")
+    message: >
+      Do not use .expect() with an empty message. Either use the ? operator
+      or provide a meaningful error message that explains why the value
+      should be present.
+    languages: [rust]
+    severity: ERROR
+    paths:
+      include:
+        - src/

@@ -1,0 +1,19 @@
+# Build artifacts
+target/
+*.rs.bk
+
+# Reports
+reports/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Copier
+.copier-answers.yml

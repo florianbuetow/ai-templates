@@ -1,0 +1,12 @@
+#![allow(missing_docs, deprecated)]
+
+use assert_cmd::Command;
+use predicates::prelude::*;
+
+#[test]
+fn test_binary_runs_successfully() {
+    let mut cmd = Command::cargo_bin("{{project_name}}").expect("binary should exist");
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("Hello from {{project_name}}!"));
+}

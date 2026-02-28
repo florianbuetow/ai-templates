@@ -1,0 +1,8 @@
+# Include .gitignore patterns
+:include .gitignore
+
+# Build output
+target/
+
+# Reports
+reports/

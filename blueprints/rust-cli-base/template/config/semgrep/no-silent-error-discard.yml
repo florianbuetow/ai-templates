@@ -1,0 +1,13 @@
+rules:
+  - id: no-silent-error-discard
+    patterns:
+      - pattern: let _ = $X;
+    message: >
+      Do not silently discard values with 'let _ = expr'. If the expression
+      returns a Result, handle the error. If truly intentional, use
+      'drop(expr)' instead and add a comment explaining why.
+    languages: [rust]
+    severity: ERROR
+    paths:
+      include:
+        - src/

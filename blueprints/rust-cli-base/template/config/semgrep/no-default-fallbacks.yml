@@ -1,0 +1,16 @@
+rules:
+  - id: no-default-fallbacks
+    patterns:
+      - pattern-either:
+          - pattern: $X.unwrap_or(...)
+          - pattern: $X.unwrap_or_default()
+          - pattern: $X.unwrap_or_else(...)
+    message: >
+      Do not use .unwrap_or(), .unwrap_or_default(), or .unwrap_or_else()
+      as silent fallbacks. Handle the None/Err case explicitly using match
+      or if let, or propagate with the ? operator.
+    languages: [rust]
+    severity: ERROR
+    paths:
+      include:
+        - src/
