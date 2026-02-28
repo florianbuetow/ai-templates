@@ -125,8 +125,8 @@ Projects created from this template include:
 - **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
 - **copier** - Template engine ([installation guide](https://copier.readthedocs.io/))
 - **git** - Version control
-- **codespell** - Spell checker (`pip install codespell`)
-- **semgrep** - Static analysis (`pip install semgrep`)
+- **codespell** - Spell checker (`brew install codespell`)
+- **semgrep** - Static analysis (`brew install semgrep`)
 
 ## Testing the Template
 

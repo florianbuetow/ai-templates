@@ -131,7 +131,7 @@ main() {
 
     if ! command -v codespell >/dev/null 2>&1; then
         echo -e "${RED}✗ Error: codespell is not installed${NC}"
-        echo "  Install with: pip install codespell"
+        echo "  Install with: brew install codespell"
         echo ""
         exit 1
     fi
@@ -139,7 +139,7 @@ main() {
 
     if ! command -v semgrep >/dev/null 2>&1; then
         echo -e "${RED}✗ Error: semgrep is not installed${NC}"
-        echo "  Install with: pip install semgrep"
+        echo "  Install with: brew install semgrep"
         echo ""
         exit 1
     fi

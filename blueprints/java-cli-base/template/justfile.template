@@ -53,14 +53,14 @@ check:
     @printf "\033[32m✓ gradlew is available\033[0m\n"
     @if ! command -v codespell >/dev/null 2>&1; then \
         printf "\033[31m✗ Error: codespell is not installed\033[0m\n"; \
-        printf "  Install with: pip install codespell\n"; \
+        printf "  Install with: brew install codespell\n"; \
         echo ""; \
         exit 1; \
     fi
     @printf "\033[32m✓ codespell is installed\033[0m\n"
     @if ! command -v semgrep >/dev/null 2>&1; then \
         printf "\033[31m✗ Error: semgrep is not installed\033[0m\n"; \
-        printf "  Install with: pip install semgrep\n"; \
+        printf "  Install with: brew install semgrep\n"; \
         echo ""; \
         exit 1; \
     fi

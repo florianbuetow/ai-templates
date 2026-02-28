@@ -51,8 +51,8 @@
 
 - **Java {{java_version}}+** - JDK ([Adoptium](https://adoptium.net/))
 - **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
-- **codespell** - Spell checker (`pip install codespell`)
-- **semgrep** - Static analysis (`pip install semgrep`)
+- **codespell** - Spell checker (`brew install codespell`)
+- **semgrep** - Static analysis (`brew install semgrep`)
 
 ## Setup
 
