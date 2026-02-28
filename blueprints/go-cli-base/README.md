@@ -23,6 +23,7 @@ Production-ready Copier template for Go CLI applications with full validation in
 | **codespell** | Spell checking | Catches typos in code, comments, and documentation |
 | **govulncheck** | Vulnerability scanning | Scans dependencies for known security vulnerabilities using Go vulnerability database |
 | **go test** | Testing framework | Built-in testing with race detection, coverage, and benchmarks |
+| **arch-go** | Architecture testing | Validates package dependencies, naming, content, and function rules via arch-go.yml |
 
 ## Template Structure
 

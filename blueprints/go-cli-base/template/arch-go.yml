@@ -1,0 +1,61 @@
+# Architecture rules for this project.
+# arch-go validates package dependencies, naming, content, and function constraints.
+#
+# Full documentation: https://github.com/arch-go/arch-go
+#
+# Add rules below as your project grows. Examples for each rule type are
+# provided in comments. Uncomment and adapt them to your package structure.
+
+version: 1
+
+threshold:
+  compliance: 0
+  coverage: 0
+
+# -------------------------------------------------------------------
+# Dependency rules — control which packages may import which
+# -------------------------------------------------------------------
+# dependenciesRules:
+#   - package: "**.internal.**"
+#     shouldNotDependsOn:
+#       internal:
+#         - "**.cmd.**"
+#   - package: "**.domain.**"
+#     shouldOnlyDependsOn:
+#       internal:
+#         - "**.domain.**"
+#       standard:
+#         - "fmt"
+#         - "errors"
+#         - "context"
+
+# -------------------------------------------------------------------
+# Content rules — restrict what a package may contain
+# -------------------------------------------------------------------
+# contentsRules:
+#   - package: "**.domain.model"
+#     shouldNotContainInterfaces: true
+#   - package: "**.config"
+#     shouldOnlyContainFunctions: true
+
+# -------------------------------------------------------------------
+# Function rules — enforce function complexity limits
+# -------------------------------------------------------------------
+# functionsRules:
+#   - package: "**.internal.**"
+#     maxParameters: 4
+#     maxReturnValues: 3
+#     maxPublicFunctionPerFile: 5
+#     maxLines: 60
+
+# -------------------------------------------------------------------
+# Naming rules — enforce struct/interface naming conventions
+# -------------------------------------------------------------------
+# namingRules:
+#   - package: "**.internal.**"
+#     interfaceImplementationNamingRule:
+#       structsThatImplement:
+#         standard:
+#           package: "builtin"
+#           interface: "error"
+#       shouldHaveSimpleNameEndingWith: "Error"

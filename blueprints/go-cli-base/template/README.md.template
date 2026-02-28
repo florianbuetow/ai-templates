@@ -9,6 +9,7 @@
 ├── go.mod                  # Go module dependencies
 ├── go.sum                  # Dependency checksums
 ├── .golangci.yml           # golangci-lint configuration
+├── arch-go.yml             # Architecture rules configuration
 ├── .pre-commit-config.yaml # Pre-commit hooks configuration
 ├── .gitignore              # Git ignore patterns
 ├── justfile                # Task runner with build/test/validation commands
@@ -57,7 +58,7 @@ just init
 
 This will:
 - Download Go dependencies
-- Install development tools (gofumpt, gosec, staticcheck, golangci-lint, govulncheck)
+- Install development tools (gofumpt, gosec, staticcheck, golangci-lint, govulncheck, arch-go)
 
 ## Usage
 
@@ -100,6 +101,7 @@ just
 - `just code-audit` - Scan for vulnerabilities (govulncheck)
 - `just code-semgrep` - Run custom static analysis
 - `just lint` - Run golangci-lint (meta-linter)
+- `just code-architecture` - Run architecture checks (arch-go)
 
 ### Testing
 
@@ -122,8 +124,9 @@ The CI pipeline runs the following steps in order:
 8. `code-semgrep` - Custom static analysis
 9. `code-audit` - Vulnerability scanning (govulncheck)
 10. `test` - Unit tests
-11. `lint` - golangci-lint
-12. `code-lspchecks` - Strict static analysis (staticcheck)
+11. `code-architecture` - Architecture checks (arch-go)
+12. `lint` - golangci-lint
+13. `code-lspchecks` - Strict static analysis (staticcheck)
 
 ## Project Rules
 

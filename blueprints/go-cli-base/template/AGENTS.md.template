@@ -23,6 +23,7 @@ This file provides guidance to AI agents and AI-assisted development tools when 
 - After **every change** to the code, the tests must be executed
 - Always verify the program runs correctly with `just run` after modifications
 - Run `just test` to execute unit tests
+- Run `just code-architecture` to check architecture rules (arch-go)
 
 ## Go Execution Rules
 - Build and run via `go run ./cmd/...` or `go build ./cmd/...`

@@ -69,15 +69,15 @@ Every template runs the same CI check categories via `just ci`. The table below 
 | Formatting | `code-format` | ruff | Spotless | gofumpt | mix format |
 | Style | `code-style` | ruff | Checkstyle | gofumpt | mix format |
 | Type checking | `code-typecheck` | mypy | Error Prone | go vet | Dialyzer |
-| LSP analysis | `code-lspchecks` | pyright | — | staticcheck | — |
+| LSP analysis | `code-lspchecks` | pyright | — | staticcheck | mix compile --warnings-as-errors |
 | Security | `code-security` | bandit | SpotBugs | gosec | Sobelow |
-| Dependency hygiene | `code-deptry` | deptry | Gradle buildHealth | go mod tidy | — |
+| Dependency hygiene | `code-deptry` | deptry | Gradle buildHealth | go mod tidy | mix deps.unlock --check-unused |
 | Spell checking | `code-spell` | codespell | codespell | codespell | codespell |
-| Custom rules | `code-semgrep` | semgrep | semgrep | semgrep | — |
+| Custom rules | `code-semgrep` | semgrep | semgrep | semgrep | Custom Credo checks |
 | Vulnerability scan | `code-audit` | pip-audit | OWASP Dep-Check | govulncheck | mix deps.audit + hex.audit |
 | Testing | `test` | pytest | JUnit 5 | go test | ExUnit |
 | Meta-linter | `lint` | — | — | golangci-lint | Credo |
-| Architecture | `code-architecture` | pytestarch | ArchUnit | — | — |
+| Architecture | `code-architecture` | pytestarch | ArchUnit | arch-go | — |
 
 See each template's README for tool details and configuration, or [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for semgrep rules.
 

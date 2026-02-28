@@ -85,6 +85,14 @@ init: check
     @go install honnef.co/go/tools/cmd/staticcheck@latest
     @go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
     @go install golang.org/x/vuln/cmd/govulncheck@latest
+    @go install github.com/arch-go/arch-go/v2@v2.1.2
+    @echo "Verifying development tools..."
+    @command -v gofumpt >/dev/null 2>&1 || { printf "\033[0;31m✗ gofumpt not found after install\033[0m\n"; exit 1; }
+    @command -v gosec >/dev/null 2>&1 || { printf "\033[0;31m✗ gosec not found after install\033[0m\n"; exit 1; }
+    @command -v staticcheck >/dev/null 2>&1 || { printf "\033[0;31m✗ staticcheck not found after install\033[0m\n"; exit 1; }
+    @command -v golangci-lint >/dev/null 2>&1 || { printf "\033[0;31m✗ golangci-lint not found after install\033[0m\n"; exit 1; }
+    @command -v govulncheck >/dev/null 2>&1 || { printf "\033[0;31m✗ govulncheck not found after install\033[0m\n"; exit 1; }
+    @command -v arch-go >/dev/null 2>&1 || { printf "\033[0;31m✗ arch-go not found after install\033[0m\n"; exit 1; }
     @printf "\033[0;32m✓ Development environment ready\033[0m\n"
     @echo ""
 
@@ -205,6 +213,14 @@ lint:
     @printf "\033[0;32m✓ Lint checks passed\033[0m\n"
     @echo ""
 
+# Run architecture checks with arch-go
+code-architecture:
+    @echo ""
+    @printf "\033[0;34m=== Running Architecture Tests ===\033[0m\n"
+    @arch-go
+    @printf "\033[0;32m✓ Architecture checks passed\033[0m\n"
+    @echo ""
+
 # Run unit tests only (fast)
 test:
     @echo ""
@@ -249,6 +265,7 @@ ci:
     just code-semgrep
     just code-audit
     just test
+    just code-architecture
     just lint
     just code-lspchecks
     echo ""
@@ -292,6 +309,9 @@ ci-quiet:
 
     just test > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Test failed\033[0m\n"; cat $TMPFILE; exit 1; }
     printf "\033[0;32m✓ Test passed\033[0m\n"
+
+    just code-architecture > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-architecture failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-architecture passed\033[0m\n"
 
     just lint > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Lint failed\033[0m\n"; cat $TMPFILE; exit 1; }
     printf "\033[0;32m✓ Lint passed\033[0m\n"
