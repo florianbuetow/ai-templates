@@ -7,21 +7,24 @@ Production-ready Copier template for Java CLI applications with full validation 
 - **Java 21+** with Gradle Kotlin DSL build system
 - **Gradle Wrapper** included for reproducible builds
 - **Just task runner** for all commands
-- **Full validation infrastructure**:
-  - Spotless with google-java-format (formatting)
-  - Checkstyle (code style)
-  - Error Prone (enhanced compile-time checks)
-  - SpotBugs + Find Security Bugs (security)
-  - Dependency Analysis Plugin (dependency hygiene)
-  - semgrep (custom static analysis)
-  - JUnit 5 + AssertJ (testing)
-  - JaCoCo (code coverage)
-  - codespell (spell checking)
-  - OWASP Dependency-Check (vulnerability scanning)
-  - ArchUnit (architecture constraint tests)
 - **Pre-commit hooks** with CI checks
 - **Comprehensive AGENTS.md** for AI-assisted development
 - **Git worktree workflow** support
+
+### Validation Tools
+
+| Tool | Purpose | Why It's Used |
+|------|---------|---------------|
+| **Spotless** | Formatting | Applies google-java-format for consistent code style |
+| **Checkstyle** | Code style | Enforces Google Java Style Guide conventions |
+| **Error Prone** | Bug detection | Google's compile-time checker - catches common Java mistakes |
+| **SpotBugs** | Security scanning | Finds security issues with Find Security Bugs plugin |
+| **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
+| **Dependency Analysis** | Dependency hygiene | Detects unused and undeclared dependencies |
+| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
+| **OWASP Dependency-Check** | Vulnerability scanning | Scans dependencies for known CVEs |
+| **ArchUnit** | Architecture constraints | Enforces package structure and import rules - prevents architectural erosion |
+| **JUnit 5 + JaCoCo** | Testing and coverage | Unit testing with coverage thresholds |
 
 ## Template Structure
 

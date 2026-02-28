@@ -6,15 +6,23 @@ Production-ready Copier template for Go CLI applications with full validation in
 
 - **Go 1.23+** with standard Go modules
 - **Just task runner** for all commands
-- **Full validation infrastructure**:
-  - golangci-lint (linting + static analysis)
-  - go vet (static analysis)
-  - gofumpt (formatting)
-  - govulncheck (vulnerability scanning)
-  - go test with coverage
 - **Pre-commit hooks** with CI checks
 - **Comprehensive AGENTS.md** for AI-assisted development
 - **Git worktree workflow** support
+
+### Validation Tools
+
+| Tool | Purpose | Why It's Used |
+|------|---------|---------------|
+| **gofumpt** | Formatting | Stricter gofmt - enforces consistent formatting beyond standard gofmt |
+| **go vet** | Static analysis | Built-in tool that catches suspicious constructs (printf args, struct tags, etc.) |
+| **staticcheck** | Strict analysis | LSP-based checker - catches unused code, deprecated APIs, and subtle bugs |
+| **golangci-lint** | Meta-linter | Runs 50+ linters in parallel - single tool for comprehensive code quality |
+| **gosec** | Security scanning | Finds security issues (SQL injection, hardcoded credentials, weak crypto, etc.) |
+| **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
+| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
+| **govulncheck** | Vulnerability scanning | Scans dependencies for known security vulnerabilities using Go vulnerability database |
+| **go test** | Testing framework | Built-in testing with race detection, coverage, and benchmarks |
 
 ## Template Structure
 

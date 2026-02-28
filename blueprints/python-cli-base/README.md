@@ -6,18 +6,24 @@ Production-ready Copier template for Python CLI applications with full validatio
 
 - **Python 3.12+** with uv package management
 - **Just task runner** for all commands
-- **Full validation infrastructure**:
-  - ruff (linting + formatting)
-  - mypy + pyright (type checking)
-  - bandit (security)
-  - deptry (dependency hygiene)
-  - semgrep (custom static analysis)
-  - pytest with coverage
-  - codespell (spell checking)
-  - pip-audit (vulnerability scanning)
 - **Pre-commit hooks** with CI checks
 - **Comprehensive AGENTS.md** for AI-assisted development
 - **Git worktree workflow** support
+
+### Validation Tools
+
+| Tool | Purpose | Why It's Used |
+|------|---------|---------------|
+| **ruff** | Linting and formatting | Fast Python linter and formatter - replaces flake8, isort, and black |
+| **mypy** | Type checking | Static type checker for gradual typing - catches type errors before runtime |
+| **pyright** | Strict type checking | Microsoft's LSP-based type checker - stricter than mypy, catches more edge cases |
+| **bandit** | Security scanning | Finds common security issues in Python code (SQL injection, hardcoded passwords, etc.) |
+| **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
+| **deptry** | Dependency hygiene | Finds unused dependencies and missing imports |
+| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
+| **pip-audit** | Vulnerability scanning | Scans dependencies for known security vulnerabilities |
+| **pytestarch** | Architecture constraints | Enforces import boundaries between layers - prevents architectural erosion |
+| **pytest** | Testing framework | Unit testing with fixtures, parameterization, and coverage |
 
 ## Template Structure
 

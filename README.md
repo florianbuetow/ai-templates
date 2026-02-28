@@ -6,6 +6,8 @@ Copier templates for Python CLI, Java CLI, Go CLI, and Elixir OTP applications d
 
 ## Quick Start
 
+**Python CLI:**
+
 ```bash
 copier copy https://github.com/florianbuetow/ai-templates/blueprints/python-cli-base my-project
 cd my-project
@@ -46,58 +48,19 @@ just run
 - **Pre-commit hooks** run full CI validation automatically before each commit
 - **Custom semgrep rules** ban default values, type suppressions, and sneaky fallback patterns
 - **AGENTS.md** provides AI assistants with project conventions and development rules
-- **Python 3.12+** with uv package management (python-cli-base)
-- **Java 21+** with Gradle Kotlin DSL build system (java-cli-base)
-- **Go 1.23+** with Go modules and golangci-lint (go-cli-base)
-- **Elixir 1.17+** with Mix build tool (elixir-otp-base)
 - **Just task runner** with recipes for common tasks (init, run, test, ci, destroy)
 - **Test infrastructure** with coverage thresholds and quality gates
 
-### Python Validation Tools
+## Available Templates
 
-| Tool | Purpose | Why It's Used |
-|------|---------|---------------|
-| **ruff** | Linting and formatting | Fast Python linter and formatter - replaces flake8, isort, and black |
-| **mypy** | Type checking | Static type checker for gradual typing - catches type errors before runtime |
-| **pyright** | Strict type checking | Microsoft's LSP-based type checker - stricter than mypy, catches more edge cases |
-| **bandit** | Security scanning | Finds common security issues in Python code (SQL injection, hardcoded passwords, etc.) |
-| **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
-| **deptry** | Dependency hygiene | Finds unused dependencies and missing imports |
-| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
-| **pip-audit** | Vulnerability scanning | Scans dependencies for known security vulnerabilities |
-| **pytestarch** | Architecture constraints | Enforces import boundaries between layers - prevents architectural erosion |
-| **pytest** | Testing framework | Unit testing with fixtures, parameterization, and coverage |
+| Template | Language | Description |
+|----------|----------|-------------|
+| [**python-cli-base**](blueprints/python-cli-base/) | Python 3.12+ | CLI apps with uv, ruff, mypy, pyright, bandit, semgrep, pytest |
+| [**java-cli-base**](blueprints/java-cli-base/) | Java 21+ | CLI apps with Gradle, Spotless, Checkstyle, Error Prone, SpotBugs, JUnit 5 |
+| [**go-cli-base**](blueprints/go-cli-base/) | Go 1.23+ | CLI apps with golangci-lint, go vet, staticcheck, gosec, govulncheck |
+| [**elixir-otp-base**](blueprints/elixir-otp-base/) | Elixir 1.17+ | OTP apps with Credo, Dialyxir, Sobelow, mix_audit, ExUnit |
 
-### Java Validation Tools
-
-| Tool | Purpose | Why It's Used |
-|------|---------|---------------|
-| **Spotless** | Formatting | Applies google-java-format for consistent code style |
-| **Checkstyle** | Code style | Enforces Google Java Style Guide conventions |
-| **Error Prone** | Bug detection | Google's compile-time checker - catches common Java mistakes |
-| **SpotBugs** | Security scanning | Finds security issues with Find Security Bugs plugin |
-| **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
-| **Dependency Analysis** | Dependency hygiene | Detects unused and undeclared dependencies |
-| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
-| **OWASP Dependency-Check** | Vulnerability scanning | Scans dependencies for known CVEs |
-| **ArchUnit** | Architecture constraints | Enforces package structure and import rules - prevents architectural erosion |
-| **JUnit 5 + JaCoCo** | Testing and coverage | Unit testing with coverage thresholds |
-
-### Go Validation Tools
-
-| Tool | Purpose | Why It's Used |
-|------|---------|---------------|
-| **gofumpt** | Formatting | Stricter gofmt - enforces consistent formatting beyond standard gofmt |
-| **go vet** | Static analysis | Built-in tool that catches suspicious constructs (printf args, struct tags, etc.) |
-| **staticcheck** | Strict analysis | LSP-based checker - catches unused code, deprecated APIs, and subtle bugs |
-| **golangci-lint** | Meta-linter | Runs 50+ linters in parallel - single tool for comprehensive code quality |
-| **gosec** | Security scanning | Finds security issues (SQL injection, hardcoded credentials, weak crypto, etc.) |
-| **semgrep** | Custom static analysis | Pattern-based code scanning - enforces project-specific rules |
-| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
-| **govulncheck** | Vulnerability scanning | Scans dependencies for known security vulnerabilities using Go vulnerability database |
-| **go test** | Testing framework | Built-in testing with race detection, coverage, and benchmarks |
-
-See [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
+See each template's README for the full validation tools breakdown, or [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for detailed tool configurations and semgrep rules.
 
 ## Highly Recommended Companion Tools
 
@@ -205,37 +168,16 @@ This updates the ai-templates repository itself (via `git pull`). Existing proje
 ```
 ai-templates/
 ├── blueprints/                                 # Copier-based project templates
-│   ├── python-cli-base/                       # Production-ready Python CLI template
-│   ├── java-cli-base/                         # Production-ready Java CLI template
-│   ├── go-cli-base/                           # Production-ready Go CLI template
-│   └── elixir-otp-base/                       # Production-ready Elixir OTP template
-│       ├── copier.yml                         # Template configuration
-│       ├── README.md                          # Template documentation
-│       └── template/                          # Template files
-│           ├── .semgrepignore.template        # Semgrep ignore patterns
-│           ├── .gitignore.template            # Git ignore patterns
-│           ├── justfile.template              # Just command runner config
-│           ├── AGENTS.md.template             # AI agent guidelines
-│           ├── config/                        # Validation configurations
-│           │   ├── semgrep/                   # Custom semgrep rules
-│           │   └── codespell/                 # Spell check config
-│           ├── src/                           # Source code directory
-│           └── tests/                         # Test directory
-├── tests/                                      # Repository test suite
-│   ├── test-template.sh                       # Python template integration tests
-│   ├── test-java-template.sh                  # Java template integration tests
-│   ├── test-go-template.sh                    # Go template integration tests
-│   └── test-elixir-template.sh                # Elixir template integration tests
-├── config/                                     # Shared validation configs
-│   ├── semgrep/                               # Custom semgrep rules
-│   └── codespell/                             # Spell check config
+│   ├── python-cli-base/                       # Python CLI template (README, copier.yml, template/)
+│   ├── java-cli-base/                         # Java CLI template
+│   ├── go-cli-base/                           # Go CLI template
+│   └── elixir-otp-base/                       # Elixir OTP template
+├── tests/                                      # Integration tests for each template
+├── config/                                     # Shared validation configs (semgrep, codespell)
 ├── docs/                                       # Documentation
-│   └── code-validation-blueprint-guide.md     # Validation infrastructure guide
 ├── justfile                                    # Quick setup commands
 ├── AGENTS.md                                   # Guidance for AI agents
-├── CLAUDE.md                                   # Redirects to AGENTS.md
-├── README.md                                   # This file
-└── .gitignore                                  # Git ignore patterns
+└── README.md                                   # This file
 ```
 
 ## Contributing

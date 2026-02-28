@@ -6,16 +6,20 @@ Production-ready Copier template for Elixir OTP applications with full validatio
 
 - **Elixir 1.17+** with Mix build tool
 - **Just task runner** for all commands
-- **Full validation infrastructure**:
-  - mix format (code formatting)
-  - credo (linting, strict mode)
-  - dialyxir (Dialyzer type checking)
-  - sobelow (security scanning)
-  - mix_audit (dependency vulnerability scanning)
-  - ExUnit with coverage
-  - codespell (spell checking)
 - **Git hooks** via git_hooks hex package
 - **Comprehensive AGENTS.md** for AI-assisted development
+
+### Validation Tools
+
+| Tool | Purpose | Why It's Used |
+|------|---------|---------------|
+| **mix format** | Formatting | Built-in code formatter - enforces consistent Elixir code style |
+| **Credo** | Linting | Static analysis for code consistency, readability, and refactoring opportunities (strict mode) |
+| **Dialyxir** | Type checking | Erlang Dialyzer wrapper - catches type errors, unreachable code, and spec violations |
+| **Sobelow** | Security scanning | Finds security issues in Elixir code (SQL injection, XSS, directory traversal, etc.) |
+| **codespell** | Spell checking | Catches typos in code, comments, and documentation |
+| **mix_audit** | Vulnerability scanning | Scans Hex dependencies for known security vulnerabilities |
+| **ExUnit** | Testing framework | Built-in testing with coverage support and async test execution |
 
 ## Usage
 
