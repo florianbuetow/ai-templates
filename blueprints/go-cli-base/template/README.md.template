@@ -1,0 +1,138 @@
+# {{project_name}}
+
+{{project_description}}
+
+## Repository Structure
+
+```
+{{project_name}}/
+├── go.mod                  # Go module dependencies
+├── go.sum                  # Dependency checksums
+├── .golangci.yml           # golangci-lint configuration
+├── .pre-commit-config.yaml # Pre-commit hooks configuration
+├── .gitignore              # Git ignore patterns
+├── justfile                # Task runner with build/test/validation commands
+├── AGENTS.md               # AI agent development rules
+├── CLAUDE.md               # Claude Code compatibility (symlink to AGENTS.md)
+├── README.md               # This file
+├── cmd/                    # Application entry points
+│   └── main.go             # Main entry point
+├── internal/               # Private application packages
+│   └── app/                # Core application logic
+│       ├── app.go          # Application code
+│       └── app_test.go     # Unit tests
+├── scripts/                # Utility scripts
+├── data/                   # Data files
+│   ├── input/             # Input data files
+│   └── output/            # Generated output files
+├── config/                 # Configuration files
+│   ├── semgrep/           # Semgrep static analysis rules
+│   │   ├── no-error-swallowing.yml
+│   │   ├── no-nolint-without-justification.yml
+│   │   ├── no-init-functions.yml
+│   │   ├── no-bare-return-in-error-func.yml
+│   │   └── no-build-ignore.yml
+│   └── codespell/         # Spell-check configuration
+│       └── ignore.txt      # Spell-check ignore list
+└── reports/                # Generated reports (not in git)
+    ├── coverage/          # Code coverage reports
+    └── security/          # Security scan reports
+```
+
+## Prerequisites
+
+- **Go {{go_version}}+** - Programming language
+- **just** - Command runner ([installation guide](https://github.com/casey/just#installation))
+- **codespell** - Spell checker (`pip install codespell`)
+- **semgrep** - Static analysis (`pip install semgrep`)
+- **pre-commit** - Git hooks (`pip install pre-commit`)
+
+## Setup
+
+Initialize the project environment:
+
+```bash
+just init
+```
+
+This will:
+- Download Go dependencies
+- Install development tools (gofumpt, gosec, staticcheck, golangci-lint, govulncheck)
+
+## Usage
+
+Run the main application:
+
+```bash
+just run
+```
+
+See all available commands:
+
+```bash
+just help
+```
+
+Or simply:
+
+```bash
+just
+```
+
+## Development
+
+### Available Commands
+
+- `just init` - Initialize development environment
+- `just run` - Run the main application
+- `just destroy` - Remove build artifacts and caches
+- `just help` - Show available commands
+
+### Code Quality
+
+- `just code-style` - Check code formatting (read-only)
+- `just code-format` - Auto-fix code formatting
+- `just code-typecheck` - Run go vet
+- `just code-lspchecks` - Run staticcheck
+- `just code-security` - Run security checks (gosec)
+- `just code-deptry` - Check dependency hygiene
+- `just code-spell` - Check spelling
+- `just code-audit` - Scan for vulnerabilities (govulncheck)
+- `just code-semgrep` - Run custom static analysis
+- `just lint` - Run golangci-lint (meta-linter)
+
+### Testing
+
+- `just test` - Run unit tests
+- `just test-coverage` - Run tests with coverage ({{coverage_threshold}}% threshold)
+
+### CI
+
+- `just ci` - Run all validation checks (verbose)
+- `just ci-quiet` - Run all checks (silent, fail-fast)
+
+The CI pipeline runs the following steps in order:
+1. `init` - Initialize environment
+2. `code-format` - Auto-format code
+3. `code-style` - Verify formatting
+4. `code-typecheck` - Type checking (go vet)
+5. `code-security` - Security scan (gosec)
+6. `code-deptry` - Dependency hygiene
+7. `code-spell` - Spell checking
+8. `code-semgrep` - Custom static analysis
+9. `code-audit` - Vulnerability scanning (govulncheck)
+10. `test` - Unit tests
+11. `lint` - golangci-lint
+12. `code-lspchecks` - Strict static analysis (staticcheck)
+
+## Project Rules
+
+See [AGENTS.md](AGENTS.md) for detailed development guidelines including:
+- Go execution rules
+- Git commit guidelines (no AI attribution)
+- Testing requirements
+- Project structure conventions
+
+## License
+
+<!-- Add your license here -->
