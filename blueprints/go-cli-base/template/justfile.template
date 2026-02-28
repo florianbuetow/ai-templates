@@ -1,0 +1,278 @@
+# =============================================================================
+# Justfile Rules (follow these when editing justfile):
+#
+# 1. Use printf (not echo) to print colors — some terminals won't render
+#    colors with echo.
+#
+# 2. Always add an empty `@echo ""` line before and after each target's
+#    command block.
+#
+# 3. Always add new targets to the help section and update it when targets
+#    are added, modified or removed.
+#
+# 4. Target ordering in help (and in this file) matters:
+#    - Setup targets first (init, setup, install, etc.)
+#    - Start/stop/run targets next
+#    - Code generation / data tooling targets next
+#    - Checks, linting, and tests next (ordered fastest to slowest)
+#    Group related targets together and separate groups with an empty
+#    `@echo ""` line in the help output.
+#
+# 5. Composite targets (e.g. ci) that call multiple sub-targets must fail
+#    fast: exit 1 on the first error. Never skip over errors or warnings.
+#    Use `set -e` or `&&` chaining to ensure immediate abort with the
+#    appropriate error message.
+#
+# 6. Every target must end with a clear short status message:
+#    - On success: green (\033[32m) message confirming completion.
+#      E.g. printf "\033[32m✓ init completed successfully\033[0m\n"
+#    - On failure: red (\033[31m) message indicating what failed, then exit 1.
+#      E.g. printf "\033[31m✗ ci failed: tests exited with errors\033[0m\n"
+# =============================================================================
+
+# Default recipe: show available commands
+_default:
+    @just --list
+
+# Show help information
+help:
+    @echo ""
+    @clear
+    @echo ""
+    @printf "\033[0;34m=== {{project_name}} ===\033[0m\n"
+    @echo ""
+    @echo "Available commands:"
+    @just --list
+    @echo ""
+
+# Initialize the development environment
+init:
+    @echo ""
+    @printf "\033[0;34m=== Initializing Development Environment ===\033[0m\n"
+    @mkdir -p reports/coverage
+    @mkdir -p reports/security
+    @echo "Downloading Go dependencies..."
+    @go mod download
+    @echo "Installing development tools..."
+    @go install mvdan.cc/gofumpt@latest
+    @go install github.com/securego/gosec/v2/cmd/gosec@latest
+    @go install honnef.co/go/tools/cmd/staticcheck@latest
+    @go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+    @go install golang.org/x/vuln/cmd/govulncheck@latest
+    @printf "\033[0;32m✓ Development environment ready\033[0m\n"
+    @echo ""
+
+# Run the main application
+run:
+    @echo ""
+    @printf "\033[0;34m=== Running Application ===\033[0m\n"
+    @go run ./cmd/...
+    @echo ""
+
+# Remove build artifacts and caches
+destroy:
+    @echo ""
+    @printf "\033[0;34m=== Destroying Build Artifacts ===\033[0m\n"
+    @rm -rf reports/
+    @go clean -cache -testcache
+    @printf "\033[0;32m✓ Build artifacts removed\033[0m\n"
+    @echo ""
+
+# Check code formatting (read-only)
+code-style:
+    #!/usr/bin/env bash
+    set -e
+    echo ""
+    printf "\033[0;34m=== Checking Code Style ===\033[0m\n"
+    UNFORMATTED=$(gofumpt -l . 2>&1)
+    if [ -n "$UNFORMATTED" ]; then
+        printf "\033[0;31m✗ The following files need formatting:\033[0m\n"
+        echo "$UNFORMATTED"
+        exit 1
+    fi
+    printf "\033[0;32m✓ Style checks passed\033[0m\n"
+    echo ""
+
+# Auto-fix code formatting
+code-format:
+    @echo ""
+    @printf "\033[0;34m=== Formatting Code ===\033[0m\n"
+    @gofumpt -w .
+    @printf "\033[0;32m✓ Code formatted\033[0m\n"
+    @echo ""
+
+# Run static type checking with go vet
+code-typecheck:
+    @echo ""
+    @printf "\033[0;34m=== Running Type Checks ===\033[0m\n"
+    @go vet ./...
+    @printf "\033[0;32m✓ Type checks passed\033[0m\n"
+    @echo ""
+
+# Run strict static analysis with staticcheck (LSP-based)
+code-lspchecks:
+    @echo ""
+    @printf "\033[0;34m=== Running Staticcheck ===\033[0m\n"
+    @staticcheck ./...
+    @printf "\033[0;32m✓ Staticcheck passed\033[0m\n"
+    @echo ""
+
+# Run security checks with gosec
+code-security:
+    @echo ""
+    @printf "\033[0;34m=== Running Security Checks ===\033[0m\n"
+    @mkdir -p reports/security
+    @gosec -fmt text -out reports/security/gosec.txt ./... || true
+    @gosec ./...
+    @printf "\033[0;32m✓ Security checks passed\033[0m\n"
+    @echo ""
+
+# Check dependency hygiene with go mod tidy
+code-deptry:
+    #!/usr/bin/env bash
+    set -e
+    echo ""
+    printf "\033[0;34m=== Checking Dependencies ===\033[0m\n"
+    cp go.mod go.mod.bak
+    cp go.sum go.sum.bak 2>/dev/null || true
+    go mod tidy
+    if ! diff -q go.mod go.mod.bak > /dev/null 2>&1; then
+        mv go.mod.bak go.mod
+        mv go.sum.bak go.sum 2>/dev/null || true
+        printf "\033[0;31m✗ go.mod is not tidy. Run 'go mod tidy'\033[0m\n"
+        exit 1
+    fi
+    rm go.mod.bak
+    rm go.sum.bak 2>/dev/null || true
+    printf "\033[0;32m✓ Dependency checks passed\033[0m\n"
+    echo ""
+
+# Check spelling in code and documentation
+code-spell:
+    @echo ""
+    @printf "\033[0;34m=== Checking Spelling ===\033[0m\n"
+    @codespell cmd internal scripts *.md 2>/dev/null || codespell cmd internal scripts
+    @printf "\033[0;32m✓ Spelling checks passed\033[0m\n"
+    @echo ""
+
+# Scan dependencies for known vulnerabilities
+code-audit:
+    @echo ""
+    @printf "\033[0;34m=== Scanning Dependencies for Vulnerabilities ===\033[0m\n"
+    @govulncheck ./...
+    @printf "\033[0;32m✓ No known vulnerabilities found\033[0m\n"
+    @echo ""
+
+# Run Semgrep static analysis
+code-semgrep:
+    @echo ""
+    @printf "\033[0;34m=== Running Semgrep Static Analysis ===\033[0m\n"
+    @semgrep --config config/semgrep/ --error .
+    @printf "\033[0;32m✓ Semgrep checks passed\033[0m\n"
+    @echo ""
+
+# Run golangci-lint (meta-linter)
+lint:
+    @echo ""
+    @printf "\033[0;34m=== Running golangci-lint ===\033[0m\n"
+    @golangci-lint run ./...
+    @printf "\033[0;32m✓ Lint checks passed\033[0m\n"
+    @echo ""
+
+# Run unit tests only (fast)
+test:
+    @echo ""
+    @printf "\033[0;34m=== Running Unit Tests ===\033[0m\n"
+    @go test -race -v ./...
+    @echo ""
+
+# Run unit tests with coverage report and threshold check
+test-coverage:
+    #!/usr/bin/env bash
+    set -e
+    echo ""
+    printf "\033[0;34m=== Running Unit Tests with Coverage ===\033[0m\n"
+    mkdir -p reports/coverage
+    go test -race -coverprofile=reports/coverage/coverage.out -covermode=atomic ./...
+    go tool cover -html=reports/coverage/coverage.out -o reports/coverage/coverage.html
+    COVERAGE=$(go tool cover -func=reports/coverage/coverage.out | grep total | awk '{print $3}' | tr -d '%')
+    printf "Total coverage: %s%%\n" "$COVERAGE"
+    THRESHOLD={{coverage_threshold}}
+    if [ "$(echo "$COVERAGE < $THRESHOLD" | bc -l)" -eq 1 ]; then
+        printf "\033[0;31m✗ Coverage %s%% is below threshold %s%%\033[0m\n" "$COVERAGE" "$THRESHOLD"
+        exit 1
+    fi
+    printf "\033[0;32m✓ Coverage threshold met (%s%% >= %s%%)\033[0m\n" "$COVERAGE" "$THRESHOLD"
+    echo "  HTML: reports/coverage/coverage.html"
+    echo ""
+
+# Run ALL validation checks (verbose)
+ci:
+    #!/usr/bin/env bash
+    set -e
+    echo ""
+    printf "\033[0;34m=== Running CI Checks ===\033[0m\n"
+    echo ""
+    just init
+    just code-format
+    just code-style
+    just code-typecheck
+    just code-security
+    just code-deptry
+    just code-spell
+    just code-semgrep
+    just code-audit
+    just test
+    just lint
+    just code-lspchecks
+    echo ""
+    printf "\033[0;32m✓ All CI checks passed\033[0m\n"
+    echo ""
+
+# Run ALL validation checks silently (only show output on errors)
+ci-quiet:
+    #!/usr/bin/env bash
+    set -e
+    printf "\033[0;34m=== Running CI Checks (Quiet Mode) ===\033[0m\n"
+    TMPFILE=$(mktemp)
+    trap "rm -f $TMPFILE" EXIT
+
+    just init > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Init failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Init passed\033[0m\n"
+
+    just code-format > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-format failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-format passed\033[0m\n"
+
+    just code-style > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-style failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-style passed\033[0m\n"
+
+    just code-typecheck > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-typecheck failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-typecheck passed\033[0m\n"
+
+    just code-security > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-security failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-security passed\033[0m\n"
+
+    just code-deptry > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-deptry failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-deptry passed\033[0m\n"
+
+    just code-spell > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-spell failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-spell passed\033[0m\n"
+
+    just code-semgrep > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-semgrep failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-semgrep passed\033[0m\n"
+
+    just code-audit > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-audit failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-audit passed\033[0m\n"
+
+    just test > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Test failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Test passed\033[0m\n"
+
+    just lint > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Lint failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Lint passed\033[0m\n"
+
+    just code-lspchecks > $TMPFILE 2>&1 || { printf "\033[0;31m✗ Code-lspchecks failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[0;32m✓ Code-lspchecks passed\033[0m\n"
+
+    echo ""
+    printf "\033[0;32m✓ All CI checks passed\033[0m\n"
+    echo ""
