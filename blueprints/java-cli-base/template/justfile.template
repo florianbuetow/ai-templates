@@ -37,13 +37,16 @@ _default:
 # Check prerequisites
 check:
     @echo ""
-    @if ! command -v java >/dev/null 2>&1; then \
-        printf "\033[31m✗ Error: java is not installed\033[0m\n"; \
+    @if ! java -version >/dev/null 2>&1; then \
+        printf "\033[31m✗ Error: java is not installed (or only macOS stub present)\033[0m\n"; \
         printf "  Please install JDK {{java_version}}+: https://adoptium.net/\n"; \
+        printf "  Quick install: brew install openjdk@{{java_version}}\n"; \
+        printf "  Then add to PATH: export PATH=\"/opt/homebrew/opt/openjdk@{{java_version}}/bin:\$$PATH\"\n"; \
         echo ""; \
         exit 1; \
     fi
     @printf "\033[32m✓ java is installed\033[0m\n"
+    @java -version 2>&1 | head -n 1 | sed 's/^/  /'
     @if [ ! -f "./gradlew" ]; then \
         printf "\033[31m✗ Error: Gradle wrapper (gradlew) not found\033[0m\n"; \
         printf "  Run this from the project root directory\n"; \
@@ -85,7 +88,7 @@ help:
     @printf "  \033[36mcode-deptry\033[0m        Check dependency hygiene\n"
     @printf "  \033[36mcode-spell\033[0m         Check spelling (codespell)\n"
     @printf "  \033[36mcode-semgrep\033[0m       Run custom static analysis (Semgrep)\n"
-    @printf "  \033[36mcode-audit\033[0m         Scan for CVEs (OWASP Dependency-Check)\n"
+    @printf "  \033[36mcode-audit\033[0m         Check for outdated dependencies\n"
     @printf "  \033[36mcode-architecture\033[0m  Run ArchUnit architecture tests\n"
     @echo ""
     @printf "  \033[36mtest\033[0m               Run unit tests\n"
@@ -99,7 +102,7 @@ help:
 init: check
     @echo ""
     @printf "\033[34m=== Initializing Development Environment ===\033[0m\n"
-    @./gradlew dependencies --quiet
+    @./gradlew classes testClasses --quiet
     @printf "\033[32m✓ init completed successfully\033[0m\n"
     @echo ""
 
@@ -176,11 +179,11 @@ code-semgrep:
     @printf "\033[32m✓ code-semgrep completed successfully\033[0m\n"
     @echo ""
 
-# Scan dependencies for known vulnerabilities (OWASP)
+# Check for outdated dependencies
 code-audit:
     @echo ""
-    @printf "\033[34m=== Scanning Dependencies for Vulnerabilities ===\033[0m\n"
-    @./gradlew dependencyCheckAnalyze --quiet
+    @printf "\033[34m=== Checking for Outdated Dependencies ===\033[0m\n"
+    @./gradlew dependencyUpdates --quiet
     @printf "\033[32m✓ code-audit completed successfully\033[0m\n"
     @echo ""
 

@@ -8,9 +8,9 @@ rules:
     pattern: "@SuppressWarnings(...)"
     paths:
       include:
-        - src/main/
+        - /src/main/
       exclude:
-        - src/test/
+        - /src/test/
 
   - id: java.no-noinspection-comment
     languages: [java]
@@ -20,9 +20,9 @@ rules:
     pattern-regex: '//\s*noinspection\b'
     paths:
       include:
-        - src/main/
+        - /src/main/
       exclude:
-        - src/test/
+        - /src/test/
 
   - id: java.no-nosonar-comment
     languages: [java]
@@ -32,6 +32,6 @@ rules:
     pattern-regex: 'NOSONAR'
     paths:
       include:
-        - src/main/
+        - /src/main/
       exclude:
-        - src/test/
+        - /src/test/

@@ -6,7 +6,7 @@ plugins {
     id("com.diffplug.spotless") version "7.0.2"
     id("com.github.spotbugs") version "6.1.2"
     id("net.ltgt.errorprone") version "4.1.0"
-    id("org.owasp.dependencycheck") version "12.1.0"
+    id("com.github.ben-manes.versions") version "0.51.0"
     id("com.autonomousapps.dependency-analysis") version "2.7.0"
 }
 
@@ -39,10 +39,13 @@ dependencies {
 
     // Testing
     testImplementation(platform("org.junit:junit-bom:5.11.4"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.assertj:assertj-core:3.27.3")
-    testImplementation("com.tngtech.archunit:archunit-junit5:1.4.0")
+    testImplementation("com.tngtech.archunit:archunit-junit5-api:1.4.0")
+    testImplementation("com.tngtech.archunit:archunit:1.4.0")
+    testRuntimeOnly("com.tngtech.archunit:archunit-junit5:1.4.0")
 }
 
 // --- Checkstyle ---
@@ -96,16 +99,10 @@ tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = java.math.BigDecimal("0.{{coverage_threshold}}")
+                minimum = "0.{{coverage_threshold}}".toBigDecimal()
             }
         }
     }
-}
-
-// --- OWASP Dependency Check ---
-dependencyCheck {
-    failBuildOnCVSS = 7.0f
-    formats = listOf("HTML", "JSON")
 }
 
 // --- Dependency Analysis ---

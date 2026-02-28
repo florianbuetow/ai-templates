@@ -9,9 +9,9 @@ rules:
     pattern: Objects.requireNonNullElse($OBJ, $DEFAULT)
     paths:
       include:
-        - src/main/
+        - /src/main/
       exclude:
-        - src/test/
+        - /src/test/
 
   - id: java.no-objects-require-non-null-else-get
     languages: [java]
@@ -23,9 +23,9 @@ rules:
     pattern: Objects.requireNonNullElseGet($OBJ, $SUPPLIER)
     paths:
       include:
-        - src/main/
+        - /src/main/
       exclude:
-        - src/test/
+        - /src/test/
 
   - id: java.no-map-get-or-default
     languages: [java]
@@ -37,9 +37,9 @@ rules:
     pattern: $MAP.getOrDefault($KEY, $DEFAULT)
     paths:
       include:
-        - src/main/
+        - /src/main/
       exclude:
-        - src/test/
+        - /src/test/
 
   - id: java.no-ternary-null-fallback
     languages: [java]
@@ -47,9 +47,9 @@ rules:
       Ternary null check with fallback hides missing data.
       Use explicit null checks with clear error messages instead.
     severity: ERROR
-    pattern: $VAR != null ? $VAR : $DEFAULT
+    pattern: "$VAR != null ? $VAR : $DEFAULT"
     paths:
       include:
-        - src/main/
+        - /src/main/
       exclude:
-        - src/test/
+        - /src/test/

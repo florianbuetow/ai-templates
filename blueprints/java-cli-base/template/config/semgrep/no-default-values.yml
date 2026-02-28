@@ -9,9 +9,9 @@ rules:
     pattern: $OPT.orElse($DEFAULT)
     paths:
       include:
-        - src/main/
+        - /src/main/
       exclude:
-        - src/test/
+        - /src/test/
 
   - id: java.no-optional-or-else-get
     languages: [java]
@@ -23,6 +23,6 @@ rules:
     pattern: $OPT.orElseGet($SUPPLIER)
     paths:
       include:
-        - src/main/
+        - /src/main/
       exclude:
-        - src/test/
+        - /src/test/
