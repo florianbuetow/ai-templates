@@ -4,7 +4,7 @@ This file provides guidance to AI agents and AI-assisted development tools when 
 
 ## Repository Overview
 
-This repository contains Copier templates for AI-agent-friendly project scaffolding across multiple languages: Python, Java, Go, Elixir, C++, and Rust.
+This repository contains Copier templates for Python, Java, Go, Elixir, C++, and Rust that enforce strict validation guardrails on AI-generated code — catching antipatterns, suppressing silent defaults, and providing immediate feedback so AI agents write better, more maintainable code from the start.
 
 ## Git Commit Guidelines
 
