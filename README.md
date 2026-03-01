@@ -2,7 +2,7 @@
 
 ![Made with AI](https://img.shields.io/badge/Made%20with-AI-333333?labelColor=f00) ![Verified by Humans](https://img.shields.io/badge/Verified%20by-Humans-333333?labelColor=brightgreen)
 
-Copier templates for Python CLI, Java CLI, Go CLI, Elixir OTP, C++ CLI, and Rust CLI applications designed to create AI-agent-friendly codebases with comprehensive validation checks that provide feedback to the AI to write better, more maintainable code and suppress typical antipatterns in generated code.
+Copier templates for Python, Java, Go, Elixir, C++, and Rust that enforce strict validation guardrails on AI-generated code — catching antipatterns, suppressing silent defaults, and providing immediate feedback so AI agents write better, more maintainable code from the start.
 
 ## Quick Start
 
