@@ -68,7 +68,7 @@ blueprints/go-cli-base/
 ### Via just create
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just create go-cli-base my-project
 ```
 
@@ -129,7 +129,7 @@ Projects created from this template include:
 To verify the template generates correctly:
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just test-go
 ```
 
@@ -162,4 +162,4 @@ To modify this template:
 
 Based on:
 - [golang-standards/project-layout](https://github.com/golang-standards/project-layout)
-- ai-templates/blueprints/python-cli-base
+- ai-guardrails/blueprints/python-cli-base

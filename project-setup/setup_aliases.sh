@@ -7,8 +7,8 @@ echo "Setting up Python project setup alias..."
 echo ""
 
 # Repository configuration
-REPO_URL="https://github.com/florianbuetow/ai-templates.git"
-TEMPLATES_DIR="$HOME/scripts/ai-templates"
+REPO_URL="https://github.com/florianbuetow/ai-guardrails.git"
+TEMPLATES_DIR="$HOME/scripts/ai-guardrails"
 SETUP_SCRIPT="$TEMPLATES_DIR/project-setup/setup-project-python-claude.sh"
 
 # Create ~/scripts directory if it doesn't exist
@@ -19,13 +19,13 @@ echo ""
 
 # Clone or update the repository
 if [ -d "$TEMPLATES_DIR/.git" ]; then
-  echo "Updating existing ai-templates repository..."
+  echo "Updating existing ai-guardrails repository..."
   cd "$TEMPLATES_DIR"
   git pull --quiet
   echo "✓ Repository updated"
   echo ""
 else
-  echo "Cloning ai-templates repository to ~/scripts/ai-templates..."
+  echo "Cloning ai-guardrails repository to ~/scripts/ai-guardrails..."
   git clone --quiet "$REPO_URL" "$TEMPLATES_DIR"
   echo "✓ Repository cloned"
   echo ""
@@ -66,8 +66,8 @@ case "$USER_SHELL" in
     echo "✗ Unsupported shell: $USER_SHELL"
     echo "Please manually add the following aliases to your shell configuration:"
     echo ""
-    echo "alias newpy='~/scripts/ai-templates/project-setup/setup-project-python-claude.sh'"
-    echo "alias update-templates='cd ~/scripts/ai-templates && git pull && cd - > /dev/null'"
+    echo "alias newpy='~/scripts/ai-guardrails/project-setup/setup-project-python-claude.sh'"
+    echo "alias update-templates='cd ~/scripts/ai-guardrails && git pull && cd - > /dev/null'"
     echo ""
     exit 1
     ;;
@@ -94,8 +94,8 @@ else
 
   cat >> "$RC_FILE" << 'EOF'
 # Aliases for AI project templates
-alias newpy='~/scripts/ai-templates/project-setup/setup-project-python-claude.sh'
-alias update-templates='cd ~/scripts/ai-templates && git pull && cd - > /dev/null'
+alias newpy='~/scripts/ai-guardrails/project-setup/setup-project-python-claude.sh'
+alias update-templates='cd ~/scripts/ai-guardrails && git pull && cd - > /dev/null'
 EOF
 
   echo "✓ Aliases added successfully"

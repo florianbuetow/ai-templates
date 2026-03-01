@@ -9,7 +9,7 @@ Copier templates for Python CLI, Java CLI, Go CLI, Elixir OTP, C++ CLI, and Rust
 **Python CLI:**
 
 ```bash
-copier copy https://github.com/florianbuetow/ai-templates/blueprints/python-cli-base my-project
+copier copy https://github.com/florianbuetow/ai-guardrails/blueprints/python-cli-base my-project
 cd my-project
 just init
 just run
@@ -18,7 +18,7 @@ just run
 **Java CLI:**
 
 ```bash
-copier copy https://github.com/florianbuetow/ai-templates/blueprints/java-cli-base my-java-project
+copier copy https://github.com/florianbuetow/ai-guardrails/blueprints/java-cli-base my-java-project
 cd my-java-project
 just init
 just run
@@ -27,7 +27,7 @@ just run
 **Go CLI:**
 
 ```bash
-copier copy https://github.com/florianbuetow/ai-templates/blueprints/go-cli-base my-go-project
+copier copy https://github.com/florianbuetow/ai-guardrails/blueprints/go-cli-base my-go-project
 cd my-go-project
 just init
 just run
@@ -36,7 +36,7 @@ just run
 **Elixir OTP:**
 
 ```bash
-copier copy https://github.com/florianbuetow/ai-templates/blueprints/elixir-otp-base my-elixir-project
+copier copy https://github.com/florianbuetow/ai-guardrails/blueprints/elixir-otp-base my-elixir-project
 cd my-elixir-project
 just init
 just run
@@ -45,7 +45,7 @@ just run
 **C++ CLI:**
 
 ```bash
-copier copy https://github.com/florianbuetow/ai-templates/blueprints/cpp-cli-base my-cpp-project
+copier copy https://github.com/florianbuetow/ai-guardrails/blueprints/cpp-cli-base my-cpp-project
 cd my-cpp-project
 just init
 just run
@@ -54,7 +54,7 @@ just run
 **Rust CLI:**
 
 ```bash
-copier copy https://github.com/florianbuetow/ai-templates/blueprints/rust-cli-base my-rust-project
+copier copy https://github.com/florianbuetow/ai-guardrails/blueprints/rust-cli-base my-rust-project
 cd my-rust-project
 just init
 just run
@@ -135,8 +135,8 @@ Each template has its own language-specific prerequisites. See the template READ
 Clone this repository:
 
 ```bash
-git clone https://github.com/florianbuetow/ai-templates.git
-cd ai-templates
+git clone https://github.com/florianbuetow/ai-guardrails.git
+cd ai-guardrails
 ```
 
 ## Usage
@@ -146,7 +146,7 @@ cd ai-templates
 **Method 1: Using the just command (recommended)**
 
 ```bash
-cd ai-templates
+cd ai-guardrails
 just create python-cli-base ~/projects/my-awesome-project
 cd ~/projects/my-awesome-project
 just init
@@ -160,7 +160,7 @@ The `just create` command takes two arguments:
 **Method 2: Using Copier directly**
 
 ```bash
-copier copy /path/to/ai-templates/blueprints/python-cli-base my-awesome-project
+copier copy /path/to/ai-guardrails/blueprints/python-cli-base my-awesome-project
 cd my-awesome-project
 just init
 just run
@@ -171,7 +171,7 @@ just run
 ### Run Tests
 
 ```bash
-cd ai-templates
+cd ai-guardrails
 just test          # Test Python template
 just test-java     # Test Java template
 just test-go       # Test Go template
@@ -193,16 +193,16 @@ Each test will:
 To get the latest template features, configurations, and fixes:
 
 ```bash
-cd ai-templates
+cd ai-guardrails
 just update
 ```
 
-This updates the ai-templates repository itself (via `git pull`). Existing projects created from the template are not affected.
+This updates the ai-guardrails repository itself (via `git pull`). Existing projects created from the template are not affected.
 
 ## Repository Structure
 
 ```
-ai-templates/
+ai-guardrails/
 ├── blueprints/                                 # Copier-based project templates
 │   ├── python-cli-base/                       # Python CLI template (README, copier.yml, template/)
 │   ├── java-cli-base/                         # Java CLI template

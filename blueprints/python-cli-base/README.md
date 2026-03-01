@@ -72,7 +72,7 @@ blueprints/python-cli-base/
 ### Via just create
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just create python-cli-base my-project
 ```
 
@@ -134,7 +134,7 @@ Projects created from this template include:
 To verify the template generates correctly:
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just test
 ```
 
@@ -167,4 +167,4 @@ To modify this template:
 
 Based on:
 - [mjun0812/python-copier-template](https://github.com/mjun0812/python-copier-template)
-- ai-templates/project-setup/setup-project-python.md
+- ai-guardrails/project-setup/setup-project-python.md

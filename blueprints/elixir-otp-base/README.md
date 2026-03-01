@@ -62,7 +62,7 @@ blueprints/elixir-otp-base/
 ### Via just create
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just create elixir-otp-base my-elixir-app
 ```
 
@@ -123,7 +123,7 @@ Projects created from this template include:
 To verify the template generates correctly:
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just test-elixir
 ```
 
@@ -156,4 +156,4 @@ To modify this template:
 
 Based on:
 - [elixir-lang/elixir](https://github.com/elixir-lang/elixir)
-- ai-templates/blueprints/python-cli-base
+- ai-guardrails/blueprints/python-cli-base

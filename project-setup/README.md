@@ -23,7 +23,7 @@ This directory contains a complete setup system for bootstrapping new Python pro
 - **`setup_aliases.sh`** - Automated alias installation script
   - Automatically detects your shell (zsh, bash, fish)
   - Creates ~/scripts directory
-  - Clones this repository to ~/scripts/ai-templates (or updates if already exists)
+  - Clones this repository to ~/scripts/ai-guardrails (or updates if already exists)
   - Adds the 'newpy' alias to create new projects
   - Adds the 'update-templates' alias to update the templates
   - Handles duplicate detection to avoid conflicts (idempotent)
@@ -41,7 +41,7 @@ Run the automated setup script to install the `newpy` alias:
 This script will:
 - Automatically detect your shell (zsh, bash, or fish)
 - Create the `~/scripts` directory
-- Clone this repository to `~/scripts/ai-templates` (or update if it already exists)
+- Clone this repository to `~/scripts/ai-guardrails` (or update if it already exists)
 - Add the `newpy` alias to your shell configuration file (for creating projects)
 - Add the `update-templates` alias to your shell configuration file (for updating templates)
 - The script is idempotent - safe to run multiple times without creating duplicates
@@ -83,14 +83,14 @@ If you prefer to set up the alias manually:
 ```bash
 mkdir -p ~/scripts
 cd ~/scripts
-git clone https://github.com/florianbuetow/ai-templates.git
+git clone https://github.com/florianbuetow/ai-guardrails.git
 ```
 
 2. Add these aliases to your `~/.zshrc`:
 ```bash
 # Aliases for AI project templates
-alias newpy='~/scripts/ai-templates/project-setup/setup-project-python-claude.sh'
-alias update-templates='cd ~/scripts/ai-templates && git pull && cd - > /dev/null'
+alias newpy='~/scripts/ai-guardrails/project-setup/setup-project-python-claude.sh'
+alias update-templates='cd ~/scripts/ai-guardrails && git pull && cd - > /dev/null'
 ```
 
 3. Reload your shell configuration:
@@ -104,14 +104,14 @@ source ~/.zshrc
 ```bash
 mkdir -p ~/scripts
 cd ~/scripts
-git clone https://github.com/florianbuetow/ai-templates.git
+git clone https://github.com/florianbuetow/ai-guardrails.git
 ```
 
 2. Add these aliases to your `~/.bashrc` or `~/.bash_profile`:
 ```bash
 # Aliases for AI project templates
-alias newpy='~/scripts/ai-templates/project-setup/setup-project-python-claude.sh'
-alias update-templates='cd ~/scripts/ai-templates && git pull && cd - > /dev/null'
+alias newpy='~/scripts/ai-guardrails/project-setup/setup-project-python-claude.sh'
+alias update-templates='cd ~/scripts/ai-guardrails && git pull && cd - > /dev/null'
 ```
 
 3. Reload your shell configuration:
@@ -126,7 +126,7 @@ source ~/.bashrc  # or source ~/.bash_profile
 When you run `./setup_aliases.sh`:
 
 1. Creates `~/scripts` directory if it doesn't exist
-2. Clones this repository to `~/scripts/ai-templates` (or updates it if already exists)
+2. Clones this repository to `~/scripts/ai-guardrails` (or updates it if already exists)
 3. Detects your shell and adds aliases to the appropriate configuration file
 4. Sets up two aliases:
    - `newpy` - creates new Python projects
@@ -137,7 +137,7 @@ When you run `./setup_aliases.sh`:
 When you run `newpy my-project-name`:
 
 1. The script creates a new directory with the specified name (or uses the current directory if you pass `.`)
-2. It copies `setup-project-python.md` from `~/scripts/ai-templates/project-setup/` to your project directory
+2. It copies `setup-project-python.md` from `~/scripts/ai-guardrails/project-setup/` to your project directory
 3. It invokes Claude Code with the instruction: "Follow the setup instructions in setup-project-python.md to the teeth."
 4. Claude Code reads the template and creates:
    - Complete project structure (`src/`, `scripts/`, `data/`, etc.)
@@ -154,7 +154,7 @@ When you run `newpy my-project-name`:
 
 When you run `update-templates`:
 
-1. Navigates to `~/scripts/ai-templates`
+1. Navigates to `~/scripts/ai-guardrails`
 2. Runs `git pull` to fetch the latest templates
 3. Returns to your previous directory
 

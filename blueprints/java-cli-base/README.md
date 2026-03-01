@@ -81,7 +81,7 @@ blueprints/java-cli-base/
 ### Via just create
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just create java-cli-base my-java-project
 ```
 
@@ -142,7 +142,7 @@ Projects created from this template include:
 To verify the template generates correctly:
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just test-java
 ```
 
@@ -175,4 +175,4 @@ To modify this template:
 
 Based on:
 - [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html)
-- ai-templates/blueprints/python-cli-base
+- ai-guardrails/blueprints/python-cli-base

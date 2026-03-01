@@ -68,7 +68,7 @@ blueprints/cpp-cli-base/
 ### Via just create
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just create cpp-cli-base my-project
 ```
 
@@ -137,7 +137,7 @@ Optional:
 To verify the template generates correctly:
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just test-cpp
 ```
 
@@ -170,4 +170,4 @@ To modify this template:
 
 Based on:
 - [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
-- ai-templates/blueprints/python-cli-base
+- ai-guardrails/blueprints/python-cli-base

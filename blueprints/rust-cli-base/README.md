@@ -68,7 +68,7 @@ blueprints/rust-cli-base/
 ### Via just create
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just create rust-cli-base my-project
 ```
 
@@ -128,7 +128,7 @@ Projects created from this template include:
 To verify the template generates correctly:
 
 ```bash
-cd /path/to/ai-templates
+cd /path/to/ai-guardrails
 just test-rust
 ```
 
@@ -161,4 +161,4 @@ To modify this template:
 
 Based on:
 - [rust-lang/cargo](https://github.com/rust-lang/cargo)
-- ai-templates/blueprints/python-cli-base
+- ai-guardrails/blueprints/python-cli-base
