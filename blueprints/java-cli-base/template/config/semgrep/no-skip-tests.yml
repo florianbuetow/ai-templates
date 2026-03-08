@@ -1,0 +1,78 @@
+rules:
+  - id: java.no-disabled-tests
+    languages: [java]
+    message: >
+      Do not use @Disabled to skip tests. Tests must either pass or fail.
+      Fix the underlying issue instead of disabling the test.
+    severity: ERROR
+    pattern-either:
+      - pattern: |
+          @Disabled
+          $RET $METHOD(...) { ... }
+      - pattern: |
+          @Disabled("...")
+          $RET $METHOD(...) { ... }
+      - pattern: |
+          @Disabled
+          class $CLASS { ... }
+      - pattern: |
+          @Disabled("...")
+          class $CLASS { ... }
+
+  - id: java.no-ignore-tests
+    languages: [java]
+    message: >
+      Do not use @Ignore to skip tests. Tests must either pass or fail.
+      Fix the underlying issue instead of ignoring the test.
+    severity: ERROR
+    pattern-either:
+      - pattern: |
+          @Ignore
+          $RET $METHOD(...) { ... }
+      - pattern: |
+          @Ignore("...")
+          $RET $METHOD(...) { ... }
+      - pattern: |
+          @Ignore
+          class $CLASS { ... }
+      - pattern: |
+          @Ignore("...")
+          class $CLASS { ... }
+
+  - id: java.no-disabled-if-tests
+    languages: [java]
+    message: >
+      Do not conditionally disable tests. Tests must either pass or fail.
+      If a test requires specific conditions, use assumptions or test fixtures instead.
+    severity: ERROR
+    pattern-either:
+      - pattern: |
+          @DisabledIf(...)
+          $RET $METHOD(...) { ... }
+      - pattern: |
+          @DisabledOnOs(...)
+          $RET $METHOD(...) { ... }
+      - pattern: |
+          @DisabledIfSystemProperty(...)
+          $RET $METHOD(...) { ... }
+      - pattern: |
+          @DisabledIfEnvironmentVariable(...)
+          $RET $METHOD(...) { ... }
+      - pattern: |
+          @DisabledOnJre(...)
+          $RET $METHOD(...) { ... }
+      - pattern: |
+          @DisabledForJreRange(...)
+          $RET $METHOD(...) { ... }
+
+  - id: java.no-assume-skip-tests
+    languages: [java]
+    message: >
+      Do not use Assumptions to skip tests at runtime. Tests must either pass or fail.
+      If a test requires specific conditions, use test fixtures or separate test suites instead.
+    severity: ERROR
+    pattern-either:
+      - pattern: Assumptions.assumeTrue(...)
+      - pattern: Assumptions.assumeFalse(...)
+      - pattern: Assume.assumeTrue(...)
+      - pattern: Assume.assumeFalse(...)

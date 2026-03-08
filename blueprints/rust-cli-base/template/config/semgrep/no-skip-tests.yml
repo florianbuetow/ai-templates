@@ -1,0 +1,8 @@
+rules:
+  - id: no-skip-tests
+    languages: [rust]
+    message: >
+      Do not use #[ignore] to skip tests. Tests must either pass or fail.
+      Fix the underlying issue instead of ignoring the test.
+    severity: ERROR
+    pattern-regex: '#\[ignore\]'

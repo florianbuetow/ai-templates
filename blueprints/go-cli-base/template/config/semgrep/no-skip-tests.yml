@@ -1,0 +1,12 @@
+rules:
+  - id: go.no-skip-tests
+    languages: [go]
+    message: >
+      Do not skip tests. Tests must either pass or fail.
+      If a test requires infrastructure, use a build tag or test flag to filter at run time.
+      If a test is not yet implemented, write it as a failing test.
+    severity: ERROR
+    pattern-either:
+      - pattern: $T.Skip(...)
+      - pattern: $T.SkipNow()
+      - pattern: $T.Skipf(...)

@@ -1,0 +1,79 @@
+rules:
+  - id: python.no-skip-tests
+    languages: [python]
+    message: >
+      Do not skip or disable tests. Tests must either pass or fail.
+      If a test requires infrastructure, use a pytest marker and filter at collection time.
+      If a test is not yet implemented, write it as a failing test.
+    severity: ERROR
+    pattern-either:
+      - pattern: pytest.skip(...)
+      - pattern: pytest.xfail(...)
+      - pattern: |
+          @pytest.mark.skip
+          def $FUNC(...):
+              ...
+      - pattern: |
+          @pytest.mark.skip(...)
+          def $FUNC(...):
+              ...
+      - pattern: |
+          @pytest.mark.skipif(...)
+          def $FUNC(...):
+              ...
+      - pattern: |
+          @pytest.mark.xfail
+          def $FUNC(...):
+              ...
+      - pattern: |
+          @pytest.mark.xfail(...)
+          def $FUNC(...):
+              ...
+      - pattern: |
+          @pytest.mark.skip
+          async def $FUNC(...):
+              ...
+      - pattern: |
+          @pytest.mark.skip(...)
+          async def $FUNC(...):
+              ...
+      - pattern: |
+          @pytest.mark.skipif(...)
+          async def $FUNC(...):
+              ...
+      - pattern: |
+          @pytest.mark.xfail
+          async def $FUNC(...):
+              ...
+      - pattern: |
+          @pytest.mark.xfail(...)
+          async def $FUNC(...):
+              ...
+
+  - id: python.no-unittest-skip-tests
+    languages: [python]
+    message: >
+      Do not skip or disable tests. Tests must either pass or fail.
+      Fix the underlying issue instead of skipping the test.
+    severity: ERROR
+    pattern-either:
+      - pattern: |
+          @unittest.skip
+          def $FUNC(...):
+              ...
+      - pattern: |
+          @unittest.skip(...)
+          def $FUNC(...):
+              ...
+      - pattern: |
+          @unittest.skipIf(...)
+          def $FUNC(...):
+              ...
+      - pattern: |
+          @unittest.skipUnless(...)
+          def $FUNC(...):
+              ...
+      - pattern: |
+          @unittest.expectedFailure
+          def $FUNC(...):
+              ...
