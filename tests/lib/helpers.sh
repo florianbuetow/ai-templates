@@ -55,6 +55,9 @@ generate_project() {
     copier copy --trust --defaults \
         "${copier_args[@]}" \
         "$template_path" "$target_dir"
+
+    # Semgrep only scans git-tracked files, so initialize a repo
+    (cd "$target_dir" && git init -q && git add -A && git commit -q -m "init")
 }
 
 cleanup_dir() {

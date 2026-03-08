@@ -40,26 +40,18 @@ for lang in "${languages[@]}"; do
 
     if [ ! -f "$lang_config" ]; then
         log_fail "Missing language config: $lang_config"
-        failed_languages=$((failed_languages + 1))
-        continue
+        exit 1
     fi
 
-    if (LANG_CONFIG_FILE="$lang_config" LANG_SLUG="$lang" run_language_tests); then
-        passed_languages=$((passed_languages + 1))
-    else
-        failed_languages=$((failed_languages + 1))
+    if ! (LANG_CONFIG_FILE="$lang_config" LANG_SLUG="$lang" run_language_tests); then
+        log_fail "$lang tests failed — aborting"
+        exit 1
     fi
+
+    passed_languages=$((passed_languages + 1))
 done
 
 log_section "Final summary"
-printf "Languages requested: %d\n" "$requested_count"
-printf "Languages passed:    %d\n" "$passed_languages"
-printf "Languages failed:    %d\n" "$failed_languages"
-
-if [ "$failed_languages" -eq 0 ]; then
-    log_pass "All requested language test suites passed"
-    exit 0
-fi
-
-log_fail "One or more language test suites failed"
-exit 1
+printf "Languages passed: %d/%d\n" "$passed_languages" "$requested_count"
+log_pass "All requested language test suites passed"
+exit 0

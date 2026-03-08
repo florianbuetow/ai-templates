@@ -2,81 +2,74 @@
 
 set -euo pipefail
 
-run_baseline_test() {
-    local temp_dir
-    local project_dir
+# Default check recipe for violation tests. Override per-violation by placing
+# a file named "check" in the violation directory containing the recipe name.
+DEFAULT_CHECK_RECIPE="code-semgrep"
 
-    temp_dir="$(mktemp -d)"
-    project_dir="$temp_dir/$PROJECT_NAME"
+# Back up original files before injecting a violation so we can restore them.
+inject_violation() {
+    local violation_dir="$1"
+    local project_dir="$2"
+    local backup_dir="$3"
 
-    log_section "$LANG_NAME baseline"
+    # Find all files in the violation directory (relative paths)
+    while IFS= read -r rel_path; do
+        local src="$violation_dir/$rel_path"
+        local dst="$project_dir/$rel_path"
+        local bak="$backup_dir/$rel_path"
 
-    if ! generate_project "$temp_dir"; then
-        log_fail "Failed to generate $LANG_NAME project"
-        cleanup_dir "$temp_dir"
-        return 1
-    fi
+        # Skip the "check" metadata file
+        if [ "$rel_path" = "check" ]; then
+            continue
+        fi
 
-    if (cd "$project_dir" && just ci); then
-        log_pass "Baseline CI passed"
-        cleanup_dir "$temp_dir"
-        return 0
-    fi
+        # Back up the original if it exists
+        if [ -f "$dst" ]; then
+            mkdir -p "$(dirname "$bak")"
+            cp "$dst" "$bak"
+        fi
 
-    log_fail "Baseline CI failed"
-    cleanup_dir "$temp_dir"
-    return 1
+        # Copy the violation file in
+        mkdir -p "$(dirname "$dst")"
+        cp "$src" "$dst"
+    done < <(cd "$violation_dir" && find . -type f | sed 's|^\./||')
 }
 
-run_violation_test() {
-    local test_name="$1"
-    local violation_dir="$2"
-    local temp_dir
-    local project_dir
+# Restore backed-up files and remove any files that were added (not overwritten).
+restore_violation() {
+    local violation_dir="$1"
+    local project_dir="$2"
+    local backup_dir="$3"
 
-    temp_dir="$(mktemp -d)"
-    project_dir="$temp_dir/$PROJECT_NAME"
+    while IFS= read -r rel_path; do
+        local dst="$project_dir/$rel_path"
+        local bak="$backup_dir/$rel_path"
 
-    log_section "$LANG_NAME violation: $test_name"
+        if [ "$rel_path" = "check" ]; then
+            continue
+        fi
 
-    if ! generate_project "$temp_dir"; then
-        log_fail "Failed to generate $LANG_NAME project"
-        cleanup_dir "$temp_dir"
-        return 1
-    fi
+        if [ -f "$bak" ]; then
+            cp "$bak" "$dst"
+        else
+            rm -f "$dst"
+        fi
+    done < <(cd "$violation_dir" && find . -type f | sed 's|^\./||')
 
-    if ! (cd "$project_dir" && just ci); then
-        log_fail "Baseline sanity check failed before injecting violation"
-        cleanup_dir "$temp_dir"
-        return 1
-    fi
-
-    cp -R "$violation_dir"/. "$project_dir"/
-
-    if (cd "$project_dir" && just ci); then
-        log_fail "Violation was not detected by CI"
-        cleanup_dir "$temp_dir"
-        return 1
-    fi
-
-    log_pass "Violation correctly detected"
-    cleanup_dir "$temp_dir"
-    return 0
+    rm -rf "$backup_dir"
 }
 
 run_language_tests() {
-    local baseline_failed=0
-    local total_tests=0
-    local passed_tests=0
-    local failed_tests=0
-    local skipped_tests=0
-    local passed_names=()
-    local failed_names=()
-    local skipped_names=()
+    local temp_dir
+    local project_dir
     local violation_root
     local violation_dirs=()
     local violation_dir
     local violation_name
+    local check_recipe
+    local backup_dir
+    local total_tests=0
+    local passed_tests=0
 
     # shellcheck source=/dev/null
     source "$LANG_CONFIG_FILE"
@@ -85,16 +78,32 @@ run_language_tests() {
 
     check_prerequisites
 
-    total_tests=$((total_tests + 1))
-    if run_baseline_test; then
-        passed_tests=$((passed_tests + 1))
-        passed_names+=("baseline")
-    else
-        failed_tests=$((failed_tests + 1))
-        failed_names+=("baseline")
-        baseline_failed=1
-    fi
+    # --- One-time project setup ---
+    temp_dir="$(mktemp -d)"
+    project_dir="$temp_dir/$PROJECT_NAME"
 
+    log_section "$LANG_NAME project setup"
+
+    if ! generate_project "$temp_dir"; then
+        log_fail "Failed to generate $LANG_NAME project"
+        cleanup_dir "$temp_dir"
+        return 1
+    fi
+    log_pass "Project generated"
+
+    # --- Baseline: full CI must pass ---
+    log_section "$LANG_NAME baseline"
+
+    if ! (cd "$project_dir" && just ci); then
+        log_fail "Baseline CI failed"
+        cleanup_dir "$temp_dir"
+        return 1
+    fi
+    log_pass "Baseline CI passed"
+    total_tests=$((total_tests + 1))
+    passed_tests=$((passed_tests + 1))
+
+    # --- Discover violation tests ---
     violation_root="$REPO_ROOT/violations/$LANG_SLUG"
     if [ -d "$violation_root" ]; then
         while IFS= read -r violation_dir; do
@@ -102,48 +111,47 @@ run_language_tests() {
         done < <(find "$violation_root" -mindepth 1 -maxdepth 1 -type d | sort)
     fi
 
-    if [ "$baseline_failed" -eq 1 ]; then
-        skipped_tests=${#violation_dirs[@]}
-        if [ "$skipped_tests" -gt 0 ]; then
-            for violation_dir in "${violation_dirs[@]}"; do
-                skipped_names+=("$(basename "$violation_dir")")
-            done
-            printf "${YELLOW}! Skipping %d violation test(s) because baseline failed${NC}\n" "$skipped_tests"
+    # --- Run each violation test (fail fast) ---
+    for violation_dir in "${violation_dirs[@]}"; do
+        violation_name="$(basename "$violation_dir")"
+        total_tests=$((total_tests + 1))
+
+        # Determine which check recipe to run
+        if [ -f "$violation_dir/check" ]; then
+            check_recipe="$(cat "$violation_dir/check")"
+        else
+            check_recipe="$DEFAULT_CHECK_RECIPE"
         fi
-    else
-        for violation_dir in "${violation_dirs[@]}"; do
-            violation_name="$(basename "$violation_dir")"
-            total_tests=$((total_tests + 1))
-            if run_violation_test "$violation_name" "$violation_dir"; then
-                passed_tests=$((passed_tests + 1))
-                passed_names+=("$violation_name")
-            else
-                failed_tests=$((failed_tests + 1))
-                failed_names+=("$violation_name")
-            fi
-        done
-    fi
+
+        log_section "$LANG_NAME violation: $violation_name (just $check_recipe)"
+
+        # Inject violation files (with backup) and stage for semgrep
+        backup_dir="$(mktemp -d)"
+        inject_violation "$violation_dir" "$project_dir" "$backup_dir"
+        (cd "$project_dir" && git add -A)
+
+        # Run the targeted check — it must fail
+        if (cd "$project_dir" && just "$check_recipe" >/dev/null 2>&1); then
+            log_fail "Violation '$violation_name' was NOT detected by 'just $check_recipe'"
+            restore_violation "$violation_dir" "$project_dir" "$backup_dir"
+            cleanup_dir "$temp_dir"
+            return 1
+        fi
+
+        log_pass "Violation '$violation_name' correctly detected"
+        passed_tests=$((passed_tests + 1))
+
+        # Restore original files and git state for the next test
+        restore_violation "$violation_dir" "$project_dir" "$backup_dir"
+        (cd "$project_dir" && git checkout -q . && git clean -qfd)
+    done
+
+    # --- Cleanup ---
+    cleanup_dir "$temp_dir"
 
     log_section "$LANG_NAME summary"
-    printf "Total:   %d\n" "$total_tests"
-    printf "Passed:  %d\n" "$passed_tests"
-    printf "Failed:  %d\n" "$failed_tests"
-    printf "Skipped: %d\n" "$skipped_tests"
-    if [ "${#passed_names[@]}" -gt 0 ]; then
-        printf "Passed tests: %s\n" "$(IFS=', '; printf '%s' "${passed_names[*]}")"
-    fi
-    if [ "${#failed_names[@]}" -gt 0 ]; then
-        printf "Failed tests: %s\n" "$(IFS=', '; printf '%s' "${failed_names[*]}")"
-    fi
-    if [ "${#skipped_names[@]}" -gt 0 ]; then
-        printf "Skipped tests: %s\n" "$(IFS=', '; printf '%s' "${skipped_names[*]}")"
-    fi
-
-    if [ "$failed_tests" -eq 0 ]; then
-        log_pass "$LANG_NAME tests passed"
-        return 0
-    fi
-
-    log_fail "$LANG_NAME tests failed"
-    return 1
+    printf "Total:  %d\n" "$total_tests"
+    printf "Passed: %d\n" "$passed_tests"
+    log_pass "$LANG_NAME — all tests passed"
+    return 0
 }

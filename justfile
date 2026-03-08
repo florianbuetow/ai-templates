@@ -28,6 +28,8 @@
 #      E.g. printf "\033[32m✓ init completed successfully\033[0m\n"
 #    - On failure: red (\033[31m) message indicating what failed, then exit 1.
 #      E.g. printf "\033[31m✗ ci failed: tests exited with errors\033[0m\n"
+# 7. Targets must be shown in groups separated by empty newlines in the help section.
+#    - init/destory/clean/help on top, ci and other tests on the bottom, between other groups
 # =============================================================================
 
 # Default recipe: list all available recipes
@@ -43,13 +45,13 @@ help:
 	@echo "  just init                              - Install templates and set up aliases"
 	@echo "  just update                            - Update templates to latest version"
 	@echo "  just create <template> <target-dir>    - Create new project from template"
-	@echo "  just test                              - Run Python baseline + violation tests"
+	@echo "  just test                              - Run all baseline + violation tests"
+	@echo "  just test-python                       - Run Python baseline + violation tests"
 	@echo "  just test-java                         - Run Java baseline + violation tests"
 	@echo "  just test-go                           - Run Go baseline + violation tests"
 	@echo "  just test-elixir                       - Run Elixir baseline + violation tests"
 	@echo "  just test-cpp                          - Run C++ baseline + violation tests"
 	@echo "  just test-rust                         - Run Rust baseline + violation tests"
-	@echo "  just test-all                          - Run all baseline + violation tests"
 	@echo ""
 	@echo "Available templates:"
 	@echo "  python-cli-base                        - Python CLI application"
@@ -142,8 +144,12 @@ update:
 create template-name target-dir=".":
 	@./project-setup/setup-project.sh --template {{template-name}} --target {{target-dir}}
 
-# Test the Python template (baseline + violations)
+# Test all templates (baseline + violations)
 test:
+	@./tests/run-tests.sh all
+
+# Test the Python template (baseline + violations)
+test-python:
 	@./tests/run-tests.sh python
 
 # Test the Java template (baseline + violations)
@@ -165,7 +171,3 @@ test-cpp:
 # Test the Rust template (baseline + violations)
 test-rust:
 	@./tests/run-tests.sh rust
-
-# Test all templates (baseline + violations)
-test-all:
-	@./tests/run-tests.sh all

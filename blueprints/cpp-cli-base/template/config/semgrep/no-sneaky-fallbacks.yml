@@ -6,7 +6,7 @@ rules:
       log it, or rethrow. Never ignore exceptions.
     severity: ERROR
     pattern: |
-      catch (...) {
+      try { ... } catch (...) {
       }
     paths:
       include:
@@ -22,11 +22,11 @@ rules:
       types or rethrow after logging. Use std::expected for recoverable errors.
     severity: WARNING
     pattern: |
-      catch (...) {
+      try { ... } catch (...) {
         ...
       }
     pattern-not: |
-      catch (...) {
+      try { ... } catch (...) {
         ...
         throw;
         ...
