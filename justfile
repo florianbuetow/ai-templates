@@ -43,8 +43,10 @@ help:
 	@echo "Available recipes:"
 	@echo "  just help                              - Show this help message"
 	@echo "  just init                              - Install templates and set up aliases"
+	@echo ""
 	@echo "  just update                            - Update templates to latest version"
 	@echo "  just create <template> <target-dir>    - Create new project from template"
+	@echo ""
 	@echo "  just test                              - Run all baseline + violation tests"
 	@echo "  just test-python                       - Run Python baseline + violation tests"
 	@echo "  just test-java                         - Run Java baseline + violation tests"
@@ -117,7 +119,8 @@ init:
 	@echo ""
 	@echo "All prerequisites met! Installing AI Templates..."
 	@echo ""
-	@./project-setup/setup_aliases.sh
+	@./project-setup/setup_aliases.sh && printf "\033[32m✓ init completed successfully\033[0m\n" || { printf "\033[31m✗ init failed\033[0m\n"; exit 1; }
+	@echo ""
 
 # Update templates to latest version
 update:
@@ -142,32 +145,48 @@ update:
 
 # Create new project from template
 create template-name target-dir=".":
-	@./project-setup/setup-project.sh --template {{template-name}} --target {{target-dir}}
+	@echo ""
+	@./project-setup/setup-project.sh --template {{template-name}} --target {{target-dir}} && printf "\033[32m✓ project created successfully\033[0m\n" || { printf "\033[31m✗ project creation failed\033[0m\n"; exit 1; }
+	@echo ""
 
 # Test all templates (baseline + violations)
 test:
-	@./tests/run-tests.sh all
+	@echo ""
+	@./tests/run-tests.sh all && printf "\033[32m✓ all tests passed\033[0m\n" || { printf "\033[31m✗ tests failed\033[0m\n"; exit 1; }
+	@echo ""
 
 # Test the Python template (baseline + violations)
 test-python:
-	@./tests/run-tests.sh python
+	@echo ""
+	@./tests/run-tests.sh python && printf "\033[32m✓ python tests passed\033[0m\n" || { printf "\033[31m✗ python tests failed\033[0m\n"; exit 1; }
+	@echo ""
 
 # Test the Java template (baseline + violations)
 test-java:
-	@./tests/run-tests.sh java
+	@echo ""
+	@./tests/run-tests.sh java && printf "\033[32m✓ java tests passed\033[0m\n" || { printf "\033[31m✗ java tests failed\033[0m\n"; exit 1; }
+	@echo ""
 
 # Test the Go template (baseline + violations)
 test-go:
-	@./tests/run-tests.sh go
+	@echo ""
+	@./tests/run-tests.sh go && printf "\033[32m✓ go tests passed\033[0m\n" || { printf "\033[31m✗ go tests failed\033[0m\n"; exit 1; }
+	@echo ""
 
 # Test the Elixir template (baseline + violations)
 test-elixir:
-	@./tests/run-tests.sh elixir
+	@echo ""
+	@./tests/run-tests.sh elixir && printf "\033[32m✓ elixir tests passed\033[0m\n" || { printf "\033[31m✗ elixir tests failed\033[0m\n"; exit 1; }
+	@echo ""
 
 # Test the C++ template (baseline + violations)
 test-cpp:
-	@./tests/run-tests.sh cpp
+	@echo ""
+	@./tests/run-tests.sh cpp && printf "\033[32m✓ cpp tests passed\033[0m\n" || { printf "\033[31m✗ cpp tests failed\033[0m\n"; exit 1; }
+	@echo ""
 
 # Test the Rust template (baseline + violations)
 test-rust:
-	@./tests/run-tests.sh rust
+	@echo ""
+	@./tests/run-tests.sh rust && printf "\033[32m✓ rust tests passed\033[0m\n" || { printf "\033[31m✗ rust tests failed\033[0m\n"; exit 1; }
+	@echo ""
