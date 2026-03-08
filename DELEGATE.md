@@ -5,16 +5,43 @@
 > The #1 mistake agents make: **pasting a prompt into tmux and forgetting to send Enter**.
 > If you don't send Enter, **nothing happens**. The prompt sits there forever. Codex never sees it.
 >
-> **Every single prompt you send must end with a SEPARATE `tmux send-keys -t 'codex:0.0' Enter` call.**
+> **Every single prompt you send must end with a SEPARATE `tmux send-keys -t '$SESSION:0.0' Enter` call.**
+> (where `$SESSION` is the unique tmux session name you created — see Session Setup below)
 >
 > This is not optional. This is not implicit. You must explicitly send Enter as its own Bash tool call.
 > If you skip this step, you will waste the entire session waiting for a response that will never come.
 
 ## Session Setup
-- The sub-agent runs **OpenAI Codex** in a tmux session named `codex`
-- Do NOT launch Claude Code (`claude`) in the codex session — always use the existing Codex CLI tool
-- If the codex session shows a stale/old Codex session, quit it first (`/exit` + Enter) and relaunch with `codex` + Enter
-- It runs in the project working directory
+
+Every delegation starts by creating a **new tmux session** with a unique name. Never reuse an existing session.
+
+### 1. Generate a Unique Session Name
+Pick a name that does not collide with any existing tmux session. Use a timestamp or random suffix:
+```bash
+SESSION="codex-$(date +%s)"
+# Verify it doesn't already exist
+tmux has-session -t "$SESSION" 2>/dev/null && echo "COLLISION — pick another name" || echo "OK: $SESSION"
+```
+Save the value of `$SESSION` — you will use it in **every** tmux command for the rest of this delegation.
+
+### 2. Create the Session, CD into the Working Directory, and Launch Codex
+```bash
+# Create a detached tmux session and cd into the project root
+tmux new-session -d -s "$SESSION" -c "$(pwd)"
+# Launch Codex inside the session
+tmux send-keys -t "$SESSION:0.0" 'codex' Enter
+```
+
+### 3. Verify Codex Started with the Correct Model
+Wait a few seconds, then confirm Codex is running and shows **model 5.3 high** (the default):
+```bash
+sleep 5 && tmux capture-pane -t "$SESSION:0.0" -p | tail -15
+```
+You should see the Codex UI with `5.3 high` displayed as the active model. If not, investigate before proceeding.
+
+### Key Rules
+- Do NOT launch Claude Code (`claude`) in the session — always use the `codex` CLI
+- Do NOT reuse or attach to an existing tmux session — always create a fresh one
 - The agent is highly capable and can handle complex, long-running tasks given precise instructions
 - Do NOT underestimate it — delegate aggressively, not conservatively
 
@@ -37,7 +64,7 @@ Codex does NOT auto-submit. After you type or paste a prompt, **nothing happens 
 **For short prompts (single Bash call):**
 ```bash
 # The trailing Enter submits the prompt
-tmux send-keys -t 'codex:0.0' 'Your message here' Enter
+tmux send-keys -t "$SESSION:0.0" 'Your message here' Enter
 ```
 
 **For multi-line prompts (load-buffer + paste-buffer):**
@@ -47,54 +74,54 @@ cat << 'EOF' | tmux load-buffer -
 Your multi-line prompt here
 EOF
 # Bash call 1 (continued): Paste it into the codex pane
-tmux paste-buffer -t 'codex:0.0'
+tmux paste-buffer -t "$SESSION:0.0"
 ```
 ```bash
 # Bash call 2 — THIS IS THE STEP YOU WILL FORGET — DO NOT SKIP IT:
-tmux send-keys -t 'codex:0.0' Enter
+tmux send-keys -t "$SESSION:0.0" Enter
 ```
 
 **Rules:**
 - **NEVER** chain Enter with `&&` in the same command — it gets lost
 - **ALWAYS** send Enter as a **separate Bash tool call** after pasting
-- **ALWAYS** verify the prompt was submitted: `sleep 5 && tmux capture-pane -t 'codex:0.0' -p | tail -10`
+- **ALWAYS** verify the prompt was submitted: `sleep 5 && tmux capture-pane -t "$SESSION:0.0" -p | tail -10`
 - If the captured output still shows your prompt text sitting in the input area, **you forgot Enter**
 
 ### Checklist — After Every Prompt Submission
 
 Before moving on, confirm ALL of these:
 1. ✅ Did I send the prompt text? (`send-keys` or `paste-buffer`)
-2. ✅ Did I send Enter as a **separate** Bash call? (`tmux send-keys -t 'codex:0.0' Enter`)
-3. ✅ Did I verify submission? (`sleep 5 && tmux capture-pane -t 'codex:0.0' -p | tail -10`)
+2. ✅ Did I send Enter as a **separate** Bash call? (`tmux send-keys -t "$SESSION:0.0" Enter`)
+3. ✅ Did I verify submission? (`sleep 5 && tmux capture-pane -t "$SESSION:0.0" -p | tail -10`)
 
 ### Exact Session Targeting
-`-t codex` does **prefix matching** and will hit other sessions like `codex-e2e`. Always use the exact pane address to avoid ambiguity:
+`-t codex` does **prefix matching** and will hit other sessions like `codex-e2e`. Always use the exact pane address with your unique `$SESSION` name to avoid ambiguity:
 ```bash
-# WRONG — matches codex, codex-e2e, codex-anything
+# WRONG — matches any session starting with "codex"
 tmux send-keys -t codex "..."
 
-# CORRECT — targets exactly the codex session, window 0, pane 0
-tmux send-keys -t 'codex:0.0' "..."
+# CORRECT — targets exactly your session, window 0, pane 0
+tmux send-keys -t "$SESSION:0.0" "..."
 ```
-Use `codex:0.0` everywhere: `send-keys`, `capture-pane`, etc.
+Use `$SESSION:0.0` everywhere: `send-keys`, `capture-pane`, etc.
 
 ### Cancelling a Prompt First
 When the agent is waiting at a Yes/No prompt:
 ```bash
 # Call 1: Cancel the prompt
-tmux send-keys -t codex Escape
+tmux send-keys -t "$SESSION:0.0" Escape
 # Call 2: Wait for it to process (separate Bash call)
 sleep 2
 # Call 3: Send your new message
-tmux send-keys -t codex "Your correction here"
+tmux send-keys -t "$SESSION:0.0" "Your correction here"
 # Call 4: Submit it
-tmux send-keys -t codex Enter
+tmux send-keys -t "$SESSION:0.0" Enter
 ```
 
 ### Reading Agent Output
 ```bash
 # See current screen
-tmux capture-pane -t codex -p | tail -50
+tmux capture-pane -t "$SESSION:0.0" -p | tail -50
 
 # Don't sleep+check in one command if user might interrupt
 # Instead, check immediately or use short sleeps
@@ -164,7 +191,7 @@ After sending instructions to the agent, you MUST automatically check on it peri
 
 **Polling pattern — use sleep to enforce wait:**
 ```bash
-sleep 30 && tmux capture-pane -t codex -p | tail -40
+sleep 30 && tmux capture-pane -t "$SESSION:0.0" -p | tail -40
 ```
 
 The `sleep` in the same command prevents rapid-fire polling. Adjust the sleep duration:
@@ -198,6 +225,33 @@ The `sleep` in the same command prevents rapid-fire polling. Adjust the sleep du
 - Permission errors on files → tell it to create new files instead of modifying
 - Sandbox restrictions → offer to run commands for it and report results
 - Missing tools → tell it to skip and you'll handle it
+
+## Session Teardown
+
+When the agent has finished ALL work and you have reviewed the results, you MUST cleanly shut down the session:
+
+### 1. Exit Codex
+```bash
+# Send /exit to quit the Codex CLI
+tmux send-keys -t "$SESSION:0.0" '/exit' Enter
+```
+
+### 2. Wait for Codex to Exit, Then Terminate the tmux Session
+```bash
+# Wait for Codex to shut down
+sleep 3
+# Type exit to close the shell and terminate the tmux session
+tmux send-keys -t "$SESSION:0.0" 'exit' Enter
+```
+
+### 3. Verify the Session is Gone
+```bash
+tmux has-session -t "$SESSION" 2>/dev/null && echo "ERROR: session still alive" || echo "OK: session terminated"
+```
+
+**NEVER** leave tmux sessions running after work is complete. Every delegation that creates a session must also destroy it.
+
+---
 
 ## Review Protocol
 
@@ -238,9 +292,10 @@ If `just ci-quiet` fails, investigate the failure. Common causes:
 
 1. **Being too conservative** — The agent can handle complex work. Delegate the full feature, not just the foundation.
 2. **Guessing test outcomes** — Never claim a test will pass or fail without running it. Run `just ci-quiet` to verify.
-3. **Forgetting Enter** — The #1 failure mode. After `paste-buffer`, you MUST send `tmux send-keys -t 'codex:0.0' Enter` as a separate Bash call. Without it, the prompt sits in the input area forever and Codex never processes it. If you are waiting more than 30 seconds and Codex hasn't started working, **you forgot Enter**.
+3. **Forgetting Enter** — The #1 failure mode. After `paste-buffer`, you MUST send `tmux send-keys -t "$SESSION:0.0" Enter` as a separate Bash call. Without it, the prompt sits in the input area forever and Codex never processes it. If you are waiting more than 30 seconds and Codex hasn't started working, **you forgot Enter**.
 4. **Not enforcing TDD** — Explicitly tell the agent to write tests first, verify they fail, then implement.
 5. **Not telling it about existing test files** — Tell it existing tests are acceptance tests that must not be modified.
 6. **Running `just test` instead of `just ci-quiet`** — `just test` only covers pytest. `just ci-quiet` is the full CI pipeline including format, lint, type checks, security, and tests. Always use `just ci-quiet` for final validation.
 7. **Not priming with AGENTS.md** — The agent needs project context. Always make it read AGENTS.md first.
 8. **Letting it use pip install** — All Python execution must go through `uv run`. All dependency management through `uv sync`.
+9. **Not tearing down the tmux session** — Every delegation must end by exiting Codex (`/exit`) and terminating the tmux session (`exit`). Leaked sessions waste resources and cause name collisions.

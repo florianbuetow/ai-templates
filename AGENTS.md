@@ -71,6 +71,10 @@ This repository contains Copier templates for Python, Java, Go, Elixir, C++, and
 
 All templates emphasize creating immediately runnable projects with no placeholders, comprehensive CI pipelines, and AGENTS.md/CLAUDE.md files for AI agent guidance.
 
+## Delegating to Sub-Agents
+
+For large implementation tasks, long debugging sessions, or any work that benefits from a dedicated executor, read and follow [DELEGATE.md](DELEGATE.md). It covers how to spin up an isolated Codex sub-agent in a fresh tmux session, send it instructions, monitor its progress, and tear down the session when done. Use delegation whenever a task is substantial enough that running it in a separate agent avoids polluting your main context.
+
 ## Landing the Plane (Session Completion)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
