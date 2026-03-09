@@ -1,0 +1,34 @@
+rules:
+  - id: no-unsafe-block
+    pattern: unsafe { ... }
+    message: >
+      Do not use unsafe blocks. This project forbids all unsafe code.
+      Find a safe alternative or use a well-audited crate that encapsulates
+      the unsafe behavior.
+    languages: [rust]
+    severity: ERROR
+    paths:
+      include:
+        - src/
+  - id: no-unsafe-fn
+    pattern: unsafe fn $NAME(...) { ... }
+    message: >
+      Do not define unsafe functions. This project forbids all unsafe code.
+      Find a safe alternative or use a well-audited crate that encapsulates
+      the unsafe behavior.
+    languages: [rust]
+    severity: ERROR
+    paths:
+      include:
+        - src/
+  - id: no-unsafe-impl
+    pattern: unsafe impl $TRAIT for $TYPE { ... }
+    message: >
+      Do not use unsafe impl. This project forbids all unsafe code.
+      Find a safe alternative or use a well-audited crate that encapsulates
+      the unsafe behavior.
+    languages: [rust]
+    severity: ERROR
+    paths:
+      include:
+        - src/
