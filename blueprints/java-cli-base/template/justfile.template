@@ -176,7 +176,7 @@ code-spell:
 code-semgrep:
     @echo ""
     @printf "\033[34m=== Running Semgrep Static Analysis ===\033[0m\n"
-    @semgrep --config config/semgrep/ --error src/main/
+    @semgrep --config config/semgrep/ --error src/main/ scripts/
     @printf "\033[32m✓ code-semgrep completed successfully\033[0m\n"
     @echo ""
 
