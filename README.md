@@ -111,13 +111,19 @@ When AI agents work on your codebase, they sometimes modify unrelated files in a
 
 Use Guard alongside AI Guardrails to keep your project structure, configuration files, and critical modules safe while the AI works on the parts you want changed.
 
-### [Claude Code Plugins](https://github.com/florianbuetow/claude-code) — Code Quality and Project Planning Skills
+### [Claude Code Plugins](https://github.com/florianbuetow/claude-code) — Code Quality, Security, and Project Planning Skills
 
-A collection of three Claude Code plugins that bring automated design analysis and specification writing into your workflow:
+A collection of Claude Code plugins that bring automated design analysis, security auditing, and specification writing into your workflow:
 
 - **SOLID Principles** — Audit any class or module against all five SOLID principles (SRP, OCP, LSP, ISP, DIP) with severity-rated findings and concrete refactoring suggestions.
 - **Beyond SOLID Principles** — Architecture-level analysis covering ten principles (Separation of Concerns, DRY, Law of Demeter, Loose Coupling, KISS, YAGNI, and more) for catching structural rot across module and service boundaries.
+- **Archibald** — Software architecture quality assessment across six dimensions: architectural smells, antipatterns, metrics, dependencies, risks, and technical debt.
+- **K.I.S.S.** — Code and architecture simplicity analyzer covering complexity, over-abstraction, redundancy, and architectural bloat.
+- **AppSec** — Comprehensive application security toolbox with 62 security skills, 8 frameworks (OWASP, STRIDE, PASTA, LINDDUN, MITRE ATT&CK), 6 red team personas, and depth modes from quick to expert.
 - **Spec Writer** — Guided specification writing that produces five layered documents (Vision, Business Requirements, Software Requirements, Architecture, and Test Verification) through an interactive interview process.
+- **Spec-DD** — Specification-driven development workflow orchestrator with language-aware test scenario generation, automatic test execution, and artifact traceability.
+- **Explain System Tradeoffs** — Distributed system tradeoff analysis covering consistency, availability, latency, and data distribution decisions.
+- **Retrospective** — Developer-AI workflow analysis with session log reviews and feedback loop integration.
 
 Use these plugins after scaffolding a project with AI Guardrails to maintain code quality as the codebase grows and to plan new features with proper specifications before writing code.
 
