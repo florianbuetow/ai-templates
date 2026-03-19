@@ -152,7 +152,7 @@ code-security:
     @printf "\033[0;34m=== Running Security Checks ===\033[0m\n"
     @set -e; \
         crate_name="{{project_name}}"; \
-        geiger_output="$(cargo geiger 2>&1)" || true; \
+        geiger_output="$(cargo geiger 2>/dev/null)" || true; \
         if [ -z "$geiger_output" ]; then \
             printf "\033[0;31mx Security check failed: cargo geiger produced no output\033[0m\n"; \
             exit 1; \
