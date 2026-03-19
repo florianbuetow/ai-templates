@@ -29,7 +29,7 @@
 #    - On failure: red (\033[31m) message indicating what failed, then exit 1.
 #      E.g. printf "\033[31m✗ ci failed: tests exited with errors\033[0m\n"
 # 7. Targets must be shown in groups separated by empty newlines in the help section.
-#    - init/destory/clean/help on top, ci and other tests on the bottom, between other groups
+#    - init/destroy/clean/help on top, ci and other tests on the bottom, between other groups
 # =============================================================================
 
 # Default recipe: list all available recipes
@@ -54,6 +54,10 @@ help:
 	@printf "    cpp-cli-base                           - C++ CLI application\n"
 	@printf "    rust-cli-base                          - Rust CLI application\n"
 	@echo ""
+	@printf "  just code-spell                        - Check spelling across the repository\n"
+	@printf "  just code-semgrep                      - Run semgrep rules against repo scripts\n"
+	@echo ""
+	@printf "  just ci                                - Run all checks + all template tests\n"
 	@printf "  just test                              - Run all baseline + violation tests\n"
 	@printf "  just test-python                       - Run Python baseline + violation tests\n"
 	@printf "  just test-java                         - Run Java baseline + violation tests\n"
@@ -143,6 +147,33 @@ update:
 create template-name target-dir=".":
 	@echo ""
 	@./project-setup/setup-project.sh --template {{template-name}} --target {{target-dir}} && printf "\033[32m✓ project created successfully\033[0m\n" || { printf "\033[31m✗ project creation failed\033[0m\n"; exit 1; }
+	@echo ""
+
+# Check spelling across the repository
+code-spell:
+	@echo ""
+	@printf "\033[0;34m=== Running Codespell ===\033[0m\n"
+	@codespell --ignore-words config/codespell/ignore.txt \
+		--skip=".git,blueprints,violations,.beads,docs,scratch,*.yml,*.yaml" \
+		. \
+		&& printf "\033[32m✓ codespell passed\033[0m\n" \
+		|| { printf "\033[31m✗ codespell found spelling errors\033[0m\n"; exit 1; }
+	@echo ""
+
+# Run semgrep rules against repo scripts
+code-semgrep:
+	@echo ""
+	@printf "\033[0;34m=== Running Semgrep Static Analysis ===\033[0m\n"
+	@semgrep --config config/semgrep/ --error \
+		tests/ project-setup/ justfile \
+		&& printf "\033[32m✓ semgrep passed\033[0m\n" \
+		|| { printf "\033[31m✗ semgrep found violations\033[0m\n"; exit 1; }
+	@echo ""
+
+# Run all checks and all template tests
+ci: code-spell code-semgrep test
+	@echo ""
+	@printf "\033[32m✓ ci passed\033[0m\n"
 	@echo ""
 
 # Test all templates (baseline + violations)
