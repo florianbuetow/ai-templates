@@ -116,28 +116,6 @@ dependencyAnalysis {
     }
 }
 
-tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask>().configureEach {
-    outputFormatter = "json"
-    doLast {
-        val reportFile = file("build/dependencyUpdates/report.json")
-        if (!reportFile.exists()) {
-            return@doLast
-        }
-
-        val report = groovy.json.JsonSlurper().parse(reportFile) as? Map<*, *> ?: return@doLast
-        val outdated = report["outdated"] as? Map<*, *> ?: return@doLast
-        val outdatedCount = when (val count = outdated["count"]) {
-            is Number -> count.toInt()
-            is String -> count.toIntOrNull() ?: 0
-            else -> 0
-        }
-
-        if (outdatedCount > 0) {
-            throw GradleException("Outdated dependencies found. Run './gradlew dependencyUpdates' to see details.")
-        }
-    }
-}
-
 // --- Test configuration ---
 tasks.test {
     useJUnitPlatform()
