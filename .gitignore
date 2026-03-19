@@ -211,6 +211,7 @@ __marimo__/
 
 # Design/plan documents
 docs/plans/
+docs/superpowers/
 
 # macOS
 .DS_Store
