@@ -99,7 +99,7 @@ Every template runs the same CI check categories via `just ci`. The table below 
 | Meta-linter | — | — | golangci-lint | Credo | — | — |
 | Architecture | pytestarch | ArchUnit | arch-go | ex_arch_unit | — | — |
 
-See each template's README for tool details and configuration, or [code-validation-blueprint-guide.md](docs/code-validation-blueprint-guide.md) for semgrep rules.
+See each template's README for tool details and configuration.
 
 ## Highly Recommended Companion Tools
 
