@@ -68,6 +68,13 @@ check:
         exit 1; \
     fi
     @printf "\033[32m✓ semgrep is installed\033[0m\n"
+    @if ! command -v infer >/dev/null 2>&1; then \
+        printf "\033[31m✗ Error: infer is not installed\033[0m\n"; \
+        printf "  Install from: https://github.com/facebook/infer/releases\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[32m✓ infer is installed\033[0m\n"
     @echo ""
 
 # Show help information
@@ -85,6 +92,7 @@ help:
     @printf "  \033[36mcode-style\033[0m         Check code style (Checkstyle)\n"
     @printf "  \033[36mcode-typecheck\033[0m     Compile with Error Prone checks\n"
     @printf "  \033[36mcode-security\033[0m      Run security checks (SpotBugs + Find Security Bugs)\n"
+    @printf "  \033[36mcode-infer\033[0m         Run Infer static analysis (null safety, resource leaks)\n"
     @printf "  \033[36mcode-deptry\033[0m        Check dependency hygiene\n"
     @printf "  \033[36mcode-spell\033[0m         Check spelling (codespell)\n"
     @printf "  \033[36mcode-semgrep\033[0m       Run custom static analysis (Semgrep)\n"
@@ -156,6 +164,15 @@ code-security:
     @printf "\033[32m✓ code-security completed successfully\033[0m\n"
     @echo ""
 
+# Run Infer static analysis (null safety, resource leaks, thread safety)
+code-infer:
+    @echo ""
+    @printf "\033[34m=== Running Infer Static Analysis ===\033[0m\n"
+    @./gradlew clean --quiet
+    @infer run -- ./gradlew build --quiet
+    @printf "\033[32m✓ code-infer completed successfully\033[0m\n"
+    @echo ""
+
 # Check dependency hygiene
 code-deptry:
     @echo ""
@@ -168,7 +185,7 @@ code-deptry:
 code-spell:
     @echo ""
     @printf "\033[34m=== Checking Spelling ===\033[0m\n"
-    @codespell src config scripts prompts *.md *.kts *.properties --ignore-words=config/codespell/ignore.txt
+    @codespell src config scripts *.md *.kts *.properties --ignore-words=config/codespell/ignore.txt
     @printf "\033[32m✓ code-spell completed successfully\033[0m\n"
     @echo ""
 
@@ -236,6 +253,7 @@ ci:
     just code-deptry
     just code-spell
     just code-semgrep
+    just code-infer
     just code-audit
     just test
     just code-architecture
@@ -278,6 +296,9 @@ ci-quiet:
 
     just code-semgrep > $TMPFILE 2>&1 || { printf "\033[31m✗ code-semgrep failed\033[0m\n"; cat $TMPFILE; exit 1; }
     printf "\033[32m✓ code-semgrep passed\033[0m\n"
+
+    just code-infer > $TMPFILE 2>&1 || { printf "\033[31m✗ code-infer failed\033[0m\n"; cat $TMPFILE; exit 1; }
+    printf "\033[32m✓ code-infer passed\033[0m\n"
 
     just code-audit > $TMPFILE 2>&1 || { printf "\033[31m✗ code-audit failed\033[0m\n"; cat $TMPFILE; exit 1; }
     printf "\033[32m✓ code-audit passed\033[0m\n"

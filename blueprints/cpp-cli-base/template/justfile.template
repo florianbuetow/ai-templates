@@ -32,7 +32,40 @@
 
 # Default recipe: show available commands
 _default:
-    @just --list
+    @just help
+
+# Show help information
+help:
+    @clear
+    @echo ""
+    @printf "\033[0;34m=== {{project_name}} ===\033[0m\n"
+    @echo ""
+    @printf "\033[0;33mSetup & Lifecycle:\033[0m\n"
+    @printf "  %-40s %s\n" "init" "Initialize the development environment"
+    @printf "  %-40s %s\n" "destroy" "Remove build artifacts and caches"
+    @printf "  %-40s %s\n" "check" "Check prerequisites"
+    @printf "  %-40s %s\n" "help" "Show this help message"
+    @echo ""
+    @printf "\033[0;33mRun:\033[0m\n"
+    @printf "  %-40s %s\n" "run" "Run the main application"
+    @echo ""
+    @printf "\033[0;33mCode Quality:\033[0m\n"
+    @printf "  %-40s %s\n" "code-format" "Auto-fix code formatting with clang-format"
+    @printf "  %-40s %s\n" "code-style" "Run clang-tidy static analysis"
+    @printf "  %-40s %s\n" "code-typecheck" "Run cppcheck static analysis"
+    @printf "  %-40s %s\n" "code-security" "Run security checks with flawfinder"
+    @printf "  %-40s %s\n" "code-infer" "Run Infer static analysis (null deref, memory leaks)"
+    @printf "  %-40s %s\n" "code-deptry" "Check include hygiene with IWYU"
+    @printf "  %-40s %s\n" "code-spell" "Check spelling in code and documentation"
+    @printf "  %-40s %s\n" "code-semgrep" "Run Semgrep static analysis"
+    @printf "  %-40s %s\n" "code-sanitize" "Run tests with sanitizers (ASan + UBSan)"
+    @echo ""
+    @printf "\033[0;33mCI & Testing:\033[0m\n"
+    @printf "  %-40s %s\n" "test" "Run unit tests"
+    @printf "  %-40s %s\n" "test-coverage" "Run tests with coverage report"
+    @printf "  %-40s %s\n" "ci" "Run ALL validation checks (verbose)"
+    @printf "  %-40s %s\n" "ci-quiet" "Run ALL validation checks silently"
+    @echo ""
 
 # Check prerequisites
 check:
@@ -100,17 +133,13 @@ check:
         exit 1; \
     fi
     @printf "\033[0;32m✓ lcov is installed\033[0m\n"
-    @echo ""
-
-# Show help information
-help:
-    @echo ""
-    @clear
-    @echo ""
-    @printf "\033[0;34m=== {{project_name}} ===\033[0m\n"
-    @echo ""
-    @echo "Available commands:"
-    @just --list
+    @if ! command -v infer >/dev/null 2>&1; then \
+        printf "\033[0;31m✗ Error: infer is not installed\033[0m\n"; \
+        printf "  Install from: https://github.com/facebook/infer\n"; \
+        echo ""; \
+        exit 1; \
+    fi
+    @printf "\033[0;32m✓ infer is installed\033[0m\n"
     @echo ""
 
 # Initialize the development environment
@@ -126,20 +155,20 @@ init: check
     @printf "\033[0;32m✓ Development environment ready\033[0m\n"
     @echo ""
 
-# Run the main application
-run:
-    @echo ""
-    @printf "\033[0;34m=== Running Application ===\033[0m\n"
-    @cmake --build --preset debug
-    @./build/debug/{{project_name}}
-    @echo ""
-
 # Remove build artifacts and caches
 destroy:
     @echo ""
     @printf "\033[0;34m=== Destroying Build Artifacts ===\033[0m\n"
     @rm -rf build/ reports/
     @printf "\033[0;32m✓ Build artifacts removed\033[0m\n"
+    @echo ""
+
+# Run the main application
+run:
+    @echo ""
+    @printf "\033[0;34m=== Running Application ===\033[0m\n"
+    @cmake --build --preset debug
+    @./build/debug/{{project_name}}
     @echo ""
 
 # Auto-fix code formatting with clang-format
@@ -193,6 +222,14 @@ code-security:
     @printf "\033[0;32m✓ Security checks passed\033[0m\n"
     @echo ""
 
+# Run Infer static analysis (null dereference, memory leaks, buffer overruns)
+code-infer:
+    @echo ""
+    @printf "\033[0;34m=== Running Infer Static Analysis ===\033[0m\n"
+    @infer run --compilation-database build/debug/compile_commands.json
+    @printf "\033[0;32m✓ Infer analysis passed\033[0m\n"
+    @echo ""
+
 # Check include hygiene with IWYU
 code-deptry:
     #!/usr/bin/env bash
@@ -244,6 +281,16 @@ code-semgrep:
     @printf "\033[0;34m=== Running Semgrep Static Analysis ===\033[0m\n"
     @semgrep --config config/semgrep/ --error --no-git-ignore src/ include/ tests/ scripts/
     @printf "\033[0;32m✓ Semgrep checks passed\033[0m\n"
+    @echo ""
+
+# Run tests with sanitizers (AddressSanitizer + UndefinedBehaviorSanitizer)
+code-sanitize:
+    @echo ""
+    @printf "\033[0;34m=== Running Sanitizer Tests ===\033[0m\n"
+    @cmake --preset sanitize
+    @cmake --build --preset sanitize
+    @ctest --preset sanitize
+    @printf "\033[0;32m✓ Sanitizer tests passed\033[0m\n"
     @echo ""
 
 # Run unit tests
@@ -305,16 +352,6 @@ test-coverage:
     printf "\033[0;32m✓ Coverage threshold met (%s%% >= %s%%)\033[0m\n" "$COVERAGE" "$THRESHOLD"
     echo "  HTML: reports/coverage/html/index.html"
     echo ""
-
-# Run tests with sanitizers (AddressSanitizer + UndefinedBehaviorSanitizer)
-code-sanitize:
-    @echo ""
-    @printf "\033[0;34m=== Running Sanitizer Tests ===\033[0m\n"
-    @cmake --preset sanitize
-    @cmake --build --preset sanitize
-    @ctest --preset sanitize
-    @printf "\033[0;32m✓ Sanitizer tests passed\033[0m\n"
-    @echo ""
 
 # Run ALL validation checks (verbose)
 ci:

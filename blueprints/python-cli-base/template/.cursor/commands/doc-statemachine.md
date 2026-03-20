@@ -1,1 +1,0 @@
-Please create state machine diagrams of existing component and write the result to docs/components-statemachine.md
